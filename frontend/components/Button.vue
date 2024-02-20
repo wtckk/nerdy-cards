@@ -6,7 +6,7 @@
 
 <script setup lang="ts"></script>
 
-<style scoped>
+<style>
 .btn {
   @apply py-1 px-2 rounded border;
 }

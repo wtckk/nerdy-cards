@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <p class="text-sm">home page</p>
-    <Button>press</Button>
+  <div class="flex justify-center items-center">
+    <span>HOME PAGE</span>
   </div>
 </template>
 
