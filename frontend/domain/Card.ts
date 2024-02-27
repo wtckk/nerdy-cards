@@ -1,4 +1,4 @@
-import Tag from "./Tag";
+import type { Tag } from "./Tag";
 
 interface Card {
   id: string;
