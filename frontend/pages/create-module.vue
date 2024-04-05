@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <span>HOME PAGE</span>
-  </div>
+  <div>создание модуля</div>
 </template>
 
 <script setup lang="ts"></script>

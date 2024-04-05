@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <span>HOME PAGE</span>
-  </div>
+  <div></div>
 </template>
 
 <script setup lang="ts"></script>

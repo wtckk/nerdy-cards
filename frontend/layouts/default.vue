@@ -1,25 +1,14 @@
 <template>
-  <div class="h-screen w-screen bg-[#6035A5] overflow-x-hidden">
-    <header class="flex justify-between py-[24px] bg-[#432671]">
-      <div>
-        <NuxtLink to="/">LOGO</NuxtLink>
-      </div>
+  <div
+    class="h-screen w-screen flex flex-col justify-between bg-[#6035A5] overflow-x-hidden"
+  >
+    <LayoutsHeader />
 
-      <div class="flex gap-[32px]">search</div>
-
-      <div>
-        <NuxtLink>Accaunt</NuxtLink>
-      </div>
-    </header>
-
-    <div class="container mx-auto min-h-[700px]">
+    <div class="container mx-auto h-full">
       <slot></slot>
     </div>
 
-    <footer class="flex justify-center py-[24px] bg-[#432671]">
-      <div>footer</div>
-    </footer>
-    <div class="flex justify-center py-[12px]">@Nerdy cards</div>
+    <LayoutsFooter />
   </div>
 </template>
 
