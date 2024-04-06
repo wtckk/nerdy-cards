@@ -18,3 +18,5 @@ interface Module {
   cards: Card[];
   tags: Tag[];
 }
+
+export type { Card, Module };
