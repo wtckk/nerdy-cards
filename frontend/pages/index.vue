@@ -1,6 +1,15 @@
 <template>
   <div>
     <span>HOME PAGE</span>
+    <div>
+      <p class="text-[20px] text-white">Новые</p>
+    </div>
+    <div>
+      <p class="">Мои</p>
+    </div>
+    <div>
+      <p class="">Популярные</p>
+    </div>
   </div>
 </template>
 
