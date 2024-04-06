@@ -1,14 +1,18 @@
 <template>
-  <div>
-    <span>HOME PAGE</span>
-    <div>
+  <div class="flex flex-col h-full">
+    <div class="h-[25%]">
       <p class="text-[20px] text-white">Новые</p>
+      <div class="overflow-x-auto flex gap-[45px]">
+        <div class="w-[50%]" v-for="module in Modules" :key="module.id">
+          <ModuleCard :module-card="module" />
+        </div>
+      </div>
     </div>
     <div>
-      <p class="">Мои</p>
+      <p class="text-[20px] text-white">Мои</p>
     </div>
     <div>
-      <p class="">Популярные</p>
+      <p class="text-[20px] text-white">Популярные</p>
     </div>
   </div>
 </template>
