@@ -3,7 +3,11 @@
     <div class="custom-scrollbar h-[35%]">
       <p class="text-[20px] text-white py-2">Новые</p>
       <div class="flex gap-[45px]">
-        <div class="w-[50%] py-2" v-for="module in Modules" :key="module.id">
+        <div
+          class="w-[50%] py-2"
+          v-for="(module, index) in Modules"
+          :key="index"
+        >
           <ModuleCard :module-card="module" />
         </div>
       </div>
@@ -11,7 +15,11 @@
     <div class="h-[35%] custom-scrollbar">
       <p class="text-[20px] text-white py-2">Мои</p>
       <div class="flex gap-[45px]">
-        <div class="w-[50%] py-2" v-for="module in Modules" :key="module.id">
+        <div
+          class="w-[50%] py-2"
+          v-for="(module, index) in Modules"
+          :key="index"
+        >
           <ModuleCard :module-card="module" />
         </div>
       </div>
@@ -19,7 +27,11 @@
     <div class="h-[35%] custom-scrollbar">
       <p class="text-[20px] text-white py-2">Популярные</p>
       <div class="flex gap-[45px]">
-        <div class="w-[50%] py-2" v-for="module in Modules" :key="module.id">
+        <div
+          class="w-[50%] py-2"
+          v-for="(module, index) in Modules"
+          :key="index"
+        >
           <ModuleCard :module-card="module" />
         </div>
       </div>
@@ -291,25 +303,19 @@ const Modules = ref<Module[]>([
 </script>
 
 <style scoped>
-/* <template>
-  <div class="flex flex-col h-full custom-scrollbar">
-    <!-- Ваш текущий контент здесь -->
-  </div>
-</template> */
-
 .custom-scrollbar {
   overflow-x: scroll;
-  scrollbar-width: thin; /* Ширина скроллбара (Windows, MacOS) */
-  scrollbar-color: rgb(167, 139, 250); /* Цвет скроллбара (для Chrome, Edge) */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(167, 139, 250);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px; /* Ширина скроллбара (для Webkit браузеров) */
+  width: 6px;
   height: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgb(64, 43, 126); /* Цвет ползунка скроллбара */
-  border-radius: 20px; /* Радиус закругления ползунка */
+  background-color: rgb(64, 43, 126);
+  border-radius: 20px;
 }
 </style>
