@@ -1,12 +1,12 @@
 <template>
   <div class="my-auto">
-    <form class="bg-[#432671] shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4 w-96">
+    <form class="bg-[#432671] shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4">
       <div class="mb-4">
         <label class="block text-white text-sm font-bold mb-2" for="username">
           Логин
         </label>
         <input
-          class="bg-[#CBAAFF] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          class="bg-[#CBAAFF] shadow appearance-none border rounded w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="username"
           type="text"
           placeholder="Логин"
@@ -17,12 +17,12 @@
           Пароль
         </label>
         <input
-          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-80 py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           id="password"
           type="password"
           placeholder="***********"
         />
-        <p class="text-red-500 text-xs italic">Please choose a password.</p>
+        <p class="text-red-500 text-xs italic">Введите пароль</p>
       </div>
       <div class="flex items-center justify-between">
         <nuxt-link to="/">
