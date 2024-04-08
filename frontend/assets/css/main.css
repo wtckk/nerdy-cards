@@ -1,0 +1,30 @@
+@import "typeface-montserrat";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+a {
+  text-decoration: none; /* Убирает подчеркивание */
+  color: inherit; /* Наследует цвет текста от родительского элемента */
+}
+
+input::placeholder {
+  color: #e1e1e1;
+}
+
+input {
+  color: white;
+  outline: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}

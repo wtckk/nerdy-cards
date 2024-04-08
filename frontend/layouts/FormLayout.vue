@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen w-screen py-[54px] bg-[#6035A5]">
-    <div class="container mx-auto">
+  <div class="h-screen w-screen bg-[#6035A5]">
+    <div class="container mx-auto h-full flex justify-center align-center">
       <slot></slot>
     </div>
   </div>

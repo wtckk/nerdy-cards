@@ -2,7 +2,14 @@
 export default {
   content: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Montserrat", "sans-serif"],
+      },
+    },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false, // Отключаем сброс стилей
+  },
 };

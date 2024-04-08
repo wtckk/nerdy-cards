@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center align-center mt-60">
+  <div class="my-auto">
     <form class="bg-[#432671] shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4 w-96">
       <div class="mb-4">
         <label class="block text-white text-sm font-bold mb-2" for="username">
@@ -25,15 +25,17 @@
         <p class="text-red-500 text-xs italic">Please choose a password.</p>
       </div>
       <div class="flex items-center justify-between">
-        <button
-          class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
-        >
-          Войти
-        </button>
+        <nuxt-link to="/">
+          <button
+            class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+          >
+            Войти
+          </button>
+        </nuxt-link>
         <a
           class="inline-block align-baseline font-bold text-sm text-[#CBAAFF] hover:text-purple-800"
-          href="#"
+          href="/recovery-password"
         >
           Забыли пароль?
         </a>

@@ -19,4 +19,9 @@ interface Module {
   tags: Tag[];
 }
 
-export type { Card, Module };
+interface Category {
+  name: string;
+  modules: Module[];
+}
+
+export type { Card, Module, Category };

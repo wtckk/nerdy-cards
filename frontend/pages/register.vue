@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center mt-32">
+  <div class="my-auto">
     <form class="bg-[#432671] shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4 w-96">
       <p class="flex justify-center text-white text-2xl font-bold mb-4">
         Регистрация
@@ -53,12 +53,14 @@
         <p class="text-red-500 text-xs italic">Введите пароль</p>
       </div>
       <div class="flex items-center justify-between">
-        <button
-          class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
-        >
-          Зарегистрироваться
-        </button>
+        <nuxt-link to="/">
+          <button
+            class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+          >
+            Зарегистрироваться
+          </button>
+        </nuxt-link>
       </div>
       <p class="mb-0 mt-2 pt-3 text-sm text-gray-500">
         Уже зарегистрированы?

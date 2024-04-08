@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="h-screen w-screen flex flex-col justify-between bg-[#6035A5] overflow-x-hidden"
-  >
+  <div class="h-screen w-screen flex flex-col bg-[#6035A5] overflow-x-hidden">
     <LayoutsHeader />
 
-    <div class="container mx-auto h-full">
+    <div class="container mx-auto">
       <slot></slot>
     </div>
 
