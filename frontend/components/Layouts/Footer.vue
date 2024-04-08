@@ -6,6 +6,7 @@
         <div class="text my-auto">Реклама</div>
         <div class="text my-auto">Поддержка</div>
       </div>
+      <nuxt-icon name="material-symbols:1x-mobiledata-badge-outline" />
 
       <div class="p-[5px] bg-[#c4b5fd] rounded-[10px]">
         <img

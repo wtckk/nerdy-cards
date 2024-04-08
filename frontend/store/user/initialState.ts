@@ -1,7 +1,7 @@
-import User from "@/domain/User";
+// import type { User } from "@/domain/User";
 
-interface InitialState {
-  user: User | null;
-}
+// interface InitialState {
+//   user: User | null;
+// }
 
-export default InitialState;
+// export type {InitialState};

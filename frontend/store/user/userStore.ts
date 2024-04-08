@@ -1,11 +1,11 @@
-import { defineStore } from "pinia";
+// import { defineStore } from "pinia";
 
-import User from "~/domain/User";
+// import type { User } from "~/domain/User";
 
-import InitialState from "@/store/user/initialState";
+// import type InitialState from "@/store/user/initialState";
 
-const useUserStore = defineStore("user", {
-  state: (): InitialState => ({
-    user: null,
-  }),
-});
+// const useUserStore = defineStore("user", {
+//   state: (): InitialState => ({
+//     user: null,
+//   }),
+// });
