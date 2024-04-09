@@ -17,7 +17,7 @@
           Пароль
         </label>
         <input
-          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-80 py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="password"
           type="password"
           placeholder="***********"

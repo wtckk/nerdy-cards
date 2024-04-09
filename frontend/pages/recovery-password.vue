@@ -9,23 +9,30 @@
           Почта
         </label>
         <input
-          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-96 py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          id="mail" type="mail" placeholder="Почтовый адрес" />
+          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="mail"
+          type="mail"
+          placeholder="Почтовый адрес"
+        />
         <p class="text-red-500 text-xs italic">Введите почту</p>
       </div>
       <div class="flex items-center justify-between">
         <nuxt-link to="/enter-code">
           <button
             class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button">
+            type="button"
+          >
             Получить код
           </button>
         </nuxt-link>
       </div>
       <p class="mb-0 mt-2 pt-3 text-sm text-gray-500">
         Уже зарегистрированы?
-        <a href="/login"
-          class="text-[#CBAAFF] text-danger transition duration-150 ease-in-out hover:hover:text-purple-800 focus:text-danger-600 active:text-danger-700">Войти</a>
+        <a
+          href="/login"
+          class="text-[#CBAAFF] text-danger transition duration-150 ease-in-out hover:hover:text-purple-800 focus:text-danger-600 active:text-danger-700"
+          >Войти</a
+        >
       </p>
     </form>
   </div>

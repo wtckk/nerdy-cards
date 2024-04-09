@@ -1,6 +1,6 @@
 <template>
-  <footer class="flex flex-col float-end bg-[#432671] text-[#4B2A81]">
-    <div class="container mx-auto flex justify-between py-[24px]">
+  <footer class="flex flex-col bg-[#432671] text-[#4B2A81]">
+    <div class="container mx-auto flex justify-between py-[24px] px-[24px]">
       <div class="flex gap-[16px]">
         <NuxtLink to="https://t.me/chelovekkq" class="text my-auto no-underline"
           >О компании</NuxtLink

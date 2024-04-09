@@ -2,7 +2,7 @@
   <div class="h-screen w-screen flex flex-col bg-[#6035A5] overflow-x-hidden">
     <LayoutsHeader />
 
-    <div class="container mx-auto">
+    <div class="container mx-auto px-[24px]">
       <slot></slot>
     </div>
 

@@ -9,24 +9,30 @@
           Код отправлен на ваш почтовый адрес
         </label>
         <input
-          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-96 py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          id="code" type="code" placeholder="Код" />
+          class="bg-[#CBAAFF] shadow appearance-none border border-red-500 rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="code"
+          type="code"
+          placeholder="Код"
+        />
         <p class="text-red-500 text-xs italic">Введите код</p>
       </div>
       <div class="flex items-center justify-between">
         <nuxt-link to="/new-password">
           <button
             class="bg-[#CBAAFF] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button">
+            type="button"
+          >
             Отправить
           </button>
         </nuxt-link>
       </div>
       <p class="mb-0 mt-2 pt-3 text-sm text-gray-500">
         Не получили код?
-        <a href="#!"
-          class="text-[#CBAAFF] text-danger transition duration-150 ease-in-out hover:hover:text-purple-800 focus:text-danger-600 active:text-danger-700">Отправить
-          снова</a>
+        <a
+          href="#!"
+          class="text-[#CBAAFF] text-danger transition duration-150 ease-in-out hover:hover:text-purple-800 focus:text-danger-600 active:text-danger-700"
+          >Отправить снова</a
+        >
       </p>
     </form>
   </div>
