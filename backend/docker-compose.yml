@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql
+    container_name: mysql_db
+    env_file:
+      - .env
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    restart: always
