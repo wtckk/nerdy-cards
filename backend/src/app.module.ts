@@ -11,7 +11,7 @@ import { RefreshToken } from './auth/entitites/refresh-token.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({

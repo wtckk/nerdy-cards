@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  main:
+    container_name: main
+    build:
+      context: .
+    env_file:
+      - .env.development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${PORT}:${PORT}"
+    command: npm run start:dev
+    depends_on:
+      - mysql
+    restart: always
+  mysql:
+    image: mysql
+    container_name: mysql
+    env_file:
+      - .env.development
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    restart: always
