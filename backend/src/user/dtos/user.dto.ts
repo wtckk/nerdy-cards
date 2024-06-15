@@ -2,7 +2,6 @@ import { UserRole } from '../enums/user-role.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
-
 /**
  * DTO для получения данных о пользователи
  */

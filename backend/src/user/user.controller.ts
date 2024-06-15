@@ -4,8 +4,6 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UserDto } from './dtos/user.dto';
 import { GetUser } from '../common/decorators/get-user.decorator';
-import { UserRole } from './enums/user-role.enum';
-import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guard/roles.guard';
 
 @ApiTags('Работа с пользователями')
@@ -22,7 +20,6 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по его ID' })
-  @Roles(UserRole.ADMIN)
   @Get('get-user-by-id/:id')
   getUserById(@Param('id') id: string) {
     return this.usersService.getUserById(id);

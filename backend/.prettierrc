@@ -2,7 +2,6 @@
   "semi": true,
   "trailingComma": "all",
   "singleQuote": true,
-  "printWidth": 140,
   "proseWrap": "preserve",
   "tabWidth": 2
 }

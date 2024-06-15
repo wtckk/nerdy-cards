@@ -13,7 +13,11 @@ async function bootstrap() {
   /**
    * Конфигурация SWAGGER
    */
-  const swaggerConfig = new DocumentBuilder().setTitle('NestJS Nerdy-cards').setVersion('1.0.0').addBearerAuth().build();
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('NestJS Nerdy-cards')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, swaggerDocument);

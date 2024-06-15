@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum';
 import { IsEmail } from 'class-validator';
 import { RefreshToken } from '../../auth/entitites/refresh-token.entity';
+import { Folder } from '../../folder/entites/folder.entity';
 
 /**
  * Модель User в базе данных
@@ -26,4 +27,7 @@ export class User {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshTokens: RefreshToken[];
+
+  @OneToMany(() => Folder, (folder) => folder.user)
+  folders: Folder[];
 }

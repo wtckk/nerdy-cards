@@ -1,4 +1,9 @@
-import { BadRequestException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { RegisterUserDTO } from '../user/dtos/register.dto';
 
@@ -26,7 +31,9 @@ export class AuthService {
   /**
    * Регистрация пользователя
    */
-  async signUp(userDto: RegisterUserDTO): Promise<{ accessToken: string; refreshToken: string }> {
+  async signUp(
+    userDto: RegisterUserDTO,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { email, username, password } = userDto;
     const existUser = await this.usersService.getUserByEmail(email);
 
@@ -70,7 +77,9 @@ export class AuthService {
   /**
    * Логин пользователя
    */
-  async signIn(userDto: LoginUserDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async signIn(
+    userDto: LoginUserDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.validateUser(userDto);
 
     if (!user) {
@@ -150,7 +159,8 @@ export class AuthService {
   async generateRefreshToken(user: User): Promise<string> {
     try {
       // Получение секрета для refreshToken
-      const refreshTokenSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
+      const refreshTokenSecret =
+        this.configService.get<string>('JWT_REFRESH_SECRET');
 
       const refreshToken = this.refreshTokenRepository.create({
         user,
@@ -183,7 +193,8 @@ export class AuthService {
    */
   validateRefreshToken(token: string) {
     try {
-      const refreshTokenSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
+      const refreshTokenSecret =
+        this.configService.get<string>('JWT_REFRESH_SECRET');
       const userData = this.jwtService.verify(token, {
         secret: refreshTokenSecret,
       });
