@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --background: #6035a5;
+  --dark-purple: #432671;
+  --basic-purple: #a78bfa;
+  --text-purple: #cbaaff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200;
+  color: white;
+  background-color: var(--background);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a,
+p {
+  outline: none;
+  text-decoration: none;
+  color: white;
+  margin: 0;
+}
+
+button {
+  outline: none;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  color: white;
+  cursor: pointer;
+}
+
+.btn {
+  background-color: var(--basic-purple);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+
+.btn-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--background);
+  -webkit-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
+  -moz-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
+  box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
+  transition: transform 0.15s;
+  transform-style: preserve-3d;
+}
+
+.btn:active,
+.btn-circle:active {
+  transform: translate(0em, 0.25em);
+}
+
+.btn-circle:hover {
+  scale: 1.05;
+}
+
+input {
+  outline: none;
+  border: none;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  background: transparent;
+}
+
+.input {
+  background-color: #a78bfa;
+}

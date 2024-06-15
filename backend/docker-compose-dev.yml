@@ -11,7 +11,7 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - "${PORT}:${PORT}"
+      - "3000:3000"
     command: npm run start:dev
     depends_on:
       - mysql
@@ -22,5 +22,5 @@ services:
     env_file:
       - .env.development
     ports:
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
+      - "3306:3306"
     restart: always
