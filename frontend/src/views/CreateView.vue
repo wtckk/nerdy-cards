@@ -1,37 +1,33 @@
 <template>
   <FormLayout>
-    <form>
-      <input class="input" type="text" name="title" v-model="newModule.title" />
-      <input class="input" type="text" name="description" v-model="newModule.description" />
+    <form @submit.prevent="submit">
+      <input class="input" type="text" name="title" v-model="title" />
+      <input class="input" type="text" name="description" v-model="description" />
 
-      <button @click="submit" type="submit" class="btn">Создать</button>
+      <button type="submit" class="btn">Создать</button>
     </form>
   </FormLayout>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 import FormLayout from '@/components/Layouts/FormLayout.vue'
 import { Module } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { storeToRefs } from 'pinia'
+import router from '@/router'
 
 const moduleStore = useModuleStore()
 const { user } = storeToRefs(moduleStore)
 
-const newModule = reactive<Module>({
-  id: '',
-  title: '',
-  description: '',
-  user: user.value,
-  createdAt: new Date(''),
-  updatedAt: new Date('')
-})
+const title = ref('')
+const description = ref('')
 
 function submit() {
-  moduleStore.createModule(newModule)
+  moduleStore.createModule(title.value, description.value)
+  router.push('/')
 }
 </script>
 

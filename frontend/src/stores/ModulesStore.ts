@@ -16,12 +16,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '0',
         title: 'Module 1',
         description: 'description',
-        user: {
-          id: '0',
-          username: 'user',
-          email: 'user@gmail.com',
-          role: 'USER'
-        },
+        userId: '0',
         createdAt: new Date('2024-02-01'),
         updatedAt: new Date('2024-06-09')
       },
@@ -29,12 +24,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '1',
         title: 'Module 2',
         description: 'description',
-        user: {
-          id: '0',
-          username: 'user',
-          email: 'user@gmail.com',
-          role: 'USER'
-        },
+        userId: '0',
         createdAt: new Date('2024-02-01'),
         updatedAt: new Date('2024-03-11')
       },
@@ -42,12 +32,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '2',
         title: 'Module 3',
         description: 'description',
-        user: {
-          id: '1',
-          username: 'user1',
-          email: 'user1@gmail.com',
-          role: 'USER'
-        },
+        userId: '1',
         createdAt: new Date('2024-05-10'),
         updatedAt: new Date('2024-05-10')
       },
@@ -55,12 +40,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '3',
         title: 'Module 4',
         description: 'description',
-        user: {
-          id: '1',
-          username: 'user1',
-          email: 'user1@gmail.com',
-          role: 'USER'
-        },
+        userId: '1',
         createdAt: new Date('2024-06-01'),
         updatedAt: new Date('2024-06-11')
       },
@@ -68,12 +48,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '4',
         title: 'Module 5',
         description: 'description',
-        user: {
-          id: '1',
-          username: 'user1',
-          email: 'user1@gmail.com',
-          role: 'USER'
-        },
+        userId: '1',
         createdAt: new Date('2024-06-01'),
         updatedAt: new Date('2024-06-11')
       },
@@ -81,12 +56,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '5',
         title: 'Module 6',
         description: 'description',
-        user: {
-          id: '2',
-          username: 'user2',
-          email: 'user2@gmail.com',
-          role: 'USER'
-        },
+        userId: '2',
         createdAt: new Date('2024-08-01'),
         updatedAt: new Date('2024-09-12')
       },
@@ -94,12 +64,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '6',
         title: 'Module 7',
         description: 'description',
-        user: {
-          id: '2',
-          username: 'user2',
-          email: 'user2@gmail.com',
-          role: 'USER'
-        },
+        userId: '2',
         createdAt: new Date('2024-05-01'),
         updatedAt: new Date('2024-06-01')
       },
@@ -107,12 +72,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '7',
         title: 'Module 8',
         description: 'description',
-        user: {
-          id: '2',
-          username: 'user2',
-          email: 'user2@gmail.com',
-          role: 'USER'
-        },
+        userId: '2',
         createdAt: new Date('2024-04-01'),
         updatedAt: new Date('2024-06-10')
       },
@@ -120,12 +80,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '8',
         title: 'Module 9',
         description: 'description',
-        user: {
-          id: '2',
-          username: 'user2',
-          email: 'user2@gmail.com',
-          role: 'USER'
-        },
+        userId: '2',
         createdAt: new Date('2024-07-02'),
         updatedAt: new Date('2024-07-02')
       },
@@ -133,12 +88,7 @@ export const useModuleStore = defineStore('moduleStore', {
         id: '9',
         title: 'Module 10',
         description: 'description',
-        user: {
-          id: '3',
-          username: 'user3',
-          email: 'user3@gmail.com',
-          role: 'USER'
-        },
+        userId: '3',
         createdAt: new Date('2024-07-01'),
         updatedAt: new Date('2024-07-11')
       }
@@ -153,20 +103,25 @@ export const useModuleStore = defineStore('moduleStore', {
   }),
   getters: {
     getMyModules(): Module[] {
-      return this.modules.filter((module) => module.user.id === this.user.id)
+      return this.modules.filter((module) => module.userId === this.user.id)
     },
     getNewModules(): Module[] {
       return this.modules.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     }
   },
   actions: {
-    async createModule(newModule: Module) {
-      const response: any = await ModuleService.createModule(newModule)
+    async createModule(title: string, description: string) {
+      const newModule = {
+        title: title,
+        description: description
+      }
+
+      const response = await ModuleService.createModule(newModule)
 
       if (response instanceof Error) {
         console.log('Система', response.message)
       } else {
-        this.modules.push(newModule)
+        this.modules.push(response)
       }
     }
   }

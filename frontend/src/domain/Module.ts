@@ -6,7 +6,7 @@ interface Module {
   id: string
   title: string
   description: string
-  user: User
+  userId: string
   createdAt: Date
   updatedAt: Date
 }

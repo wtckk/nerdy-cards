@@ -26,7 +26,7 @@ async function bootstrap() {
    * Использование Cookie-Parser
    */
   app.use(cookieParser());
-
+  app.enableCors();
   await app.listen(PORT);
 }
 
