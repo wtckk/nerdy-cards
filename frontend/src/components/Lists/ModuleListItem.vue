@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 
 import { Module, ModulesType } from '@/domain/Module'
 
@@ -23,24 +23,27 @@ const { search } = storeToRefs(moduleStore)
 
 const props = defineProps<{
   type: ModulesType
+  modules: Module[]
 }>()
 
-const modules = ref<Module[]>([])
-
 const filteredModulst = computed(() => {
-  return modules.value.filter((module) =>
-    module.title.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
+  let modules = props.modules
 
-onMounted(() => {
-  if (props.type === 'My') {
-    modules.value = moduleStore.getMyModules
-  } else if (props.type === 'New') {
-    modules.value = moduleStore.getNewModules
-  } else {
-    console.error('ModuleListItem.vue: Unknown type')
+  if (search.value) {
+    modules = modules.filter((module) =>
+      module.title.toLowerCase().includes(search.value.toLowerCase())
+    )
   }
+
+  if (props.type === 'New') {
+    modules
+  } else if (props.type === 'My') {
+    modules = modules.filter((module) => module.userId === moduleStore.user.id)
+  } else {
+    console.log('ModuleListItem: неизвестный тип модуля')
+  }
+
+  return modules
 })
 </script>
 

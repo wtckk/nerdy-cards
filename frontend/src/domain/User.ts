@@ -7,4 +7,15 @@ interface User {
   role: UserRoles
 }
 
-export default User
+interface LoginUser {
+  email: string
+  password: string
+}
+
+interface RegistrationUser {
+  username: string
+  email: string
+  password: string
+}
+
+export { User, LoginUser, RegistrationUser }
