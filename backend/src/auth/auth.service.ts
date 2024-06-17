@@ -17,11 +17,15 @@ import { User } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ConfigService } from '@nestjs/config';
+import { ProfileService } from '../profile/profile.service';
+import { UserDto } from '../user/dtos/user.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UserService,
+    private readonly profileService: ProfileService,
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
     private readonly jwtService: JwtService,
@@ -33,7 +37,7 @@ export class AuthService {
    */
   async signUp(
     userDto: RegisterUserDTO,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
     const { email, username, password } = userDto;
     const existUser = await this.usersService.getUserByEmail(email);
 
@@ -55,17 +59,16 @@ export class AuthService {
         username,
         password: hashPassword,
       });
-      // Генирорование токенов после успешной регистрации
-      const payload = {
-        sub: user.id,
-        username: user.username,
-        email: email,
-        role: user.role,
-      };
-      const accessToken = this.jwtService.sign(payload);
-      const refreshToken = await this.generateRefreshToken(user);
 
-      return { accessToken, refreshToken };
+      await this.profileService.createProfile(user);
+
+      const tokens = await this.generateRefreshToken(user);
+
+      return {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        user: plainToClass(UserDto, user),
+      };
     } catch (error) {
       throw new BadRequestException({
         message: 'Ошибка регистрации',
@@ -79,7 +82,7 @@ export class AuthService {
    */
   async signIn(
     userDto: LoginUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
     const user = await this.validateUser(userDto);
 
     if (!user) {
@@ -89,17 +92,13 @@ export class AuthService {
       });
     }
 
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
+    const tokens = await this.generateRefreshToken(user);
+
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: plainToClass(UserDto, user),
     };
-
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = await this.generateRefreshToken(user);
-
-    return { accessToken, refreshToken };
   }
 
   /**
@@ -119,7 +118,9 @@ export class AuthService {
   /**
    * Обновление refreshToken
    */
-  async refreshTokens(refreshToken: string): Promise<string> {
+  async refreshTokens(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     // Проверяем рефреш токен
     const userData = await this.validateRefreshToken(refreshToken);
 
@@ -136,9 +137,8 @@ export class AuthService {
       });
     }
 
-    const newRefreshToken = await this.generateRefreshToken(token.user);
-
-    return newRefreshToken;
+    const tokens = await this.generateRefreshToken(token.user);
+    return tokens;
   }
 
   /**
@@ -154,32 +154,32 @@ export class AuthService {
   }
 
   /**
-   * Генерация REFRESH TOKEN пользователя
+   * Генерация REFRESH TOKEN и ACCESS TOKEN пользователя
    */
-  async generateRefreshToken(user: User): Promise<string> {
+  async generateRefreshToken(
+    user: User,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       // Получение секрета для refreshToken
       const refreshTokenSecret =
         this.configService.get<string>('JWT_REFRESH_SECRET');
 
+      const payload = {
+        sub: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      };
       const refreshToken = this.refreshTokenRepository.create({
         user,
-        token: this.jwtService.sign(
-          {
-            sub: user.id,
-            username: user.username,
-            email: user.email,
-            role: user.role,
-          },
-          {
-            secret: refreshTokenSecret,
-            expiresIn: '30d',
-          },
-        ),
+        token: this.jwtService.sign(payload, {
+          secret: refreshTokenSecret,
+          expiresIn: '30d',
+        }),
       });
       await this.refreshTokenRepository.save(refreshToken);
-
-      return refreshToken.token;
+      const accessToken = this.jwtService.sign(payload);
+      return { accessToken, refreshToken: refreshToken.token };
     } catch (error) {
       throw new UnauthorizedException({
         message: 'Пользователь не авторизован',

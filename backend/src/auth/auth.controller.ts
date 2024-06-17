@@ -13,6 +13,7 @@ import { RegisterUserDTO } from '../user/dtos/register.dto';
 import { Request, Response } from 'express';
 import { LoginUserDto } from '../user/dtos/login.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { UserDto } from '../user/dtos/user.dto';
 
 @ApiTags('Аунтефикация')
 @ApiBearerAuth()
@@ -23,17 +24,18 @@ export class AuthController {
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @Post('signup')
   async signUp(
-    @Body() user: RegisterUserDTO,
+    @Body() registerDto: RegisterUserDTO,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ accessToken: string }> {
-    const { accessToken, refreshToken } = await this.authService.signUp(user);
+  ): Promise<{ accessToken: string; user: UserDto }> {
+    const { accessToken, refreshToken, user } =
+      await this.authService.signUp(registerDto);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 1000, // 30d
     });
 
-    return { accessToken };
+    return { accessToken, user };
   }
 
   @ApiOperation({ summary: 'Логин пользователя' })
@@ -43,8 +45,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<{
     accessToken: string;
+    user: UserDto;
   }> {
-    const { accessToken, refreshToken } =
+    const { accessToken, refreshToken, user } =
       await this.authService.signIn(userDto);
 
     res.cookie('refreshToken', refreshToken, {
@@ -52,7 +55,7 @@ export class AuthController {
       maxAge: 60 * 60 * 24 * 30 * 1000, // 30d
     });
 
-    return { accessToken };
+    return { accessToken, user };
   }
 
   @ApiOperation({ summary: 'Обновление токена' })
@@ -60,16 +63,16 @@ export class AuthController {
   @Post('refresh-tokens')
   async refreshTokens(@Req() req: Request, @Res() res: Response) {
     const { refreshToken } = req.cookies; // Получение рефреш токена из куков
-    const newRefreshToken = await this.authService.refreshTokens(refreshToken);
+    const tokens = await this.authService.refreshTokens(refreshToken);
 
-    res.cookie('refreshToken', newRefreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30 * 1000, // 30d
     });
 
-    return res.status(200).json({
-      message: 'Успешное обновление токенов',
-      status: HttpStatus.OK,
+    return res.json({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
     });
   }
 

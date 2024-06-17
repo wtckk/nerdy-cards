@@ -7,12 +7,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { Profile } from '../../profile/entities/profile.entity';
 
 /**
  * Модель папок карточек в базе данных
  */
-@Entity()
+@Entity({ name: 'folders' })
 export class Folder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -20,7 +20,7 @@ export class Folder {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @CreateDateColumn()
@@ -29,10 +29,9 @@ export class Folder {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
-  userId: string;
-
-  @ManyToOne(() => User, (user) => user.folders, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  @ManyToOne(() => Profile, (profile) => profile.folders, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'profileId' })
+  profile: Profile;
 }
