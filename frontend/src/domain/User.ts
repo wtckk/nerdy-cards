@@ -7,6 +7,15 @@ interface User {
   role: UserRoles
 }
 
+interface Profile {
+  id: string
+  userId: string
+  username: string
+
+  group?: string
+  university?: string
+}
+
 interface LoginUser {
   email: string
   password: string
@@ -18,4 +27,4 @@ interface RegistrationUser {
   password: string
 }
 
-export { User, LoginUser, RegistrationUser }
+export { User, Profile, LoginUser, RegistrationUser }

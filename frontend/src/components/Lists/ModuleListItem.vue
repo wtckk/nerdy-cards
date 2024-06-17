@@ -45,9 +45,7 @@ const filteredModulst = computed(() => {
 onMounted(async () => {
   console.log('modules')
   if (user.value?.id) {
-    let modules:
-      | { id: string; title: string; description: string; createdAt: Date; updatedAt: Date }[]
-      | Error
+    let modules: Module[] | Error
 
     if (props.type === 'My') {
       modules = await moduleStore.getUserModules(user.value.id)

@@ -3,7 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import CreateView from '@/views/CreateView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
-import Load from '@/views/load.vue'
+import LoaderView from '@/views/LoaderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +31,7 @@ const router = createRouter({
     {
       path: '/load',
       name: 'load',
-      component: Load
+      component: LoaderView
     }
   ]
 })

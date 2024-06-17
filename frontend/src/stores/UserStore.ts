@@ -79,7 +79,7 @@ export const useUserStore = defineStore('userStore', {
 
       const token = localStorage.getItem('token')
       const newObj = localStorage.getItem('user')
-      const user = JSON.parse(newObj)
+      const user = JSON.parse(String(newObj))
       if (token) {
         this.token = token
         this.isAuth = true
