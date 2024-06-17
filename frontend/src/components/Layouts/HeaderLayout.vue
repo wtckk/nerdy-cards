@@ -9,17 +9,24 @@
 
       <RouterLink to="create">
         <button class="btn-circle">
-          <img src="/icons/plus.svg" alt="search" />
+          <img src="/icons/plus.svg" alt="add-module" />
         </button>
       </RouterLink>
     </div>
 
     <div class="header-btns">
       <button class="btn-circle">
-        <img src="/icons/notification.svg" alt="search" />
+        <img src="/icons/notification.svg" alt="notification" />
       </button>
-      <button class="btn-circle">
-        <img src="/icons/account.svg" alt="search" />
+
+      <RouterLink to="login">
+        <button class="btn-circle">
+          <img src="/icons/account.svg" alt="account" />
+        </button>
+      </RouterLink>
+
+      <button v-if="isAuth" @click="userStore.logout" class="btn-circle">
+        <img src="/icons/logout.svg" alt="account" />
       </button>
     </div>
   </header>
@@ -27,10 +34,14 @@
 
 <script setup lang="ts">
 import { useModuleStore } from '@/stores/ModulesStore'
+import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
 
 const moduleStore = useModuleStore()
 const { search } = storeToRefs(moduleStore)
+
+const userStore = useUserStore()
+const { isAuth } = storeToRefs(userStore)
 </script>
 
 <style scoped>
