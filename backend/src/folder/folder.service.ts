@@ -43,6 +43,7 @@ export class FolderService {
       order: {
         createdAt: 'desc',
       },
+      relations: ['profile'],
     });
     return folders;
   }
