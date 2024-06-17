@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { RefreshToken } from './auth/entitites/refresh-token.entity';
 import { FolderModule } from './folder/folder.module';
 import { Folder } from './folder/entites/folder.entity';
+import { ProfileModule } from './profile/profile.module';
+import { Profile } from './profile/entities/profile.entity';
 
 @Module({
   imports: [
@@ -23,13 +25,14 @@ import { Folder } from './folder/entites/folder.entity';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [User, RefreshToken, Folder],
+      entities: [User, RefreshToken, Folder, Profile],
       synchronize: true,
       logging: ['query', 'error'],
     }),
     UserModule,
     AuthModule,
     FolderModule,
+    ProfileModule,
   ],
   controllers: [],
   providers: [],

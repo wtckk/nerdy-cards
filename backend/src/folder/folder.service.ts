@@ -3,22 +3,47 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Folder } from './entites/folder.entity';
 import { Repository } from 'typeorm';
 import { CreateFolderDto } from './dtos/create-folder.dto';
-import { UserDto } from '../user/dtos/user.dto';
 import { FolderDto } from './dtos/folder.dto';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
+import { ProfileService } from '../profile/profile.service';
 
+// TODO: переписать создание папок с использованием профиля
 @Injectable()
 export class FolderService {
   constructor(
     @InjectRepository(Folder)
     private readonly folderRepository: Repository<Folder>,
+    private readonly profileService: ProfileService,
   ) {}
 
   /**
-   * Получение списка всех созданных папок
+   * Получение списка всех созданных папок (отсортированные)
    */
-  getAllFolder(): Promise<FolderDto[]> {
-    const folders = this.folderRepository.find();
+  async getAllFolder(): Promise<Folder[]> {
+    const folders = await this.folderRepository.find({
+      order: {
+        createdAt: 'desc',
+      },
+      relations: ['profile'],
+    });
+    return folders;
+  }
+
+  /**
+   * Получение папок пользователя (отсортированные)
+   */
+  async getFolderByUser(userId: string): Promise<FolderDto[]> {
+    const profile = await this.profileService.getProfileByUserId(userId);
+    const folders = await this.folderRepository.find({
+      where: {
+        profile: {
+          id: profile.id,
+        },
+      },
+      order: {
+        createdAt: 'desc',
+      },
+    });
     return folders;
   }
 
@@ -33,10 +58,13 @@ export class FolderService {
   /**
    * Создание папки
    */
-  async createFolder(dto: CreateFolderDto, user: UserDto) {
+  async createFolder(dto: CreateFolderDto, userId: string) {
+    const profile = await this.profileService.getProfileByUserId(userId);
     const folder = this.folderRepository.create({
       ...dto,
-      userId: user.id,
+      profile: {
+        id: profile.id,
+      },
     });
     return await this.folderRepository.save(folder);
   }

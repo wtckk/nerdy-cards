@@ -29,7 +29,4 @@ export class FolderDto {
 
   @ApiProperty()
   updatedAt: Date;
-
-  @ApiProperty()
-  userId: string;
 }

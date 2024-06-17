@@ -16,5 +16,5 @@ export class CreateFolderDto {
     example: 'Слова для 3 аттестации',
     description: 'Описание предназначения паки',
   })
-  description: string;
+  description?: string;
 }

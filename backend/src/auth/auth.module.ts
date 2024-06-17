@@ -7,12 +7,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshToken } from './entitites/refresh-token.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { ProfileModule } from '../profile/profile.module';
 
 @Module({
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
   imports: [
     UserModule,
+    ProfileModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forFeature([RefreshToken]),
     JwtModule.registerAsync({

@@ -25,12 +25,17 @@ export class FolderController {
 
   @Post('create')
   createFolder(@GetUser() user: UserDto, @Body() dto: CreateFolderDto) {
-    return this.folderService.createFolder(dto, user);
+    return this.folderService.createFolder(dto, user.id);
   }
 
   @Get('all')
   getAllFolders() {
     return this.folderService.getAllFolder();
+  }
+
+  @Get('user/:id')
+  getAllFolderUser(@Param('id') userId: string) {
+    return this.folderService.getFolderByUser(userId);
   }
 
   @Put('update/:id')

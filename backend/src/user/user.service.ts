@@ -46,7 +46,9 @@ export class UserService {
    * Получение пользователя по EMAIL
    */
   getUserByEmail(email: string): Promise<User> {
-    const user = this.usersRepository.findOneBy({ email });
+    const user = this.usersRepository.findOne({
+      where: { email },
+    });
     return user;
   }
 
