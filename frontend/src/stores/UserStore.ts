@@ -29,10 +29,12 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
+        localStorage.setItem('user', JSON.stringify(response.user))
 
         this.token = response.accessToken
         this.isAuth = true
         this.user = response.user
+        console.log('user')
       }
     },
 
@@ -49,6 +51,7 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
+        localStorage.setItem('user', JSON.stringify(response.user))
 
         this.token = response.accessToken
         this.isAuth = true
@@ -63,6 +66,7 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
 
         this.token = ''
         this.isAuth = false
@@ -71,10 +75,16 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async refreshToken() {
+      console.log(1)
+
       const token = localStorage.getItem('token')
+      const newObj = localStorage.getItem('user')
+      const user = JSON.parse(newObj)
       if (token) {
         this.token = token
         this.isAuth = true
+        this.user = user
+        console.log(this.user)
       }
     }
   }

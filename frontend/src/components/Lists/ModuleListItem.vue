@@ -8,26 +8,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 import { Module, ModulesType } from '@/domain/Module'
 
 import ModuleCard from '@/components/Cards/ModuleCard.vue'
 
 import { useModuleStore } from '@/stores/ModulesStore'
+import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
 
 const moduleStore = useModuleStore()
+const userStore = useUserStore()
 
 const { search } = storeToRefs(moduleStore)
+const { user } = storeToRefs(userStore)
 
 const props = defineProps<{
   type: ModulesType
-  modules: Module[]
 }>()
 
+const localModules = ref<Module[]>([])
+
 const filteredModulst = computed(() => {
-  let modules = props.modules
+  let modules = localModules.value
 
   if (search.value) {
     modules = modules.filter((module) =>
@@ -35,15 +39,31 @@ const filteredModulst = computed(() => {
     )
   }
 
-  if (props.type === 'New') {
-    modules
-  } else if (props.type === 'My') {
-    modules = modules.filter((module) => module.userId === moduleStore.user.id)
-  } else {
-    console.log('ModuleListItem: неизвестный тип модуля')
-  }
-
   return modules
+})
+
+onMounted(async () => {
+  console.log('modules')
+  if (user.value?.id) {
+    let modules:
+      | { id: string; title: string; description: string; createdAt: Date; updatedAt: Date }[]
+      | Error
+
+    if (props.type === 'My') {
+      modules = await moduleStore.getUserModules(user.value.id)
+    } else if (props.type === 'New') {
+      modules = await moduleStore.getModules()
+    } else {
+      console.log('ModuleListItem: неизвестный тип модуля')
+      return
+    }
+
+    if (modules instanceof Error) {
+      console.error('Произошла ошибка при получении модулей:', modules)
+    } else {
+      localModules.value = modules
+    }
+  }
 })
 </script>
 
