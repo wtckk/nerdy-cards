@@ -20,6 +20,7 @@ import { ConfigService } from '@nestjs/config';
 import { ProfileService } from '../profile/profile.service';
 import { UserDto } from '../user/dtos/user.dto';
 import { plainToClass } from 'class-transformer';
+import { AuthResult } from './types/types';
 
 @Injectable()
 export class AuthService {
@@ -35,9 +36,7 @@ export class AuthService {
   /**
    * Регистрация пользователя
    */
-  async signUp(
-    userDto: RegisterUserDTO,
-  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
+  async signUp(userDto: RegisterUserDTO): Promise<AuthResult> {
     const { email, username, password } = userDto;
     const existUser = await this.usersService.getUserByEmail(email);
 
@@ -67,7 +66,7 @@ export class AuthService {
       return {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
-        user: plainToClass(UserDto, user),
+        user: tokens.user,
       };
     } catch (error) {
       throw new BadRequestException({
@@ -80,9 +79,7 @@ export class AuthService {
   /**
    * Логин пользователя
    */
-  async signIn(
-    userDto: LoginUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
+  async signIn(userDto: LoginUserDto): Promise<AuthResult> {
     const user = await this.validateUser(userDto);
 
     if (!user) {
@@ -97,7 +94,7 @@ export class AuthService {
     return {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      user: plainToClass(UserDto, user),
+      user: tokens.user,
     };
   }
 
@@ -118,9 +115,7 @@ export class AuthService {
   /**
    * Обновление refreshToken
    */
-  async refreshTokens(
-    refreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
+  async refreshTokens(refreshToken: string): Promise<AuthResult> {
     // Проверяем рефреш токен
     const userData = await this.validateRefreshToken(refreshToken);
 
@@ -156,9 +151,7 @@ export class AuthService {
   /**
    * Генерация REFRESH TOKEN и ACCESS TOKEN пользователя
    */
-  async generateRefreshToken(
-    user: User,
-  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
+  async generateRefreshToken(user: User): Promise<AuthResult> {
     try {
       // Получение секрета для refreshToken
       const refreshTokenSecret =
@@ -170,6 +163,7 @@ export class AuthService {
         email: user.email,
         role: user.role,
       };
+      // Создание refreshToken в бд
       const refreshToken = this.refreshTokenRepository.create({
         user,
         token: this.jwtService.sign(payload, {
@@ -196,11 +190,12 @@ export class AuthService {
   /**
    * Валидация рефреш токена для последуещего использования
    */
-  validateRefreshToken(token: string) {
+  async validateRefreshToken(token: string) {
     try {
       const refreshTokenSecret =
         this.configService.get<string>('JWT_REFRESH_SECRET');
-      const userData = this.jwtService.verify(token, {
+
+      const userData = await this.jwtService.verifyAsync(token, {
         secret: refreshTokenSecret,
       });
       return userData;

@@ -26,7 +26,10 @@ async function bootstrap() {
    * Использование Cookie-Parser
    */
   app.use(cookieParser());
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: 'http://localhost:5173',
+  });
   await app.listen(PORT);
 }
 
