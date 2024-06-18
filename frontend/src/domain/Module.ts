@@ -1,4 +1,4 @@
-import User from './User'
+import { Profile } from './User'
 
 type ModulesType = 'My' | 'New'
 
@@ -6,7 +6,7 @@ interface Module {
   id: string
   title: string
   description: string
-  userId: string
+  profile: Profile
   createdAt: Date
   updatedAt: Date
 }

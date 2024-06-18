@@ -5,7 +5,7 @@
     </div>
 
     <div>
-      <p>{{ card.userId }}</p>
+      <p>{{ card.profile.username }}</p>
     </div>
   </div>
 </template>
