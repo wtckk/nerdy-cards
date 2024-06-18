@@ -1,9 +1,9 @@
 import { Module } from '@/domain/Module'
-import axios from 'axios'
+import $api from '@/http'
 
 const getModules = async (): Promise<Module[] | Error> => {
   try {
-    const response = await axios.get(`/folder/all`)
+    const response = await $api.get(`/folder/all`)
     return response.data
   } catch (error) {
     console.log(error, 'Ошибка получения модулей')
@@ -17,7 +17,7 @@ const getModules = async (): Promise<Module[] | Error> => {
 
 const getUserModules = async (id: string): Promise<Module[] | Error> => {
   try {
-    const response = await axios.get(`/folder/user/${id}`)
+    const response = await $api.get(`/folder/user/${id}`)
     return response.data
   } catch (error) {
     console.log(error, 'Ошибка получения модулей')
@@ -31,7 +31,7 @@ const getUserModules = async (id: string): Promise<Module[] | Error> => {
 
 const createModule = async (newModule: object): Promise<Module | Error> => {
   try {
-    const response = await axios.post(`/folder/create`, newModule)
+    const response = await $api.post(`/folder/create`, newModule)
     return response.data
   } catch (error) {
     console.log(error, 'Ошибка создания модуля')

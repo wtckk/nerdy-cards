@@ -33,7 +33,7 @@ const password = ref('')
 
 function submit() {
   userStore.loginUser(email.value, password.value)
-  router.push('load')
+  router.push('/')
 }
 </script>
 

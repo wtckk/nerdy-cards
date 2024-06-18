@@ -1,4 +1,5 @@
 <template>
+  <h1>{{ userStore.isAuth }}</h1>
   <RouterView />
 </template>
 
@@ -11,7 +12,9 @@ import { onMounted } from 'vue'
 const userStore = useUserStore()
 
 onMounted(() => {
-  userStore.refreshToken()
+  if (localStorage.getItem('token')) {
+    userStore.checkAuth()
+  }
 })
 </script>
 

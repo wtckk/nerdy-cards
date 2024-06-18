@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item" v-if="filteredModulst.length">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
       <ModuleCard v-for="module in filteredModulst" :key="module.id" :card="module" />

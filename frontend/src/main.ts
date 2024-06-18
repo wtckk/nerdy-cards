@@ -6,16 +6,32 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { AuthResponse } from './domain/Responses'
 
 const app = createApp(App)
 
-axios.defaults.baseURL = 'http://localhost:3000/api'
+// axios.interceptors.response.use(
+//   (config) => {
+//     return config
+//   },
+//   async (error) => {
+//     const originalRequest = error.config
 
-axios.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-  config.headers['Content-Type'] = 'application/json'
-  return config
-})
+//     if (error.response.status == 401 && error.config && !error.config._isRetry) {
+//       originalRequest._isRetry = true
+//       try {
+//         const response = await axios.post<AuthResponse>(`${API_URL}/auth/refresh-tokens`, {
+//           withCredentials: true
+//         })
+//         localStorage.setItem('token', response.data.accessToken)
+//         return axios.request(originalRequest)
+//       } catch (e) {
+//         console.log('не авторизован')
+//       }
+//     }
+//     throw error
+//   }
+// )
 
 app.use(createPinia())
 app.use(router)
