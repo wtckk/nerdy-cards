@@ -1,5 +1,4 @@
 <template>
-  <h1>{{ userStore.isAuth }}</h1>
   <RouterView />
 </template>
 

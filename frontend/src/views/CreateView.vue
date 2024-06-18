@@ -35,8 +35,9 @@ const moduleStore = useModuleStore()
 const title = ref('')
 const description = ref('')
 
-function submit() {
-  moduleStore.createModule(title.value, description.value)
+async function submit() {
+  await moduleStore.createModule(title.value, description.value)
+
   router.push('/')
 }
 </script>

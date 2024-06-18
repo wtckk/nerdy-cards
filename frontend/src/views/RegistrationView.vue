@@ -39,8 +39,8 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 
-function submit() {
-  userStore.regUser(username.value, email.value, password.value)
+async function submit() {
+  await userStore.regUser(username.value, email.value, password.value)
   router.push('/')
 }
 </script>

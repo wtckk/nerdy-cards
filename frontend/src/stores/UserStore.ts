@@ -79,7 +79,7 @@ export const useUserStore = defineStore('userStore', {
     async checkAuth() {
       this.isLoading = true
       try {
-        const response = await axios.post<AuthResponse>(`${API_URL}/auth/refresh-tokens`, {
+        const response = await axios.get<AuthResponse>(`${API_URL}/auth/refresh-tokens`, {
           withCredentials: true
         })
         console.log('refresh', response)

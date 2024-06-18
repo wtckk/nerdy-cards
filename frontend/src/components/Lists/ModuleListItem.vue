@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUpdated } from 'vue'
 
 import { Module, ModulesType } from '@/domain/Module'
 
@@ -51,6 +51,7 @@ onMounted(async () => {
       modules = await moduleStore.getUserModules(user.value.id)
     } else if (props.type === 'New') {
       modules = await moduleStore.getModules()
+      console.log(modules)
     } else {
       console.log('ModuleListItem: неизвестный тип модуля')
       return

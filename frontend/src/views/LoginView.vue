@@ -31,8 +31,9 @@ const userStore = useUserStore()
 const email = ref('')
 const password = ref('')
 
-function submit() {
-  userStore.loginUser(email.value, password.value)
+async function submit() {
+  await userStore.loginUser(email.value, password.value)
+
   router.push('/')
 }
 </script>
