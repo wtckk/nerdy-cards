@@ -59,7 +59,6 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Обновление токена' })
-  @UseGuards(JwtAuthGuard)
   @Post('refresh-tokens')
   async refreshTokens(@Req() req: Request, @Res() res: Response) {
     const { refreshToken } = req.cookies; // Получение рефреш токена из куков
@@ -73,6 +72,7 @@ export class AuthController {
     return res.json({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      user: tokens.user,
     });
   }
 

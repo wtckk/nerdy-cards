@@ -120,7 +120,7 @@ export class AuthService {
    */
   async refreshTokens(
     refreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
     // Проверяем рефреш токен
     const userData = await this.validateRefreshToken(refreshToken);
 
@@ -158,7 +158,7 @@ export class AuthService {
    */
   async generateRefreshToken(
     user: User,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: UserDto }> {
     try {
       // Получение секрета для refreshToken
       const refreshTokenSecret =
@@ -179,7 +179,12 @@ export class AuthService {
       });
       await this.refreshTokenRepository.save(refreshToken);
       const accessToken = this.jwtService.sign(payload);
-      return { accessToken, refreshToken: refreshToken.token };
+
+      return {
+        accessToken,
+        refreshToken: refreshToken.token,
+        user: plainToClass(UserDto, user),
+      };
     } catch (error) {
       throw new UnauthorizedException({
         message: 'Пользователь не авторизован',
