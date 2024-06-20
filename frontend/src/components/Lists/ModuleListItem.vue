@@ -43,7 +43,6 @@ const filteredModulst = computed(() => {
 })
 
 onMounted(async () => {
-  console.log('modules')
   if (user.value?.id) {
     let modules: Module[] | Error
 
@@ -51,7 +50,6 @@ onMounted(async () => {
       modules = await moduleStore.getUserModules(user.value.id)
     } else if (props.type === 'New') {
       modules = await moduleStore.getModules()
-      console.log(modules)
     } else {
       console.log('ModuleListItem: неизвестный тип модуля')
       return

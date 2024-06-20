@@ -9,6 +9,8 @@ interface Module {
   profile: Profile
   createdAt: Date
   updatedAt: Date
+
+  cards?: Card[]
 }
 
 interface Card {

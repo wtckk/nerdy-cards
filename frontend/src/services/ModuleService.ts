@@ -29,6 +29,20 @@ const getUserModules = async (id: string): Promise<Module[] | Error> => {
   }
 }
 
+const getModuleById = async (id: string): Promise<Module | Error> => {
+  try {
+    const response = await $api.get(`/folder/get-by-id/${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error, 'Ошибка получения модуля пользователя')
+    if (error instanceof Error) {
+      return error
+    } else {
+      return new Error('Неизвестная ошибка')
+    }
+  }
+}
+
 const createModule = async (newModule: object): Promise<Module | Error> => {
   try {
     const response = await $api.post(`/folder/create`, newModule)
@@ -46,6 +60,7 @@ const createModule = async (newModule: object): Promise<Module | Error> => {
 const ModuleService = {
   getModules,
   getUserModules,
+  getModuleById,
 
   createModule
 }

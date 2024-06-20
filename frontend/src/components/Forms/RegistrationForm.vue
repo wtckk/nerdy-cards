@@ -41,11 +41,12 @@ const errorMessage = ref('')
 
 async function submit() {
   if (username.value && email.value && password.value) {
-    try {
-      await userStore.regUser(username.value, email.value, password.value)
-      router.push('/')
-    } catch (error) {
+    const response = await userStore.regUser(username.value, email.value, password.value)
+
+    if (response instanceof Error) {
       errorMessage.value = 'Данные неверны. Пожалуйста, попробуйте снова.'
+    } else {
+      router.push('/')
     }
   } else {
     errorMessage.value = 'заполните все поля пожалуйста'
@@ -62,6 +63,5 @@ form {
 
 .error-message {
   color: red;
-  margin-top: 0;
 }
 </style>

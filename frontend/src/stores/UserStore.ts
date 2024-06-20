@@ -38,8 +38,8 @@ export const useUserStore = defineStore('userStore', {
         this.token = response.accessToken
         this.isAuth = true
         this.user = response.user
-        console.log('user', this.token)
       }
+      return response
     },
 
     async regUser(username: string, email: string, password: string) {
@@ -60,6 +60,8 @@ export const useUserStore = defineStore('userStore', {
         this.isAuth = true
         this.user = response.user
       }
+
+      return response
     },
 
     async logout() {
@@ -82,10 +84,8 @@ export const useUserStore = defineStore('userStore', {
         const response = await axios.get<AuthResponse>(`${API_URL}/auth/refresh-tokens`, {
           withCredentials: true
         })
-        console.log('refresh', response)
 
         localStorage.setItem('token', response.data.accessToken)
-        console.log('dfsfe')
 
         this.isAuth = true
         this.user = response.data.user

@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import ModuleService from '@/services/ModuleService'
 
 import { Card, Module } from '@/domain/Module'
-import { User } from '@/domain/User'
 
 interface State {
   modules: Module[]
@@ -44,13 +43,30 @@ export const useModuleStore = defineStore('moduleStore', {
           return this.myModules
         }
       }
+    },
+    getModuleById() {
+      return async (moduleId: string) => {
+        const response = await ModuleService.getModuleById(moduleId)
+
+        if (response instanceof Error) {
+          return new Error('Неизвестная ошибка')
+        } else {
+          const cards = response.cards
+          if (cards) {
+            this.cards.push(...cards)
+          }
+
+          return response
+        }
+      }
     }
   },
   actions: {
-    async createModule(title: string, description: string) {
+    async createModule(title: string, description: string, cards: Card[]) {
       const newModule = {
         title: title,
-        description: description
+        description: description,
+        cards: cards
       }
 
       const response = await ModuleService.createModule(newModule)
@@ -59,11 +75,10 @@ export const useModuleStore = defineStore('moduleStore', {
         console.log('Система', response.message)
       } else {
         this.modules.push(response)
+        this.cards.push(...cards)
       }
-    },
 
-    async saveCards(cards: Card[]) {
-      this.cards = cards
+      return response
     }
   }
 })

@@ -16,7 +16,6 @@
     />
 
     <CreateModuleCards :cards="cards" @add-card="addCard" @delite-card="deliteCard" />
-    {{ cards }}
 
     <button type="submit" class="btn">Создать</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -77,20 +76,19 @@ async function submit() {
     }
   }
 
-  if (!title.value || !description.value) {
+  if (!title.value) {
     isFiff = false
     errorMessage.value = 'Заполните все поля, пожалуйста.'
     return
   }
 
   if (isFiff) {
-    try {
-      await moduleStore.createModule(title.value, description.value)
-      await moduleStore.saveCards(cards.value)
+    const response = await moduleStore.createModule(title.value, description.value, cards.value)
 
-      router.push('/')
-    } catch (error) {
+    if (response instanceof Error) {
       errorMessage.value = 'Произошла ошибка при создании модуля. Пожалуйста, попробуйте снова.'
+    } else {
+      router.push('/')
     }
   }
 }
@@ -105,6 +103,5 @@ form {
 
 .error-message {
   color: red;
-  margin-top: 0;
 }
 </style>
