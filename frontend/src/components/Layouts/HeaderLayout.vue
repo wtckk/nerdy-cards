@@ -19,13 +19,13 @@
         <img src="/icons/notification.svg" alt="notification" />
       </button>
 
-      <RouterLink to="login">
+      <RouterLink v-if="!isAuth" to="login">
         <button class="btn-circle">
           <img src="/icons/account.svg" alt="account" />
         </button>
       </RouterLink>
 
-      <button v-if="isAuth" @click="userStore.logout" class="btn-circle">
+      <button v-else @click="userStore.logout" class="btn-circle">
         <img src="/icons/logout.svg" alt="account" />
       </button>
     </div>

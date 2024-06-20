@@ -11,7 +11,9 @@ import { onMounted } from 'vue'
 const userStore = useUserStore()
 
 onMounted(() => {
-  userStore.refreshToken()
+  if (localStorage.getItem('token')) {
+    userStore.checkAuth()
+  }
 })
 </script>
 

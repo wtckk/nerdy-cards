@@ -11,4 +11,11 @@ interface Module {
   updatedAt: Date
 }
 
-export { Module, ModulesType }
+interface Card {
+  id: string
+  term: string
+  definition: string
+  position: number
+}
+
+export { Module, Card, ModulesType }

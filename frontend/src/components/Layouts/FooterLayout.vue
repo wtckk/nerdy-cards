@@ -21,6 +21,7 @@
 <style scoped>
 footer {
   color: var(--text-purple);
+  background-color: var(--dark-purple);
 }
 
 .footer-block {
@@ -28,7 +29,6 @@ footer {
   justify-content: space-between;
   align-items: center;
 
-  background-color: var(--dark-purple);
   padding: 36px 50px;
 }
 
@@ -52,7 +52,7 @@ footer {
 
 .footer-tag {
   text-align: center;
-  padding: 24px 0;
-  font-size: 24px;
+  padding: 12px 0;
+  font-size: 14px;
 }
 </style>

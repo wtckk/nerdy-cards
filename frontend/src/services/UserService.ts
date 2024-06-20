@@ -1,14 +1,11 @@
-import { LoginUser, RegistrationUser, User } from '@/domain/User'
-import axios from 'axios'
+import $api from '@/http'
 
-interface AuthResponse {
-  accessToken: string
-  user: User
-}
+import { AuthResponse } from '@/domain/Responses'
+import { LoginUser, RegistrationUser } from '@/domain/User'
 
 const loginUser = async (user: LoginUser): Promise<AuthResponse | Error> => {
   try {
-    const response = await axios.post<AuthResponse>(`/auth/login`, user)
+    const response = await $api.post<AuthResponse>(`/auth/login`, user)
 
     return response.data
   } catch (error) {
@@ -24,7 +21,7 @@ const loginUser = async (user: LoginUser): Promise<AuthResponse | Error> => {
 
 const regUser = async (user: RegistrationUser): Promise<AuthResponse | Error> => {
   try {
-    const response = await axios.post<AuthResponse>(`/auth/signup`, user)
+    const response = await $api.post<AuthResponse>(`/auth/signup`, user)
 
     return response.data
   } catch (error) {
@@ -40,7 +37,7 @@ const regUser = async (user: RegistrationUser): Promise<AuthResponse | Error> =>
 
 const logout = async (): Promise<object | Error> => {
   try {
-    const response = await axios.post(`/auth/logout`)
+    const response = await $api.post(`/auth/logout`)
 
     return response.data
   } catch (error) {

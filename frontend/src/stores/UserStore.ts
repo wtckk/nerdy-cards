@@ -2,18 +2,23 @@ import { defineStore } from 'pinia'
 
 import { LoginUser, RegistrationUser, User } from '@/domain/User'
 import UserService from '@/services/UserService'
+import axios from 'axios'
+import { AuthResponse } from '@/domain/Responses'
+import { API_URL } from '@/http'
 
 interface State {
   user: User | null
   token: string | ''
   isAuth: Boolean
+  isLoading: Boolean
 }
 
 export const useUserStore = defineStore('userStore', {
   state: (): State => ({
     user: null,
     token: '',
-    isAuth: false
+    isAuth: false,
+    isLoading: false
   }),
 
   actions: {
@@ -29,12 +34,11 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
-        localStorage.setItem('user', JSON.stringify(response.user))
 
         this.token = response.accessToken
         this.isAuth = true
         this.user = response.user
-        console.log('user')
+        console.log('user', this.token)
       }
     },
 
@@ -51,7 +55,6 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
-        localStorage.setItem('user', JSON.stringify(response.user))
 
         this.token = response.accessToken
         this.isAuth = true
@@ -66,7 +69,6 @@ export const useUserStore = defineStore('userStore', {
         console.log('Система', response.message)
       } else {
         localStorage.removeItem('token')
-        localStorage.removeItem('user')
 
         this.token = ''
         this.isAuth = false
@@ -74,17 +76,23 @@ export const useUserStore = defineStore('userStore', {
       }
     },
 
-    async refreshToken() {
-      console.log(1)
+    async checkAuth() {
+      this.isLoading = true
+      try {
+        const response = await axios.get<AuthResponse>(`${API_URL}/auth/refresh-tokens`, {
+          withCredentials: true
+        })
+        console.log('refresh', response)
 
-      const token = localStorage.getItem('token')
-      const newObj = localStorage.getItem('user')
-      const user = JSON.parse(String(newObj))
-      if (token) {
-        this.token = token
+        localStorage.setItem('token', response.data.accessToken)
+        console.log('dfsfe')
+
         this.isAuth = true
-        this.user = user
-        console.log(this.user)
+        this.user = response.data.user
+      } catch (error) {
+        console.log(error, 'Ошибка проверки авторизации')
+      } finally {
+        this.isLoading = false
       }
     }
   }

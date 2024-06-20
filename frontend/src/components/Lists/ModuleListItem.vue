@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item" v-if="filteredModulst.length">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
       <ModuleCard v-for="module in filteredModulst" :key="module.id" :card="module" />
@@ -51,6 +51,7 @@ onMounted(async () => {
       modules = await moduleStore.getUserModules(user.value.id)
     } else if (props.type === 'New') {
       modules = await moduleStore.getModules()
+      console.log(modules)
     } else {
       console.log('ModuleListItem: неизвестный тип модуля')
       return

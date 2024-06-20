@@ -3,6 +3,7 @@ import {
   Controller,
   HttpStatus,
   Post,
+  Get,
   Req,
   Res,
   UseGuards,
@@ -59,7 +60,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Обновление токена' })
-  @Post('refresh-tokens')
+  @Get('refresh-tokens')
   async refreshTokens(@Req() req: Request, @Res() res: Response) {
     const { refreshToken } = req.cookies; // Получение рефреш токена из куков
     const tokens = await this.authService.refreshTokens(refreshToken);
