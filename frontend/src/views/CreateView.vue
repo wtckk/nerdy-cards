@@ -1,51 +1,11 @@
 <template>
   <FormLayout>
-    <form @submit.prevent="submit">
-      <input
-        class="input"
-        type="text"
-        name="title"
-        placeholder="Название модуля..."
-        v-model="title"
-      />
-      <input
-        class="input"
-        type="text"
-        name="description"
-        placeholder="Описание модуля..."
-        v-model="description"
-      />
-
-      <button type="submit" class="btn">Создать</button>
-    </form>
+    <CreateModuleForm />
   </FormLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
 import FormLayout from '@/components/Layouts/FormLayout.vue'
 
-import { useModuleStore } from '@/stores/ModulesStore'
-
-import router from '@/router'
-
-const moduleStore = useModuleStore()
-
-const title = ref('')
-const description = ref('')
-
-async function submit() {
-  await moduleStore.createModule(title.value, description.value)
-
-  router.push('/')
-}
+import CreateModuleForm from '@/components/Forms/CreateModuleForm.vue'
 </script>
-
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-</style>

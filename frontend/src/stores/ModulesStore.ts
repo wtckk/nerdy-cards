@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 
 import ModuleService from '@/services/ModuleService'
 
-import { Module } from '@/domain/Module'
+import { Card, Module } from '@/domain/Module'
 import { User } from '@/domain/User'
 
 interface State {
   modules: Module[]
   myModules: Module[]
+  cards: Card[]
   search: string
 }
 
@@ -15,6 +16,7 @@ export const useModuleStore = defineStore('moduleStore', {
   state: (): State => ({
     modules: [],
     myModules: [],
+    cards: [],
     search: ''
   }),
   getters: {
@@ -58,6 +60,10 @@ export const useModuleStore = defineStore('moduleStore', {
       } else {
         this.modules.push(response)
       }
+    },
+
+    async saveCards(cards: Card[]) {
+      this.cards = cards
     }
   }
 })
