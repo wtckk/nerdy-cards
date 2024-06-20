@@ -57,6 +57,11 @@ export class FolderService {
     const folder = await this.folderRepository.findOne({
       where: { id: id },
       relations: ['profile', 'cards'],
+      order: {
+        cards: {
+          position: 'asc',
+        },
+      },
     });
     if (!folder) {
       throw new BadRequestException({
