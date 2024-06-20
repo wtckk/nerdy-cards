@@ -11,6 +11,8 @@ import { FolderModule } from './folder/folder.module';
 import { Folder } from './folder/entites/folder.entity';
 import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/entities/profile.entity';
+import { CardModule } from './card/card.module';
+import { Card } from './card/entites/card.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { Profile } from './profile/entities/profile.entity';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [User, RefreshToken, Folder, Profile],
+      entities: [User, RefreshToken, Folder, Profile, Card],
       synchronize: true,
       logging: ['query', 'error'],
     }),
@@ -33,6 +35,7 @@ import { Profile } from './profile/entities/profile.entity';
     AuthModule,
     FolderModule,
     ProfileModule,
+    CardModule,
   ],
   controllers: [],
   providers: [],

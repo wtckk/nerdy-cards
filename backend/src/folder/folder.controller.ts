@@ -23,11 +23,6 @@ import { UpdateFolderDto } from './dtos/update-folder.dto';
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Post('create')
-  createFolder(@GetUser() user: UserDto, @Body() dto: CreateFolderDto) {
-    return this.folderService.createFolder(dto, user.id);
-  }
-
   @Get('all')
   getAllFolders() {
     return this.folderService.getAllFolder();
@@ -36,6 +31,16 @@ export class FolderController {
   @Get('user/:id')
   getAllFolderUser(@Param('id') userId: string) {
     return this.folderService.getFolderByUser(userId);
+  }
+
+  @Post('create')
+  createFolder(@GetUser() user: UserDto, @Body() dto: CreateFolderDto) {
+    return this.folderService.createFolder(dto, user.id);
+  }
+
+  @Get('get-by-id/:id')
+  getFolderById(@Param('id') id: string) {
+    return this.folderService.getFolderById(id);
   }
 
   @Put('update/:id')

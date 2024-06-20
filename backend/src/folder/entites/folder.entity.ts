@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Profile } from '../../profile/entities/profile.entity';
+import { Card } from '../../card/entites/card.entity';
 
 /**
  * Модель папок карточек в базе данных
@@ -34,4 +36,7 @@ export class Folder {
   })
   @JoinColumn({ name: 'profileId' })
   profile: Profile;
+
+  @OneToMany(() => Card, (card) => card.folder)
+  cards: Card[];
 }

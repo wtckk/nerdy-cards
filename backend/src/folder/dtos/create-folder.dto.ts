@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { CreateCardDto } from '../../card/dtos/create-card.dto';
 
 /**
  * DTO для создания FOLDER
@@ -17,4 +18,10 @@ export class CreateFolderDto {
     description: 'Описание предназначения паки',
   })
   description?: string;
+
+  @ApiProperty({
+    description: 'Карточки модуля',
+    type: [CreateCardDto],
+  })
+  cards: CreateCardDto[];
 }
