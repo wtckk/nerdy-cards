@@ -17,6 +17,7 @@ interface Profile {
   group?: string
   university?: string
   folders?: Module[]
+  avatarUrl?: string
 }
 
 interface LoginUser {

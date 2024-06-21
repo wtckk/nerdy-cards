@@ -2,12 +2,17 @@
   <RouterLink :to="`/modules/${card.id}`">
     <div class="card">
       <div class="card-top">
-        <p>{{ card.title }}</p>
+        <p>
+          {{ card.title }}
+          <br />
+          {{ card.cardCount }}
+        </p>
 
         <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
       </div>
 
       <div>
+        <img :src="profile.avatarUrl" height="30px" alt="" />
         <p>{{ profile.username }}</p>
       </div>
     </div>

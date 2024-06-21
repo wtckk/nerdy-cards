@@ -3,7 +3,9 @@
     <div class="profile">
       <div class="profile-top">
         <div class="profile-info">
-          <img src="/ava.png" alt="" />
+          <img :src="profile?.avatarUrl" alt="" />
+          <input type="file" @change="onFileSelected" />
+          <button @click="uploadAvatar" :disabled="!selectedFile">Загрузить</button>
 
           <strong>Данные пользователя</strong>
 
@@ -76,6 +78,8 @@ import ModuleCard from '@/components/Cards/ModuleCard.vue'
 
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
+import $api from '@/http'
+import axios from 'axios'
 
 const userStore = useUserStore()
 const { profile } = storeToRefs(userStore)
@@ -88,6 +92,45 @@ const editedProfile = reactive({
   group: '',
   university: ''
 })
+
+const selectedFile = ref<File | null>(null)
+const avatarUrl = ref<string | null>(null)
+const uploadError = ref<string | null>(null)
+
+const onFileSelected = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  selectedFile.value = target.files ? target.files[0] : null
+}
+
+const uploadAvatar = async () => {
+  if (!selectedFile.value) {
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('avatar', selectedFile.value) // 'avatar' - имя поля в запросе
+  console.log(formData)
+
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/api/profile/avatar/${profileId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMGZjMzlkYi02MGMwLTRlNDgtOTI4Zi02MzU4NGE5ZTYyZjgiLCJ1c2VybmFtZSI6InphaGFyIiwiZW1haWwiOiJ6YWhhcnIzOXp6b29AbWFpbC5ydSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzE4OTk0MTY4LCJleHAiOjE3MTkwMDEzNjh9.x6YtjPLLW2Gt-6Yntj-9yK4Wh36XFcnVjI3vt8OKpYc`
+        }
+      }
+    )
+
+    avatarUrl.value = response.data // Предполагаем, что сервер возвращает URL аватара
+    uploadError.value = null
+  } catch (error: any) {
+    console.error(error)
+    uploadError.value = error.response?.data?.message || 'Ошибка загрузки аватара'
+    avatarUrl.value = null
+  }
+}
 
 function editProfile() {
   isEditing.value = true
