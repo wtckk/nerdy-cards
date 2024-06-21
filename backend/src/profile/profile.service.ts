@@ -11,12 +11,15 @@ import { User } from '../user/entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { createSuccessResponse } from '../utils/utils';
+import { S3Service } from '../s3/s3.service';
+import { AVATAR_FOLDER } from '../common/constants/s3.constants';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+    private readonly s3Service: S3Service,
   ) {}
 
   /**
@@ -97,5 +100,23 @@ export class ProfileService {
     await this.profileRepository.save({ ...profile, ...dto });
 
     return createSuccessResponse('Профиль успешно обновлен');
+  }
+
+  async updateAvatar(
+    profileId: string,
+    file: Express.Multer.File,
+  ): Promise<any> {
+    // Путь для хранения авторки пользователя
+    const filePath = `${AVATAR_FOLDER}/${profileId}/`;
+
+    const s3Response = await this.s3Service.uploadAvatar(file.buffer, filePath);
+
+    const profile = await this.getProfile(profileId);
+
+    await this.profileRepository.save({
+      ...profile,
+      avatarUrl: s3Response.Location,
+    });
+    return s3Response.Location;
   }
 }
