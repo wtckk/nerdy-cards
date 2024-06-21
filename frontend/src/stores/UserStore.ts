@@ -35,6 +35,18 @@ export const useUserStore = defineStore('userStore', {
           return this.profile
         }
       }
+    },
+    getUserProfile() {
+      return async (userId: string) => {
+        const response = await UserService.getUserProfile(userId)
+
+        if (response instanceof Error) {
+          return new Error('Неизвестная ошибка')
+        } else {
+          this.profile = response
+          return this.profile
+        }
+      }
     }
   },
 
@@ -111,6 +123,18 @@ export const useUserStore = defineStore('userStore', {
       } finally {
         this.isLoading = false
       }
+    },
+
+    async updatedProfile(profileId: string, newProfile: object) {
+      const response = await UserService.updatedProfile(profileId, newProfile)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        return
+      }
+
+      return response
     }
   }
 })

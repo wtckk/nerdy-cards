@@ -8,7 +8,7 @@
       </div>
 
       <div>
-        <p>{{ card.profile.username }}</p>
+        <p>{{ profile.username }}</p>
       </div>
     </div>
   </RouterLink>
@@ -16,10 +16,12 @@
 
 <script setup lang="ts">
 import { Module } from '@/domain/Module'
+import { Profile } from '@/domain/User'
 import { RouterLink } from 'vue-router'
 
 defineProps<{
   card: Module
+  profile: Profile
 }>()
 </script>
 

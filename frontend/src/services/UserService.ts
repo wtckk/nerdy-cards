@@ -1,6 +1,6 @@
 import $api from '@/http'
 
-import { AuthResponse } from '@/domain/Responses'
+import { AuthResponse, Success } from '@/domain/Responses'
 import { LoginUser, Profile, RegistrationUser } from '@/domain/User'
 
 const getProfile = async (profileId: string): Promise<Profile | Error> => {
@@ -83,13 +83,29 @@ const logout = async (): Promise<object | Error> => {
   }
 }
 
+const updatedProfile = async (profileId: string, newProfile: object): Promise<Success | Error> => {
+  try {
+    const response = await $api.put(`/profile/update/${profileId}`, newProfile)
+    return response.data
+  } catch (error) {
+    console.log(error, 'Ошибка изменения профиля')
+    if (error instanceof Error) {
+      return error
+    } else {
+      return new Error('Неизвестная ошибка')
+    }
+  }
+}
+
 const UserService = {
   getProfile,
   getUserProfile,
 
   regUser,
   loginUser,
-  logout
+  logout,
+
+  updatedProfile
 }
 
 export default UserService

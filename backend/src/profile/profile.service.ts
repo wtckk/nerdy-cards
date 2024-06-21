@@ -45,7 +45,11 @@ export class ProfileService {
    * Получение профиля пользователя по ID профиля
    */
   async getProfile(id: string): Promise<Profile> {
-    const profile = await this.profileRepository.findOneBy({ id });
+    const profile = await this.profileRepository.findOne({
+      where: { id },
+      relations: ['folders'],
+    });
+
     if (!profile) {
       throw new NotFoundException({
         message: 'ID не существует',
@@ -54,7 +58,6 @@ export class ProfileService {
     }
     return profile;
   }
-
   /**
    * Получение профиля по userID
    */
