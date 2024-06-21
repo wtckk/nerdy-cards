@@ -77,3 +77,7 @@ input {
 .input {
   background-color: #a78bfa;
 }
+
+.error-message {
+  color: red;
+}

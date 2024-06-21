@@ -3,7 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import CreateView from '@/views/CreateView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
-import ModuleView from '@/views/ModuleView.vue'
+import ModuleView from '@/views/ModulePage/ModuleView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,10 @@ const router = createRouter({
       path: '/create',
       name: 'create',
       component: CreateView
+    },
+    {
+      path: '/profile/:id',
+      component: ProfileView
     }
   ]
 })

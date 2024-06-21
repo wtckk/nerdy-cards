@@ -11,6 +11,7 @@ interface Profile {
   id: string
   userId: string
   username: string
+  createdAt: Date
 
   group?: string
   university?: string
