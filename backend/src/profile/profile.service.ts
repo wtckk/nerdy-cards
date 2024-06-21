@@ -11,12 +11,15 @@ import { User } from '../user/entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { createSuccessResponse } from '../utils/utils';
+import { S3Service } from '../s3/s3.service';
+import { AVATAR_FOLDER } from '../common/constants/s3.constants';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+    private readonly s3Service: S3Service,
   ) {}
 
   /**
@@ -45,7 +48,11 @@ export class ProfileService {
    * Получение профиля пользователя по ID профиля
    */
   async getProfile(id: string): Promise<Profile> {
-    const profile = await this.profileRepository.findOneBy({ id });
+    const profile = await this.profileRepository.findOne({
+      where: { id },
+      relations: ['folders'],
+    });
+
     if (!profile) {
       throw new NotFoundException({
         message: 'ID не существует',
@@ -94,5 +101,24 @@ export class ProfileService {
     await this.profileRepository.save({ ...profile, ...dto });
 
     return createSuccessResponse('Профиль успешно обновлен');
+  }
+
+  async updateAvatar(
+    profileId: string,
+    file: Express.Multer.File,
+  ): Promise<SuccessResponseDto> {
+    console.log(file.buffer);
+    // Путь для хранения авторки пользователя
+    const filePath = `${AVATAR_FOLDER}/${profileId}/${file.originalname}`;
+
+    const s3Response = await this.s3Service.uploadAvatar(file.buffer, filePath);
+
+    const profile = await this.getProfile(profileId);
+
+    await this.profileRepository.save({
+      ...profile,
+      avatarUrl: s3Response.Location,
+    });
+    return createSuccessResponse('Аватар успешно загружен');
   }
 }

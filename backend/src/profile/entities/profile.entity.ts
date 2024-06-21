@@ -22,6 +22,9 @@ export class Profile {
   username: string;
 
   @Column({ nullable: true })
+  avatarUrl?: string;
+
+  @Column({ nullable: true })
   group?: string;
 
   @Column({ nullable: true })

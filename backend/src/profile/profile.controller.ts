@@ -1,11 +1,28 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { Profile } from './entities/profile.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Профиль пользователя')
 @ApiBearerAuth()
@@ -39,5 +56,26 @@ export class ProfileController {
     @Body() dto: UpdateProfileDto,
   ): Promise<SuccessResponseDto> {
     return this.profileService.updateProfile(profileId, dto);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Post('avatar/:profileId')
+  updateAvatar(
+    @Param('profileId') profileId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<SuccessResponseDto> {
+    return this.profileService.updateAvatar(profileId, file);
   }
 }
