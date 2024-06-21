@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
@@ -9,15 +9,17 @@ export class CreateCardDto {
     example: 'Английский',
     description: 'Термин',
   })
-  @IsNotEmpty()
-  term: string;
+  @IsString()
+  @IsOptional()
+  term?: string;
 
   @ApiProperty({
     example: 'English',
     description: 'Определение термина',
   })
-  @IsNotEmpty()
-  definition: string;
+  @IsString()
+  @IsOptional()
+  definition?: string;
 
   @ApiProperty({
     example: '1',

@@ -20,7 +20,9 @@ import { ConfigService } from '@nestjs/config';
 import { ProfileService } from '../profile/profile.service';
 import { UserDto } from '../user/dtos/user.dto';
 import { plainToClass } from 'class-transformer';
-import { AuthResult } from './types/types';
+import { AuthResult } from '../utils/types/auth-result.types';
+import { createSuccessResponse } from '../utils/utils';
+import { SuccessResponseDto } from '../utils/response.dto';
 
 @Injectable()
 export class AuthService {
@@ -101,9 +103,10 @@ export class AuthService {
   /**
    * Выход пользователя
    */
-  async logout(refreshToken: string): Promise<void> {
+  async logout(refreshToken: string): Promise<SuccessResponseDto> {
     try {
       await this.refreshTokenRepository.delete({ token: refreshToken });
+      return createSuccessResponse('Успешный выход');
     } catch (error) {
       throw new BadRequestException({
         message: 'Ошибка при удаление токена',
@@ -190,7 +193,7 @@ export class AuthService {
   /**
    * Валидация рефреш токена для последуещего использования
    */
-  async validateRefreshToken(token: string) {
+  async validateRefreshToken(token: string): Promise<UserDto | null> {
     try {
       const refreshTokenSecret =
         this.configService.get<string>('JWT_REFRESH_SECRET');

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  HttpStatus,
   Post,
   Get,
   Req,
@@ -14,7 +13,8 @@ import { RegisterUserDTO } from '../user/dtos/register.dto';
 import { Request, Response } from 'express';
 import { LoginUserDto } from '../user/dtos/login.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { UserDto } from '../user/dtos/user.dto';
+import { SuccessResponseDto } from '../utils/response.dto';
+import { AuthResult } from '../utils/types/auth-result.types';
 
 @ApiTags('Аунтефикация')
 @ApiBearerAuth()
@@ -27,7 +27,7 @@ export class AuthController {
   async signUp(
     @Body() registerDto: RegisterUserDTO,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ accessToken: string; user: UserDto }> {
+  ): Promise<AuthResult> {
     const { accessToken, refreshToken, user } =
       await this.authService.signUp(registerDto);
 
@@ -44,10 +44,7 @@ export class AuthController {
   async login(
     @Body() userDto: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{
-    accessToken: string;
-    user: UserDto;
-  }> {
+  ): Promise<AuthResult> {
     const { accessToken, refreshToken, user } =
       await this.authService.signIn(userDto);
 
@@ -80,15 +77,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Удаление refresh токена' })
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<SuccessResponseDto> {
     const { refreshToken } = req.cookies; // Получение рефреш токена из куков
     res.clearCookie('refreshToken'); // Очищение куков
 
-    await this.authService.logout(refreshToken);
-
-    return {
-      message: 'Успешный выход',
-      status: HttpStatus.OK,
-    };
+    return await this.authService.logout(refreshToken);
   }
 }

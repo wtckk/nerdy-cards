@@ -9,6 +9,8 @@ import { Profile } from './entities/profile.entity';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { SuccessResponseDto } from '../utils/response.dto';
+import { createSuccessResponse } from '../utils/utils';
 
 @Injectable()
 export class ProfileService {
@@ -20,7 +22,7 @@ export class ProfileService {
   /**
    * Создание профиля
    */
-  async createProfile(user: User) {
+  async createProfile(user: User): Promise<Profile> {
     const profile = this.profileRepository.create({
       username: user.username,
       user,
@@ -31,7 +33,7 @@ export class ProfileService {
   /**
    * Получение всех профилей (ADMINS)
    */
-  async getAllProfiles() {
+  async getAllProfiles(): Promise<Profile[]> {
     const profiles = await this.profileRepository.find({
       relations: ['user'],
     });
@@ -41,7 +43,7 @@ export class ProfileService {
   /**
    * Получение профиля пользователя по ID профиля
    */
-  async getProfile(id: string) {
+  async getProfile(id: string): Promise<Profile> {
     const profile = await this.profileRepository.findOneBy({ id });
     if (!profile) {
       throw new NotFoundException({
@@ -55,7 +57,7 @@ export class ProfileService {
   /**
    * Получение профиля по userID
    */
-  async getProfileByUserId(userId: string) {
+  async getProfileByUserId(userId: string): Promise<Profile> {
     const profile = await this.profileRepository.findOne({
       where: {
         user: {
@@ -76,7 +78,10 @@ export class ProfileService {
   /**
    * Обновление данных профиля
    */
-  async updateProfile(id: string, dto: UpdateProfileDto) {
+  async updateProfile(
+    id: string,
+    dto: UpdateProfileDto,
+  ): Promise<SuccessResponseDto> {
     const profile = await this.getProfile(id);
 
     if (!profile) {
@@ -87,9 +92,6 @@ export class ProfileService {
     }
     await this.profileRepository.save({ ...profile, ...dto });
 
-    return {
-      message: 'Профиль успешно обновлен',
-      status: HttpStatus.OK,
-    };
+    return createSuccessResponse('Профиль успешно обновлен');
   }
 }

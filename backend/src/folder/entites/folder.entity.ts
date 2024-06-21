@@ -31,6 +31,9 @@ export class Folder {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ default: false })
+  isPublic: boolean;
+
   @ManyToOne(() => Profile, (profile) => profile.folders, {
     onDelete: 'CASCADE',
   })

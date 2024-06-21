@@ -5,6 +5,6 @@ import { UserDto } from '../../user/dtos/user.dto';
  */
 export type AuthResult = {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
   user: UserDto;
 };
