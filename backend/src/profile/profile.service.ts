@@ -106,10 +106,9 @@ export class ProfileService {
   async updateAvatar(
     profileId: string,
     file: Express.Multer.File,
-  ): Promise<SuccessResponseDto> {
-    console.log(file.buffer);
+  ): Promise<any> {
     // Путь для хранения авторки пользователя
-    const filePath = `${AVATAR_FOLDER}/${profileId}/${file.originalname}`;
+    const filePath = `${AVATAR_FOLDER}/${profileId}/`;
 
     const s3Response = await this.s3Service.uploadAvatar(file.buffer, filePath);
 
@@ -119,6 +118,6 @@ export class ProfileService {
       ...profile,
       avatarUrl: s3Response.Location,
     });
-    return createSuccessResponse('Аватар успешно загружен');
+    return s3Response.Location;
   }
 }

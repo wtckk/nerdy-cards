@@ -21,7 +21,7 @@ export class Profile {
   @Column()
   username: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   avatarUrl?: string;
 
   @Column({ nullable: true })

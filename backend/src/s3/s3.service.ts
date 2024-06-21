@@ -18,7 +18,10 @@ export class S3Service {
   }
 
   async uploadAvatar(fileBuffer: Buffer, filePath: string): Promise<any> {
-    const s3Response = this.s3.Upload({ buffer: fileBuffer }, filePath);
+    const s3Response = this.s3.Upload(
+      { buffer: fileBuffer, name: 'avatar.jpg' },
+      filePath,
+    );
     return s3Response;
   }
 }

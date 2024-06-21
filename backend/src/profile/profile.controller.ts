@@ -75,7 +75,7 @@ export class ProfileController {
   updateAvatar(
     @Param('profileId') profileId: string,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<SuccessResponseDto> {
+  ): Promise<string> {
     return this.profileService.updateAvatar(profileId, file);
   }
 }
