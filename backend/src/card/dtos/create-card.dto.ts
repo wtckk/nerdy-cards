@@ -2,7 +2,7 @@ import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * DTO для создания карточки
+ * DTO для создания карточки совместно с созданием папки
  */
 export class CreateCardDto {
   @ApiProperty({

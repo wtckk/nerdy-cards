@@ -45,7 +45,7 @@ export class FolderService {
       order: {
         createdAt: 'desc',
       },
-      relations: ['profile', 'cards'],
+      relations: ['profile'],
     });
     return folders;
   }
@@ -97,7 +97,7 @@ export class FolderService {
         ...cardDto,
         folderId: savedFolder.id,
       }));
-      await this.cardService.createCard(cards);
+      await this.cardService.createCard(cards, savedFolder.id);
 
       return savedFolder;
     } catch (error) {

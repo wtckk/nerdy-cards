@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entites/card.entity';
 import { In, Repository } from 'typeorm';
@@ -13,16 +13,19 @@ export class CardService {
   ) {}
 
   /**
-   * Создание CARD
+   * Создание карточек вместе с папкой
    */
-  async createCard(createCardsDto: CreateCardDto[]) {
+  async createCard(
+    createCardsDto: CreateCardDto[],
+    id: string,
+  ): Promise<Card[]> {
     const cardEntities = createCardsDto.map((cardDto) => {
       const card = this.cardRepository.create({
         term: cardDto.term,
         definition: cardDto.definition,
         position: cardDto.position,
         folder: {
-          id: cardDto.folderId,
+          id: id,
         },
       });
       return card;
@@ -31,6 +34,9 @@ export class CardService {
     return await this.cardRepository.save(cardEntities);
   }
 
+  /**
+   * Обновление данных карточки массивом
+   */
   async updatedCard(updateCardDtos: UpdateCardDto[]) {
     // Проверяем, есть ли карточки для обновления
     if (updateCardDtos.length === 0) {
@@ -62,5 +68,34 @@ export class CardService {
       status: HttpStatus.OK,
       message: 'Карточки успешно обновлены',
     };
+  }
+
+  /**
+   * Удаление карточки
+   */
+  async removeCard(cardId: string) {
+    try {
+      await this.cardRepository.delete(cardId);
+      return {
+        message: 'Успешное удаление карточки',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
+  /**
+   * Получение карточки по ID
+   */
+  async getCardById(cardId: string) {
+    const card = await this.cardRepository.findOneBy({ id: cardId });
+    if (!card) {
+      throw new BadRequestException({
+        message: 'ID не существует',
+        status: HttpStatus.OK,
+      });
+    }
+    return card;
   }
 }

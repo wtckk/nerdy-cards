@@ -1,8 +1,14 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from './entities/profile.entity';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
 
 @Injectable()
 export class ProfileService {
@@ -33,7 +39,7 @@ export class ProfileService {
   }
 
   /**
-   * Получение профилья пользователя
+   * Получение профиля пользователя по ID профиля
    */
   async getProfile(id: string) {
     const profile = await this.profileRepository.findOneBy({ id });
@@ -46,6 +52,9 @@ export class ProfileService {
     return profile;
   }
 
+  /**
+   * Получение профиля по userID
+   */
   async getProfileByUserId(userId: string) {
     const profile = await this.profileRepository.findOne({
       where: {
@@ -53,6 +62,7 @@ export class ProfileService {
           id: userId,
         },
       },
+      relations: ['folders'],
     });
     if (!profile) {
       throw new NotFoundException({
@@ -61,5 +71,25 @@ export class ProfileService {
       });
     }
     return profile;
+  }
+
+  /**
+   * Обновление данных профиля
+   */
+  async updateProfile(id: string, dto: UpdateProfileDto) {
+    const profile = await this.getProfile(id);
+
+    if (!profile) {
+      throw new BadRequestException({
+        message: 'ID не существует',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+    await this.profileRepository.save({ ...profile, ...dto });
+
+    return {
+      message: 'Профиль успешно обновлен',
+      status: HttpStatus.OK,
+    };
   }
 }
