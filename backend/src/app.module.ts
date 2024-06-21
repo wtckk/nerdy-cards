@@ -13,6 +13,7 @@ import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/entities/profile.entity';
 import { CardModule } from './card/card.module';
 import { Card } from './card/entites/card.entity';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Card } from './card/entites/card.entity';
     FolderModule,
     ProfileModule,
     CardModule,
+    S3Module,
   ],
   controllers: [],
   providers: [],

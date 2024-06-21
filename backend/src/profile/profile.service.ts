@@ -31,7 +31,8 @@ export class ProfileService {
   }
 
   /**
-   * Получение всех профилей (ADMINS)
+   * Получение всех профилей
+   * Доступно администраторам
    */
   async getAllProfiles(): Promise<Profile[]> {
     const profiles = await this.profileRepository.find({

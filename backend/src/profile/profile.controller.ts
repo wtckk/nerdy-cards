@@ -25,6 +25,13 @@ export class ProfileController {
   getProfile(@Param('id') profileId: string): Promise<Profile> {
     return this.profileService.getProfile(profileId);
   }
+
+  @ApiOperation({ summary: 'Получение профиля по ID ползователя' })
+  @Get('by-user-id/:id')
+  getProfileByUserId(@Param('id') userId: string): Promise<Profile> {
+    return this.profileService.getProfileByUserId(userId);
+  }
+
   @ApiOperation({ summary: 'Обновление' })
   @Put('update/:id')
   updateProfile(
