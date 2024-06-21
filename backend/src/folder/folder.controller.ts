@@ -18,6 +18,7 @@ import { FolderService } from './folder.service';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { Folder } from './entites/folder.entity';
+import { FolderDto } from './dtos/folder.dto';
 
 @ApiTags('Работа с папками')
 @ApiBearerAuth()
@@ -27,18 +28,18 @@ export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
   @ApiOperation({
-    summary: 'Получение всех папок пользователей',
+    summary: 'Получение всех опубликованных папок пользователей',
   })
   @Get('all')
-  getAllFolders(): Promise<Folder[]> {
-    return this.folderService.getAllFolder();
+  getAllPublicFolders(): Promise<FolderDto[]> {
+    return this.folderService.getAllPublicFolder();
   }
 
   @ApiOperation({
     summary: 'Получение всех папок конкретного пользователя по userId',
   })
   @Get('user/:id')
-  getAllFolderUser(@Param('id') userId: string): Promise<Folder[]> {
+  getAllFolderUser(@Param('id') userId: string): Promise<FolderDto[]> {
     return this.folderService.getFolderByUser(userId);
   }
 
@@ -73,7 +74,7 @@ export class FolderController {
   }
 
   @ApiOperation({
-    summary: 'Публикация папки для изучения',
+    summary: 'Публикация папки',
   })
   @Patch('publish/:id')
   publishFolder(@Param('id') folderId: string): Promise<SuccessResponseDto> {

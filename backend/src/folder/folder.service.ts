@@ -9,6 +9,8 @@ import { CardService } from '../card/card.service';
 import { CreateCardDto } from '../card/dtos/create-card.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { SuccessResponseDto } from '../utils/response.dto';
+import { FolderDto } from './dtos/folder.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class FolderService {
@@ -22,37 +24,36 @@ export class FolderService {
   /**
    * Получение списка всех созданных папок (отсортированные)
    * Доступно всем пользователям
+   * Используем QueryBuilder для подсчета количества карточек папки
    */
-  async getAllFolder(): Promise<Folder[]> {
-    const folders = await this.folderRepository.find({
-      where: {
-        isPublic: true,
-      },
-      order: {
-        createdAt: 'desc',
-      },
-      relations: ['profile'],
-    });
-    return folders;
+  async getAllPublicFolder(): Promise<FolderDto[]> {
+    const folders = await this.folderRepository
+      .createQueryBuilder('folder')
+      .leftJoinAndSelect('folder.profile', 'profile')
+      .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .where('folder.isPublic = :isPublic', { isPublic: true })
+      .groupBy('folder.id')
+      .orderBy('folder.createdAt', 'DESC')
+      .getMany();
+    return plainToClass(FolderDto, folders);
   }
 
   /**
    * Получение папок пользователя (отсортированные)
+   * Доступно всем пользователям
+   * Используем QueryBuilder для подсчета количества карточек папки
    */
-  async getFolderByUser(userId: string): Promise<Folder[]> {
+  async getFolderByUser(userId: string): Promise<FolderDto[]> {
     const profile = await this.profileService.getProfileByUserId(userId);
-    const folders = await this.folderRepository.find({
-      where: {
-        profile: {
-          id: profile.id,
-        },
-      },
-      order: {
-        createdAt: 'desc',
-      },
-      relations: ['profile'],
-    });
-    return folders;
+    const folders = await this.folderRepository
+      .createQueryBuilder('folder')
+      .leftJoinAndSelect('folder.profile', 'profile')
+      .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .where('folder.profileId = :profileId', { profileId: profile.id })
+      .groupBy('folder.id')
+      .orderBy('folder.createdAt', 'DESC')
+      .getMany();
+    return plainToClass(FolderDto, folders);
   }
 
   /**
@@ -132,7 +133,7 @@ export class FolderService {
   }
 
   /**
-   * Изменение
+   * Изменение статуса Public у Folder
    */
   async publishFolder(folderId: string): Promise<SuccessResponseDto> {
     const folder = await this.getFolderById(folderId);
