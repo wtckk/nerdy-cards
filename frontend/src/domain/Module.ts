@@ -9,6 +9,8 @@ interface Module {
   profile: Profile
   createdAt: Date
   updatedAt: Date
+  isPublic: Boolean
+  cardCount: number
 
   cards?: Card[]
 }

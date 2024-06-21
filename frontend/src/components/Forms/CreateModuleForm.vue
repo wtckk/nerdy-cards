@@ -67,6 +67,7 @@ async function deliteCard(position: number) {
 
 async function submit() {
   let isFiff = true
+  errorMessage.value = ''
 
   for (const card of cards.value) {
     if (!card.term || !card.definition) {
@@ -99,9 +100,5 @@ form {
   display: flex;
   flex-direction: column;
   gap: 24px;
-}
-
-.error-message {
-  color: red;
 }
 </style>

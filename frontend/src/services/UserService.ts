@@ -1,7 +1,39 @@
 import $api from '@/http'
 
 import { AuthResponse } from '@/domain/Responses'
-import { LoginUser, RegistrationUser } from '@/domain/User'
+import { LoginUser, Profile, RegistrationUser } from '@/domain/User'
+
+const getProfile = async (profileId: string): Promise<Profile | Error> => {
+  try {
+    const response = await $api.get<Profile>(`/profile/id/${profileId}`)
+
+    return response.data
+  } catch (error) {
+    console.log(error, 'Ошибка получения профиля пользователя')
+
+    if (error instanceof Error) {
+      return error
+    } else {
+      return new Error('Неизвестная ошибка')
+    }
+  }
+}
+
+const getUserProfile = async (userId: string): Promise<Profile | Error> => {
+  try {
+    const response = await $api.get<Profile>(`/profile/by-user-id/${userId}`)
+
+    return response.data
+  } catch (error) {
+    console.log(error, 'Ошибка получения профиля пользователя')
+
+    if (error instanceof Error) {
+      return error
+    } else {
+      return new Error('Неизвестная ошибка')
+    }
+  }
+}
 
 const loginUser = async (user: LoginUser): Promise<AuthResponse | Error> => {
   try {
@@ -52,6 +84,9 @@ const logout = async (): Promise<object | Error> => {
 }
 
 const UserService = {
+  getProfile,
+  getUserProfile,
+
   regUser,
   loginUser,
   logout
