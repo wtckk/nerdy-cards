@@ -1,18 +1,19 @@
 <template>
   <form @submit.prevent="submit">
+    <h1>Вход</h1>
+    <p>Почта</p>
     <input class="input" type="email" name="email" placeholder="email@mail.com" v-model="email" />
-    <input
-      class="input"
-      type="password"
-      name="password"
-      placeholder="tN1v******"
-      v-model="password"
-    />
+    <p>Пароль</p>
+    <input class="input" type="password" name="password" placeholder="tN1v******" v-model="password" />
 
     <button type="submit" class="btn">Войти</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-
-    <RouterLink to="registration">Регистрация</RouterLink>
+    <p class="registration-question"> 
+      Ещё не зарегистрированы?
+      <RouterLink to="registration">Регистрация</RouterLink>
+    </p>
+    
+    
   </form>
 </template>
 
@@ -47,12 +48,37 @@ async function submit() {
 
 <style scoped>
 form {
+  background-color: #4B2A81;
+  padding: 24px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  
+  gap: 12px;
 }
+
+button {
+  margin-top: 16px;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  margin: 0px;
+}
+
+a {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.registration-question {
+  font-size: 12px;
+}
+
 
 .error-message {
   color: red;
 }
+
 </style>

@@ -76,4 +76,6 @@ input {
 
 .input {
   background-color: #a78bfa;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
