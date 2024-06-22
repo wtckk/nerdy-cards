@@ -74,11 +74,10 @@ export class ProfileController {
     },
   })
   @UseInterceptors(FileInterceptor('avatar'))
-  @UsePipes(FileValidationPipe)
   @Post('avatar/:profileId')
   updateAvatar(
     @Param('profileId') profileId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(FileValidationPipe) file: Express.Multer.File,
   ): Promise<string> {
     return this.profileService.updateAvatar(profileId, file);
   }
