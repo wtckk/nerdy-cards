@@ -3,11 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Folder } from './entites/folder.entity';
 import { Repository } from 'typeorm';
 import { CreateFolderDto } from './dtos/create-folder.dto';
-import { FolderDto } from './dtos/folder.dto';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
 import { ProfileService } from '../profile/profile.service';
 import { CardService } from '../card/card.service';
 import { CreateCardDto } from '../card/dtos/create-card.dto';
+import { createSuccessResponse } from '../utils/utils';
+import { SuccessResponseDto } from '../utils/response.dto';
+import { FolderDto } from './dtos/folder.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class FolderService {
@@ -20,40 +23,43 @@ export class FolderService {
 
   /**
    * Получение списка всех созданных папок (отсортированные)
+   * Доступно всем пользователям
+   * Используем QueryBuilder для подсчета количества карточек папки
    */
-  async getAllFolder(): Promise<Folder[]> {
-    const folders = await this.folderRepository.find({
-      order: {
-        createdAt: 'desc',
-      },
-      relations: ['profile'],
-    });
-    return folders;
+  async getAllPublicFolder(): Promise<FolderDto[]> {
+    const folders = await this.folderRepository
+      .createQueryBuilder('folder')
+      .leftJoinAndSelect('folder.profile', 'profile')
+      .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .where('folder.isPublic = :isPublic', { isPublic: true })
+      .groupBy('folder.id')
+      .orderBy('folder.createdAt', 'DESC')
+      .getMany();
+    return plainToClass(FolderDto, folders);
   }
 
   /**
    * Получение папок пользователя (отсортированные)
+   * Доступно всем пользователям
+   * Используем QueryBuilder для подсчета количества карточек папки
    */
   async getFolderByUser(userId: string): Promise<FolderDto[]> {
     const profile = await this.profileService.getProfileByUserId(userId);
-    const folders = await this.folderRepository.find({
-      where: {
-        profile: {
-          id: profile.id,
-        },
-      },
-      order: {
-        createdAt: 'desc',
-      },
-      relations: ['profile', 'cards'],
-    });
-    return folders;
+    const folders = await this.folderRepository
+      .createQueryBuilder('folder')
+      .leftJoinAndSelect('folder.profile', 'profile')
+      .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .where('folder.profileId = :profileId', { profileId: profile.id })
+      .groupBy('folder.id')
+      .orderBy('folder.createdAt', 'DESC')
+      .getMany();
+    return plainToClass(FolderDto, folders);
   }
 
   /**
    * Получение папки по ID
    */
-  async getFolderById(id: string) {
+  async getFolderById(id: string): Promise<Folder> {
     const folder = await this.folderRepository.findOne({
       where: { id: id },
       relations: ['profile', 'cards'],
@@ -75,7 +81,7 @@ export class FolderService {
   /**
    * Создание папки вместе с карточками
    */
-  async createFolder(dto: CreateFolderDto, userId: string) {
+  async createFolder(dto: CreateFolderDto, userId: string): Promise<Folder> {
     const profile = await this.profileService.getProfileByUserId(userId);
     try {
       const folder = this.folderRepository.create({
@@ -97,7 +103,7 @@ export class FolderService {
         ...cardDto,
         folderId: savedFolder.id,
       }));
-      await this.cardService.createCard(cards);
+      await this.cardService.createCards(cards, savedFolder.id);
 
       return savedFolder;
     } catch (error) {
@@ -111,7 +117,10 @@ export class FolderService {
   /**
    * Обновление данных папок
    */
-  async updateFolder(id: string, dto: UpdateFolderDto) {
+  async updateFolder(
+    id: string,
+    dto: UpdateFolderDto,
+  ): Promise<SuccessResponseDto> {
     const folder = await this.getFolderById(id);
     if (!folder) {
       throw new BadRequestException({
@@ -120,9 +129,19 @@ export class FolderService {
       });
     }
     await this.folderRepository.save({ ...folder, ...dto });
-    return {
-      message: 'Папка успешно обновлена',
-      status: HttpStatus.OK,
-    };
+    return createSuccessResponse('Папка успешно обновлена');
+  }
+
+  /**
+   * Изменение статуса Public у Folder
+   */
+  async publishFolder(folderId: string): Promise<SuccessResponseDto> {
+    const folder = await this.getFolderById(folderId);
+
+    // Инвертируем значение isPublic
+    folder.isPublic = !folder.isPublic;
+
+    await this.folderRepository.save(folder);
+    return createSuccessResponse('Конфиденциальность папки успешно обновлена');
   }
 }

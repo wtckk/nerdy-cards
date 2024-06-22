@@ -1,20 +1,32 @@
 <template>
-  <div class="card">
-    <div>
-      <p>{{ card.title }}</p>
-    </div>
+  <RouterLink :to="`/modules/${card.id}`">
+    <div class="card">
+      <div class="card-top">
+        <p>
+          {{ card.title }}
+          <br />
+          {{ card.cardCount }}
+        </p>
 
-    <div>
-      <p>{{ card.profile.username }}</p>
+        <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
+      </div>
+
+      <div>
+        <img :src="profile.avatarUrl" height="30px" alt="" />
+        <p>{{ profile.username }}</p>
+      </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">
 import { Module } from '@/domain/Module'
+import { Profile } from '@/domain/User'
+import { RouterLink } from 'vue-router'
 
 defineProps<{
   card: Module
+  profile: Profile
 }>()
 </script>
 
@@ -36,5 +48,13 @@ defineProps<{
 .card:hover {
   opacity: 1;
   scale: 1.05;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  opacity: 0.6;
 }
 </style>

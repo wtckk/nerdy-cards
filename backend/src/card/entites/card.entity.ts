@@ -15,10 +15,10 @@ export class Card {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   term: string;
 
-  @Column()
+  @Column({ nullable: true })
   definition: string;
 
   @Column({ type: 'bigint' })

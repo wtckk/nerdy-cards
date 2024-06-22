@@ -32,6 +32,7 @@ const password = ref('')
 const errorMessage = ref('')
 
 async function submit() {
+  errorMessage.value = ''
   if (email.value && password.value) {
     const response = await userStore.loginUser(email.value, password.value)
 

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { LoginUser, RegistrationUser, User } from '@/domain/User'
+import { LoginUser, Profile, RegistrationUser, User } from '@/domain/User'
 import UserService from '@/services/UserService'
 import axios from 'axios'
 import { AuthResponse } from '@/domain/Responses'
@@ -8,6 +8,7 @@ import { API_URL } from '@/http'
 
 interface State {
   user: User | null
+  profile: Profile | null
   token: string | ''
   isAuth: Boolean
   isLoading: Boolean
@@ -16,10 +17,38 @@ interface State {
 export const useUserStore = defineStore('userStore', {
   state: (): State => ({
     user: null,
+    profile: null,
     token: '',
     isAuth: false,
     isLoading: false
   }),
+
+  getters: {
+    getProfile() {
+      return async (profileId: string) => {
+        const response = await UserService.getProfile(profileId)
+
+        if (response instanceof Error) {
+          return new Error('Неизвестная ошибка')
+        } else {
+          this.profile = response
+          return this.profile
+        }
+      }
+    },
+    getUserProfile() {
+      return async (userId: string) => {
+        const response = await UserService.getUserProfile(userId)
+
+        if (response instanceof Error) {
+          return new Error('Неизвестная ошибка')
+        } else {
+          this.profile = response
+          return this.profile
+        }
+      }
+    }
+  },
 
   actions: {
     async loginUser(email: string, password: string) {
@@ -94,6 +123,18 @@ export const useUserStore = defineStore('userStore', {
       } finally {
         this.isLoading = false
       }
+    },
+
+    async updatedProfile(profileId: string, newProfile: object) {
+      const response = await UserService.updatedProfile(profileId, newProfile)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        return
+      }
+
+      return response
     }
   }
 })

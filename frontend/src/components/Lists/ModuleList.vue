@@ -9,7 +9,9 @@ import ModuleListItem from '@/components/Lists/ModuleListItem.vue'
 
 import { ModulesType } from '@/domain/Module'
 
-const types: ModulesType[] = ['New', 'My']
+defineProps<{
+  types: ModulesType[]
+}>()
 </script>
 
 <style scoped>

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { CreateCardDto } from '../../card/dtos/create-card.dto';
 
 /**
- * DTO для получения данных о Папке
+ * DTO для показа данных Папки
  */
 export class FolderDto {
   @ApiProperty({
-    example: '',
     description: 'Уникальный идентификатор папки (UUID)',
   })
   id: string;
@@ -15,18 +15,22 @@ export class FolderDto {
     example: 'Английский язык IT',
     description: 'Название папки для изучения',
   })
-  @IsString()
   title: string;
 
   @ApiProperty({
     example: 'Слова для 3 аттестации',
-    description: 'Описание предназначения паки',
+    description: 'Описание предназначения папки',
   })
-  description: string;
+  description?: string;
 
-  @ApiProperty()
-  createdAt: Date;
+  @ApiProperty({
+    description: 'Карточки папки',
+    type: [CreateCardDto],
+  })
+  cards: CreateCardDto[];
 
-  @ApiProperty()
-  updatedAt: Date;
+  @ApiProperty({
+    description: 'Количество карточек папки',
+  })
+  cardCount: number;
 }

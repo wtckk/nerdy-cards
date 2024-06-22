@@ -79,6 +79,68 @@ export const useModuleStore = defineStore('moduleStore', {
       }
 
       return response
+    },
+
+    async createModuleCard(moduleId: string, newCards: Card[]) {
+      const response = await ModuleService.createModuleCard(moduleId, newCards)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        newCards.forEach((card) => {
+          if (card.id) {
+            this.cards.push(card)
+          }
+        })
+      }
+
+      return response
+    },
+
+    async publishModule(moduleId: string) {
+      const response = await ModuleService.publishModule(moduleId)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        this.modules = this.modules.map((module) => {
+          if (module.id === moduleId) {
+            module.isPublic = true
+          }
+          return module
+        })
+      }
+
+      return response
+    },
+
+    async updateModuleCards(cards: Card[]) {
+      const response = await ModuleService.updatedCards(cards)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        this.cards.map((card) => {
+          const editedCard = cards.find((c) => {
+            return card.id === c.id
+          })
+          return editedCard
+        })
+      }
+
+      return response
+    },
+
+    async removeModuleCard(deletedCard: Card) {
+      const response = await ModuleService.removeModuleCard(deletedCard.id)
+
+      if (response instanceof Error) {
+        console.log('Система', response.message)
+      } else {
+        this.cards = this.cards.filter((card) => deletedCard.id !== card.id)
+      }
+
+      return response
     }
   }
 })

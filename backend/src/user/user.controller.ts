@@ -15,18 +15,18 @@ export class UserController {
 
   @ApiOperation({ summary: 'Получения списка всех пользователей' })
   @Get('all')
-  getAllUsers() {
+  getAllUsers(): Promise<UserDto[]> {
     return this.usersService.getAllUsers();
   }
 
   @ApiOperation({ summary: 'Получение пользователя по его ID' })
   @Get('get-user-by-id/:id')
-  getUserById(@Param('id') id: string) {
+  getUserById(@Param('id') id: string): Promise<UserDto> {
     return this.usersService.getUserById(id);
   }
 
   @Get('get-my-info')
-  async getUser(@GetUser() user: UserDto) {
+  async getUser(@GetUser() user: UserDto): Promise<UserDto> {
     return user;
   }
 }

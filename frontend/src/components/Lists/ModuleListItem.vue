@@ -1,8 +1,13 @@
 <template>
-  <div class="item" v-if="filteredModulst.length">
+  <div class="item" v-if="filteredModules.length">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
-      <ModuleCard v-for="module in filteredModulst" :key="module.id" :card="module" />
+      <ModuleCard
+        v-for="module in filteredModules"
+        :key="module.id"
+        :card="module"
+        :profile="module.profile"
+      />
     </div>
   </div>
 </template>
@@ -30,7 +35,7 @@ const props = defineProps<{
 
 const localModules = ref<Module[]>([])
 
-const filteredModulst = computed(() => {
+const filteredModules = computed(() => {
   let modules = localModules.value
 
   if (search.value) {

@@ -1,3 +1,4 @@
+import { Module } from './Module'
 import UserRoles from './Roles'
 
 interface User {
@@ -11,9 +12,12 @@ interface Profile {
   id: string
   userId: string
   username: string
+  createdAt: Date
 
   group?: string
   university?: string
+  folders?: Module[]
+  avatarUrl?: string
 }
 
 interface LoginUser {
