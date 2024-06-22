@@ -1,19 +1,21 @@
 <template>
   <form @submit.prevent="submit">
+    <h1>Регистрация</h1>
+    <p>Логин</p>
     <input
       class="input"
       type="text"
       name="username"
-      placeholder="learner1225"
       minlength="4"
       v-model="username"
     />
-    <input class="input" type="email" name="email" placeholder="email@mail.com" v-model="email" />
+    <p>Почта</p>
+    <input class="input" type="email" name="email"  v-model="email" />
+    <p>Пароль</p>
     <input
       class="input"
       type="password"
       name="password"
-      placeholder="bE23******"
       minlength="8"
       v-model="password"
     />
@@ -21,7 +23,11 @@
     <button type="submit" class="btn">Регистрация</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-    <RouterLink to="login">Войти</RouterLink>
+    <p class="login-question">
+      Уже есть зарегистрированы?
+      <RouterLink to="login">Войти</RouterLink>
+    </p>
+    
   </form>
 </template>
 <script setup lang="ts">
@@ -50,15 +56,38 @@ async function submit() {
       router.push('/')
     }
   } else {
-    errorMessage.value = 'заполните все поля пожалуйста'
+    errorMessage.value = 'Заполните все поля, пожалуйста.'
   }
 }
 </script>
 
 <style scoped>
 form {
+  background-color: #4B2A81;
+  padding: 24px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
 }
+
+button {
+  margin-top: 16px;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  margin: 0px;
+}
+
+a {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.login-question {
+  font-size: 12px;
+}
+
 </style>

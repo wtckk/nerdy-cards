@@ -80,6 +80,10 @@ input {
   border-radius: 8px;
 }
 
+::placeholder {
+  color: #6035a5;
+}
+
 .error-message {
   color: red;
 }

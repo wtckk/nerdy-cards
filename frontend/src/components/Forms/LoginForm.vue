@@ -2,9 +2,9 @@
   <form @submit.prevent="submit">
     <h1>Вход</h1>
     <p>Почта</p>
-    <input class="input" type="email" name="email" placeholder="email@mail.com" v-model="email" />
+    <input class="input" type="email" name="email" v-model="email" />
     <p>Пароль</p>
-    <input class="input" type="password" name="password" placeholder="tN1v******" v-model="password" />
+    <input class="input" type="password" name="password" v-model="password" />
 
     <button type="submit" class="btn">Войти</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -54,7 +54,6 @@ form {
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  
   gap: 12px;
 }
 
