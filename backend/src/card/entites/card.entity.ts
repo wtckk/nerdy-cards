@@ -15,13 +15,13 @@ export class Card {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  term: string;
+  @Column({ type: 'varchar', nullable: true })
+  term?: string;
 
-  @Column({ nullable: true })
-  definition: string;
+  @Column({ type: 'varchar', nullable: true })
+  definition?: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   position: number;
 
   @ManyToOne(() => Folder, (folder) => folder.cards, {

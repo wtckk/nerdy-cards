@@ -38,8 +38,8 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение всех папок конкретного пользователя по userId',
   })
-  @Get('user/:id')
-  getAllFolderUser(@Param('id') userId: string): Promise<FolderDto[]> {
+  @Get('user/:userId')
+  getAllFolderUser(@Param('userId') userId: string): Promise<FolderDto[]> {
     return this.folderService.getFolderByUser(userId);
   }
 
@@ -57,7 +57,7 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение папки по ее id',
   })
-  @Get('get-by-id/:id')
+  @Get('get-by-id/:folderId')
   getFolderById(@Param('id') id: string): Promise<Folder> {
     return this.folderService.getFolderById(id);
   }
@@ -65,9 +65,9 @@ export class FolderController {
   @ApiOperation({
     summary: 'Обновление данных папки',
   })
-  @Put('update/:id')
+  @Put('update/:folderId')
   updateFolder(
-    @Param('id') id: string,
+    @Param('folderId') id: string,
     @Body() dto: UpdateFolderDto,
   ): Promise<SuccessResponseDto> {
     return this.folderService.updateFolder(id, dto);
@@ -76,8 +76,10 @@ export class FolderController {
   @ApiOperation({
     summary: 'Публикация папки',
   })
-  @Patch('publish/:id')
-  publishFolder(@Param('id') folderId: string): Promise<SuccessResponseDto> {
+  @Patch('publish/:folderId')
+  publishFolder(
+    @Param('folderId') folderId: string,
+  ): Promise<SuccessResponseDto> {
     return this.folderService.publishFolder(folderId);
   }
 }

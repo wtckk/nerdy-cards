@@ -26,10 +26,10 @@ export class CardController {
     summary: 'Создание карточек в созданной папке',
   })
   @ApiBody({ type: [CreateCardDto] })
-  @Post('create/:id')
+  @Post('create/:folderId')
   createCards(
     @Body() cardsDto: CreateCardDto[],
-    @Param('id') id: string,
+    @Param('folderId') id: string,
   ): Promise<Card[]> {
     return this.cardService.createCards(cardsDto, id);
   }
@@ -46,8 +46,8 @@ export class CardController {
   @ApiOperation({
     summary: 'Удаление карточки',
   })
-  @Delete('delete/:id')
-  removeCard(@Param('id') cardId: string): Promise<SuccessResponseDto> {
+  @Delete('delete/:cardId')
+  removeCard(@Param('cardId') cardId: string): Promise<SuccessResponseDto> {
     return this.cardService.removeCard(cardId);
   }
 }

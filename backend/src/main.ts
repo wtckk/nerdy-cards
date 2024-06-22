@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as process from 'process';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from './common/pipes/validation.pipe';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -26,10 +27,15 @@ async function bootstrap(): Promise<void> {
    * Использование Cookie-Parser
    */
   app.use(cookieParser());
+
   app.enableCors({
     credentials: true,
     origin: 'http://localhost:5173',
   });
+  /**
+   * Глобальное использование Pipe
+   */
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT);
 }
 

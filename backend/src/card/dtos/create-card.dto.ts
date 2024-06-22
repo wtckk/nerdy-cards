@@ -1,4 +1,10 @@
-import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
@@ -9,7 +15,9 @@ export class CreateCardDto {
     example: 'Английский',
     description: 'Термин',
   })
-  @IsString()
+  @IsString({ message: 'Термин должен быть строкой' })
+  @MinLength(1, { message: 'Термин должен быть не менее 1 символа' })
+  @MaxLength(255, { message: 'Термин должен быть не более 255 символов' })
   @IsOptional()
   term?: string;
 
@@ -17,17 +25,16 @@ export class CreateCardDto {
     example: 'English',
     description: 'Определение термина',
   })
-  @IsString()
+  @IsString({ message: 'Определение должно быть строкой' })
   @IsOptional()
+  @MinLength(1, { message: 'Определение должно быть не менее 1 символа' })
+  @MaxLength(255, { message: 'Определение должно быть не более 255 символов' })
   definition?: string;
 
   @ApiProperty({
     example: '1',
-    description: 'Позиция определения с термином',
+    description: 'Позиция карточки в папке',
   })
-  @IsNumber()
+  @IsNumber({}, { message: 'Позиция должна быть числом' })
   position: number;
-
-  @IsUUID()
-  folderId: string;
 }

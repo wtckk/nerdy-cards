@@ -20,8 +20,8 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по его ID' })
-  @Get('get-user-by-id/:id')
-  getUserById(@Param('id') id: string): Promise<UserDto> {
+  @Get('get-user-by-id/:userId')
+  getUserById(@Param('userId') id: string): Promise<UserDto> {
     return this.usersService.getUserById(id);
   }
 

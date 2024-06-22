@@ -19,10 +19,10 @@ export class Folder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 32 })
   title: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
   description: string;
 
   @CreateDateColumn()

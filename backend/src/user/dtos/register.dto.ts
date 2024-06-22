@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 /**
  * DTO для регистрации пользователя
@@ -9,8 +15,14 @@ export class RegisterUserDTO {
     example: 'user',
     description: 'Уникальное имя пользователя',
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Имя пользователя должно быть строкой' })
+  @IsNotEmpty({ message: 'Имя пользователя обязательно' })
+  @MinLength(4, {
+    message: 'Имя пользователя должно быть не менее 4 символов',
+  })
+  @MaxLength(32, {
+    message: 'Имя пользователя должно быть не более 32 символов',
+  })
   username: string;
 
   @ApiProperty({
@@ -18,14 +30,15 @@ export class RegisterUserDTO {
     description: 'Уникальный почтовый адрес пользователя',
   })
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
     example: 'password',
     description: 'Пароль пользователя',
   })
-  @IsString()
-  @MinLength(8)
+  @IsString({ message: 'Пароль должен быть строкой' })
+  @IsNotEmpty({ message: 'Пароль обязателен' })
+  @MinLength(8, { message: 'Пароль должен быть не менее 8 символов' })
+  @MaxLength(24, { message: 'Пароль долженб быть не более 24 символов' })
   password: string;
 }

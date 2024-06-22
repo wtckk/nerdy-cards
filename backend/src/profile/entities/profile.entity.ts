@@ -18,7 +18,7 @@ export class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 32, unique: true })
   username: string;
 
   @Column({ type: 'text', nullable: true })

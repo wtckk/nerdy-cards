@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
 import { CreateCardDto } from '../../card/dtos/create-card.dto';
 
 /**

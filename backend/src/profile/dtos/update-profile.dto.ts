@@ -9,7 +9,7 @@ export class UpdateProfileDto {
     example: 'ПКТб-22-1',
     description: 'Группа пользователя',
   })
-  @IsString()
+  @IsString({ message: 'Поле "группа" должно быть строкой' })
   @IsOptional()
   group?: string;
 
@@ -17,7 +17,7 @@ export class UpdateProfileDto {
     example: 'ВШЦТ',
     description: 'Университет пользователя',
   })
-  @IsString()
+  @IsString({ message: 'Поле "университет" должно быть строкой' })
   @IsOptional()
   university?: string;
 }

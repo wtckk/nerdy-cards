@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -23,6 +24,7 @@ import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { Profile } from './entities/profile.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FileValidationPipe } from '../common/pipes/file-validation.pipe';
 
 @ApiTags('Профиль пользователя')
 @ApiBearerAuth()
@@ -38,26 +40,27 @@ export class ProfileController {
   }
 
   @ApiOperation({ summary: 'Получения профиля по ID профиля' })
-  @Get('id/:id')
-  getProfile(@Param('id') profileId: string): Promise<Profile> {
+  @Get('id/:profileId')
+  getProfile(@Param('profileId') profileId: string): Promise<Profile> {
     return this.profileService.getProfile(profileId);
   }
 
   @ApiOperation({ summary: 'Получение профиля по ID ползователя' })
-  @Get('by-user-id/:id')
-  getProfileByUserId(@Param('id') userId: string): Promise<Profile> {
+  @Get('by-user-id/:userId')
+  getProfileByUserId(@Param('userId') userId: string): Promise<Profile> {
     return this.profileService.getProfileByUserId(userId);
   }
 
-  @ApiOperation({ summary: 'Обновление' })
-  @Put('update/:id')
+  @ApiOperation({ summary: 'Обновление данных профиля' })
+  @Put('update/:profileId')
   updateProfile(
-    @Param('id') profileId: string,
+    @Param('profileId') profileId: string,
     @Body() dto: UpdateProfileDto,
   ): Promise<SuccessResponseDto> {
     return this.profileService.updateProfile(profileId, dto);
   }
 
+  @ApiOperation({ summary: 'Загрузка аватарки профиля' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -71,6 +74,7 @@ export class ProfileController {
     },
   })
   @UseInterceptors(FileInterceptor('avatar'))
+  @UsePipes(FileValidationPipe)
   @Post('avatar/:profileId')
   updateAvatar(
     @Param('profileId') profileId: string,
