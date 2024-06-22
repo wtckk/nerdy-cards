@@ -5,12 +5,14 @@ export const API_URL = 'http://localhost:3000/api'
 
 const $api = axios.create({
   withCredentials: true,
-  baseURL: API_URL
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json' // Заголовок по умолчанию
+  }
 })
 
 $api.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-  config.headers['Content-Type'] = 'application/json'
   return config
 })
 

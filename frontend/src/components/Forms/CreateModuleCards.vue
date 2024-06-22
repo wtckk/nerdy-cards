@@ -45,4 +45,8 @@ defineEmits(['deliteCard', 'addCard'])
   justify-content: space-between;
   align-items: center;
 }
+
+.card-inputs {
+  display: flex;
+}
 </style>

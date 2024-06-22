@@ -83,6 +83,26 @@ const logout = async (): Promise<object | Error> => {
   }
 }
 
+const uploadAvatar = async (profileId: string, file: FormData): Promise<string | Error> => {
+  try {
+    const response = await $api.post(`/profile/avatar/${profileId}`, file, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    console.log(error, 'Ошибка загрузки аватара')
+
+    if (error instanceof Error) {
+      return error
+    } else {
+      return new Error('Неизвестная ошибка')
+    }
+  }
+}
+
 const updatedProfile = async (profileId: string, newProfile: object): Promise<Success | Error> => {
   try {
     const response = await $api.put(`/profile/update/${profileId}`, newProfile)
@@ -104,6 +124,7 @@ const UserService = {
   regUser,
   loginUser,
   logout,
+  uploadAvatar,
 
   updatedProfile
 }
