@@ -1,6 +1,10 @@
 <template>
   <div class="profile-info">
-    <ProfileInfoAvatar :profile-id="profileId" :current-avatar-url="profile?.avatarUrl" />
+    <ProfileInfoAvatar
+      :profile-id="profileId"
+      :current-avatar-url="profile?.avatarUrl"
+      :can-be-changed="userStore.user?.username === profile?.username"
+    />
 
     <strong>Данные пользователя</strong>
 

@@ -44,6 +44,10 @@ const filteredModules = computed(() => {
     )
   }
 
+  if (props.type === 'My' && !userStore.user) {
+    modules = []
+  }
+
   return modules
 })
 onMounted(async () => {

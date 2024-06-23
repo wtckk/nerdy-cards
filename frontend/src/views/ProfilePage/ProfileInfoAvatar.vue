@@ -16,6 +16,7 @@ import ProfileService from '@/services/ProfileService'
 const props = defineProps<{
   currentAvatarUrl: string | undefined
   profileId: string
+  canBeChanged: boolean
 }>()
 
 const selectedFile = ref<File | null>(null)
@@ -49,6 +50,7 @@ const uploadAvatar = async () => {
   try {
     await ProfileService.updateAvatar(props.profileId, formData)
     avatarUrl.value = URL.createObjectURL(selectedFile.value)
+    selectedFile.value = null
   } catch (error: any) {
     console.error(error)
     errorMessage.value = 'Не вышло загрузить аватар, попробуйте другой файл'
@@ -56,7 +58,7 @@ const uploadAvatar = async () => {
 }
 
 const openFileDialog = () => {
-  if (fileInput.value) {
+  if (fileInput.value && props.canBeChanged) {
     fileInput.value.click()
   }
 }
