@@ -1,115 +1,51 @@
-import $api from '@/http'
+import { $api, handleError } from '@/http'
+import { AxiosError } from 'axios'
 
-import { Card, Module } from '@/domain/Module'
+import { Module } from '@/domain/Module'
 import { Success } from '@/domain/Responses'
 
 const getModules = async (): Promise<Module[] | Error> => {
   try {
-    const response = await $api.get(`/folder/all`)
+    const response = await $api.get<Module[]>(`/folder/all`)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка получения модулей')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка получения модулей')
   }
 }
 
 const getUserModules = async (id: string): Promise<Module[] | Error> => {
   try {
-    const response = await $api.get(`/folder/user/${id}`)
+    const response = await $api.get<Module[]>(`/folder/user/${id}`)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка получения модулей')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка получения модулей пользователя')
   }
 }
 
 const getModuleById = async (id: string): Promise<Module | Error> => {
   try {
-    const response = await $api.get(`/folder/get-by-id/${id}`)
+    const response = await $api.get<Module>(`/folder/get-by-id/${id}`)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка получения модуля пользователя')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка получения модуля пользователя')
   }
 }
 
 const createModule = async (newModule: object): Promise<Module | Error> => {
   try {
-    const response = await $api.post(`/folder/create`, newModule)
+    const response = await $api.post<Module>(`/folder/create`, newModule)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка создания модуля')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-
-const createModuleCard = async (moduleId: string, newCards: Card[]): Promise<Card[] | Error> => {
-  try {
-    const response = await $api.post(`/card/create/${moduleId}`, newCards)
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка создания карточки')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-const updatedCards = async (cards: Card[]): Promise<Success | Error> => {
-  try {
-    const response = await $api.put(`/card/update`, cards)
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка сохранения карточек')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка создания модуля')
   }
 }
 
 const publishModule = async (moduleId: string): Promise<Success | Error> => {
   try {
-    const response = await $api.patch(`/folder/publish/${moduleId}`)
+    const response = await $api.patch<Success>(`/folder/publish/${moduleId}`)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка изменения статуса модуля')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-const removeModuleCard = async (cardId: string): Promise<Success | Error> => {
-  try {
-    const response = await $api.delete(`/card/delete/${cardId}`)
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка удаения карточек')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка изменения статуса модуля')
   }
 }
 
@@ -119,13 +55,8 @@ const ModuleService = {
   getModuleById,
 
   createModule,
-  createModuleCard,
 
-  updatedCards,
-
-  publishModule,
-
-  removeModuleCard
+  publishModule
 }
 
 export default ModuleService

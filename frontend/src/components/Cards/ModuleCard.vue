@@ -2,17 +2,23 @@
   <RouterLink :to="`/modules/${card.id}`">
     <div class="card">
       <div class="card-top">
-        <p>
+        <div>
           {{ card.title }}
-          <br />
-          {{ card.cardCount }}
-        </p>
+
+          <span v-if="card.cardCount" class="top-counter">{{ card.cardCount }}</span>
+        </div>
 
         <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
       </div>
 
-      <div>
-        <img :src="profile.avatarUrl" height="30px" alt="" />
+      <div class="card-user">
+        <img
+          :src="profile.avatarUrl"
+          height="30px"
+          width="30px"
+          style="border-radius: 50%"
+          alt=""
+        />
         <p>{{ profile.username }}</p>
       </div>
     </div>
@@ -56,5 +62,17 @@ defineProps<{
   justify-content: space-between;
 
   opacity: 0.6;
+}
+
+.top-counter {
+  background-color: var(--dark-purple);
+  padding: 2px 8px;
+  border-radius: 50px;
+}
+
+.card-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 </style>

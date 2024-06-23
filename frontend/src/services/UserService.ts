@@ -1,132 +1,40 @@
-import $api from '@/http'
+import { $api, handleError } from '@/http'
+import { AxiosError } from 'axios'
 
 import { AuthResponse, Success } from '@/domain/Responses'
-import { LoginUser, Profile, RegistrationUser } from '@/domain/User'
-
-const getProfile = async (profileId: string): Promise<Profile | Error> => {
-  try {
-    const response = await $api.get<Profile>(`/profile/id/${profileId}`)
-
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка получения профиля пользователя')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-
-const getUserProfile = async (userId: string): Promise<Profile | Error> => {
-  try {
-    const response = await $api.get<Profile>(`/profile/by-user-id/${userId}`)
-
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка получения профиля пользователя')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
+import { LoginUser, RegistrationUser } from '@/domain/User'
 
 const loginUser = async (user: LoginUser): Promise<AuthResponse | Error> => {
   try {
     const response = await $api.post<AuthResponse>(`/auth/login`, user)
-
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка авторизации пользователя')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка авторизации пользователя')
   }
 }
 
-const regUser = async (user: RegistrationUser): Promise<AuthResponse | Error> => {
+const registerUser = async (user: RegistrationUser): Promise<AuthResponse | Error> => {
   try {
     const response = await $api.post<AuthResponse>(`/auth/signup`, user)
-
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка регистрации пользователя')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка регистрации пользователя')
   }
 }
 
-const logout = async (): Promise<object | Error> => {
+const logout = async (): Promise<Success | Error> => {
   try {
-    const response = await $api.post(`/auth/logout`)
-
+    const response = await $api.post<Success>(`/auth/logout`)
     return response.data
   } catch (error) {
-    console.log(error, 'Ошибка выхода из аккаунта')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-
-const uploadAvatar = async (profileId: string, file: FormData): Promise<string | Error> => {
-  try {
-    const response = await $api.post(`/profile/avatar/${profileId}`, file, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка загрузки аватара')
-
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
-  }
-}
-
-const updatedProfile = async (profileId: string, newProfile: object): Promise<Success | Error> => {
-  try {
-    const response = await $api.put(`/profile/update/${profileId}`, newProfile)
-    return response.data
-  } catch (error) {
-    console.log(error, 'Ошибка изменения профиля')
-    if (error instanceof Error) {
-      return error
-    } else {
-      return new Error('Неизвестная ошибка')
-    }
+    return handleError(error as AxiosError, 'Ошибка выхода из аккаунта')
   }
 }
 
 const UserService = {
-  getProfile,
-  getUserProfile,
-
-  regUser,
+  registerUser,
   loginUser,
-  logout,
-  uploadAvatar,
-
-  updatedProfile
+  logout
 }
 
 export default UserService

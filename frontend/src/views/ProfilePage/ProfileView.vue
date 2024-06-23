@@ -7,9 +7,9 @@
         <div class="profile-stats">stats</div>
       </div>
 
-      <div class="item-cards custom-scrollbar">
+      <div v-if="profile" class="item-cards custom-scrollbar">
         <ModuleCard
-          v-for="folder in profile?.folders"
+          v-for="folder in profile.folders"
           :key="folder.id"
           :card="folder"
           :profile="profile"
