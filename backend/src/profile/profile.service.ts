@@ -13,6 +13,7 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { S3Service } from '../s3/s3.service';
 import { AVATAR_FOLDER } from '../common/constants/s3.constants';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProfileService {
@@ -48,10 +49,12 @@ export class ProfileService {
    * Получение профиля пользователя по ID профиля
    */
   async getProfile(id: string): Promise<Profile> {
-    const profile = await this.profileRepository.findOne({
-      where: { id },
-      relations: ['folders'],
-    });
+    const profile = await this.profileRepository
+      .createQueryBuilder('profile')
+      .leftJoinAndSelect('profile.folders', 'folders')
+      .loadRelationCountAndMap('folders.cardCount', 'folders.cards')
+      .where('profile.id = :id', { id })
+      .getOne();
 
     if (!profile) {
       throw new NotFoundException({
@@ -61,6 +64,7 @@ export class ProfileService {
     }
     return profile;
   }
+
   /**
    * Получение профиля по userID
    */

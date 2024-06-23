@@ -58,7 +58,7 @@ export class FolderController {
     summary: 'Получение папки по ее id',
   })
   @Get('get-by-id/:folderId')
-  getFolderById(@Param('id') id: string): Promise<Folder> {
+  getFolderById(@Param('folderId') id: string): Promise<Folder> {
     return this.folderService.getFolderById(id);
   }
 
