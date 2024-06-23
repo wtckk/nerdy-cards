@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 import ModuleService from '@/services/ModuleService'
+import CardService from '@/services/CardService'
 
 import { Card, Module } from '@/domain/Module'
 
@@ -24,7 +25,7 @@ export const useModuleStore = defineStore('moduleStore', {
         const response = await ModuleService.getModules()
 
         if (response instanceof Error) {
-          return new Error('Неизвестная ошибка')
+          console.error('Ошибка при получении модулей:', response.message)
         } else {
           this.modules = response
           return this.modules
@@ -36,10 +37,9 @@ export const useModuleStore = defineStore('moduleStore', {
         const response = await ModuleService.getUserModules(userId)
 
         if (response instanceof Error) {
-          return new Error('Неизвестная ошибка')
+          console.error('Ошибка при получении модулей пользователя:', response.message)
         } else {
           this.myModules = response
-
           return this.myModules
         }
       }
@@ -49,30 +49,25 @@ export const useModuleStore = defineStore('moduleStore', {
         const response = await ModuleService.getModuleById(moduleId)
 
         if (response instanceof Error) {
-          return new Error('Неизвестная ошибка')
+          console.error('Ошибка при получении модуля по ID:', response.message)
         } else {
           const cards = response.cards
           if (cards) {
             this.cards.push(...cards)
           }
-
-          return response
         }
+        return response
       }
     }
   },
   actions: {
     async createModule(title: string, description: string, cards: Card[]) {
-      const newModule = {
-        title: title,
-        description: description,
-        cards: cards
-      }
+      const newModule = { title, description, cards }
 
       const response = await ModuleService.createModule(newModule)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при создании модуля:', response.message)
       } else {
         this.modules.push(response)
         this.cards.push(...cards)
@@ -81,19 +76,14 @@ export const useModuleStore = defineStore('moduleStore', {
       return response
     },
 
-    async createModuleCard(moduleId: string, newCards: Card[]) {
-      const response = await ModuleService.createModuleCard(moduleId, newCards)
+    async createCards(moduleId: string, newCards: Card[]) {
+      const response = await CardService.createCards(moduleId, newCards)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при создании карточек модуля:', response.message)
       } else {
-        newCards.forEach((card) => {
-          if (card.id) {
-            this.cards.push(card)
-          }
-        })
+        this.cards.push(...newCards)
       }
-
       return response
     },
 
@@ -101,45 +91,36 @@ export const useModuleStore = defineStore('moduleStore', {
       const response = await ModuleService.publishModule(moduleId)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при изменении статуса модуля:', response.message)
       } else {
-        this.modules = this.modules.map((module) => {
-          if (module.id === moduleId) {
-            module.isPublic = true
-          }
-          return module
-        })
+        this.modules = this.modules.map((module) =>
+          module.id === moduleId ? { ...module, isPublic: true } : module
+        )
       }
-
       return response
     },
 
-    async updateModuleCards(cards: Card[]) {
-      const response = await ModuleService.updatedCards(cards)
+    async updateCards(cards: Card[]) {
+      const response = await CardService.updateCards(cards)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при обновлении карточек модуля:', response.message)
       } else {
-        this.cards.map((card) => {
-          const editedCard = cards.find((c) => {
-            return card.id === c.id
-          })
-          return editedCard
+        this.cards = this.cards.map((card) => {
+          const editedCard = cards.find((c) => c.id === card.id)
+          return editedCard ? editedCard : card
         })
       }
-
       return response
     },
 
-    async removeModuleCard(deletedCard: Card) {
-      const response = await ModuleService.removeModuleCard(deletedCard.id)
-
+    async removeCard(cardId: string) {
+      const response = await CardService.removeCard(cardId)
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при удалении карточки модуля:', response.message)
       } else {
-        this.cards = this.cards.filter((card) => deletedCard.id !== card.id)
+        this.cards = this.cards.filter((card) => card.id !== cardId)
       }
-
       return response
     }
   }

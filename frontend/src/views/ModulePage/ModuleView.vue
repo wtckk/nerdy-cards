@@ -73,7 +73,7 @@ function editCards() {
 // }
 
 async function deleteCard(deletedCard: Card) {
-  const response = await moduleStore.removeModuleCard(deletedCard)
+  const response = await moduleStore.removeCard(deletedCard.id)
 
   if (response instanceof Error) {
     errorMessage.value = 'Произошла ошибка при удалении карточки. Пожалуйста, попробуйте снова.'
@@ -97,7 +97,7 @@ async function createCard() {
     }
   ]
 
-  const response = await moduleStore.createModuleCard(id, newCards)
+  const response = await moduleStore.createCards(id, newCards)
 
   if (response instanceof Error) {
     errorMessage.value = 'Произошла ошибка при добавлении карточки. Пожалуйста, попробуйте снова.'
@@ -121,7 +121,7 @@ async function updateCards(cards: Card[]) {
   }
 
   if (isFiff) {
-    const response = await moduleStore.updateModuleCards(cards)
+    const response = await moduleStore.updateCards(cards)
 
     if (response instanceof Error) {
       errorMessage.value = 'Произошла ошибка при сохранении карточек. Пожалуйста, попробуйте снова.'

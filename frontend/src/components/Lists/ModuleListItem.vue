@@ -46,24 +46,29 @@ const filteredModules = computed(() => {
 
   return modules
 })
-
 onMounted(async () => {
   if (user.value?.id) {
-    let modules: Module[] | Error
+    let modules: Module[] | Error = []
 
     if (props.type === 'My') {
-      modules = await moduleStore.getUserModules(user.value.id)
+      const response = await moduleStore.getUserModules(user.value.id)
+      if (response) {
+        modules = response
+      }
     } else if (props.type === 'New') {
-      modules = await moduleStore.getModules()
+      const response = await moduleStore.getModules()
+      if (response) {
+        modules = response
+      }
     } else {
       console.log('ModuleListItem: неизвестный тип модуля')
       return
     }
 
-    if (modules instanceof Error) {
-      console.error('Произошла ошибка при получении модулей:', modules)
-    } else {
+    if (Array.isArray(modules)) {
       localModules.value = modules
+    } else {
+      console.error('Error fetching modules:', (modules as Error).message)
     }
   }
 })

@@ -1,15 +1,18 @@
 import { defineStore } from 'pinia'
 
-import { LoginUser, Profile, RegistrationUser, User } from '@/domain/User'
-import UserService from '@/services/UserService'
 import axios from 'axios'
-import { AuthResponse } from '@/domain/Responses'
 import { API_URL } from '@/http'
+
+import { LoginUser, Profile, RegistrationUser, User } from '@/domain/User'
+import { AuthResponse } from '@/domain/Responses'
+
+import UserService from '@/services/UserService'
+import ProfileService from '@/services/ProfileService'
 
 interface State {
   user: User | null
   profile: Profile | null
-  token: string | ''
+  token: string
   isAuth: Boolean
   isLoading: Boolean
 }
@@ -18,7 +21,7 @@ export const useUserStore = defineStore('userStore', {
   state: (): State => ({
     user: null,
     profile: null,
-    token: '',
+    token: localStorage.getItem('token') || '',
     isAuth: false,
     isLoading: false
   }),
@@ -26,10 +29,10 @@ export const useUserStore = defineStore('userStore', {
   getters: {
     getProfile() {
       return async (profileId: string) => {
-        const response = await UserService.getProfile(profileId)
+        const response = await ProfileService.getProfile(profileId)
 
         if (response instanceof Error) {
-          return new Error('Неизвестная ошибка')
+          console.error('Ошибка при получении профиля по id:', response.message)
         } else {
           this.profile = response
           return this.profile
@@ -38,10 +41,10 @@ export const useUserStore = defineStore('userStore', {
     },
     getUserProfile() {
       return async (userId: string) => {
-        const response = await UserService.getUserProfile(userId)
+        const response = await ProfileService.getProfileByUserId(userId)
 
         if (response instanceof Error) {
-          return new Error('Неизвестная ошибка')
+          console.error('Ошибка при получении профиля пользователя:', response.message)
         } else {
           this.profile = response
           return this.profile
@@ -52,15 +55,12 @@ export const useUserStore = defineStore('userStore', {
 
   actions: {
     async loginUser(email: string, password: string) {
-      const loginUser: LoginUser = {
-        email: email,
-        password: password
-      }
+      const loginUser: LoginUser = { email, password }
 
       const response = await UserService.loginUser(loginUser)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при авторизации пользователя:', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
 
@@ -72,16 +72,12 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async regUser(username: string, email: string, password: string) {
-      const registrationUser: RegistrationUser = {
-        username: username,
-        email: email,
-        password: password
-      }
+      const registrationUser: RegistrationUser = { username, email, password }
 
-      const response = await UserService.regUser(registrationUser)
+      const response = await UserService.registerUser(registrationUser)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при регистрации пользователя:', response.message)
       } else {
         localStorage.setItem('token', response.accessToken)
 
@@ -97,13 +93,13 @@ export const useUserStore = defineStore('userStore', {
       const response = await UserService.logout()
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при выходе из акккаунта', response.message)
       } else {
         localStorage.removeItem('token')
 
         this.token = ''
         this.isAuth = false
-        this.user = {} as User
+        this.user = null
       }
     },
 
@@ -126,10 +122,10 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async updatedProfile(profileId: string, newProfile: object) {
-      const response = await UserService.updatedProfile(profileId, newProfile)
+      const response = await ProfileService.updateProfile(profileId, newProfile)
 
       if (response instanceof Error) {
-        console.log('Система', response.message)
+        console.error('Ошибка при обновлении данных профиля', response.message)
       } else {
         return
       }

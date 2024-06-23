@@ -2,23 +2,11 @@
   <form @submit.prevent="submit">
     <h1>Регистрация</h1>
     <p>Логин</p>
-    <input
-      class="input"
-      type="text"
-      name="username"
-      minlength="4"
-      v-model="username"
-    />
+    <input class="input" type="text" name="username" minlength="4" v-model="username" />
     <p>Почта</p>
-    <input class="input" type="email" name="email"  v-model="email" />
+    <input class="input" type="email" name="email" v-model="email" />
     <p>Пароль</p>
-    <input
-      class="input"
-      type="password"
-      name="password"
-      minlength="8"
-      v-model="password"
-    />
+    <input class="input" type="password" name="password" minlength="8" v-model="password" />
 
     <button type="submit" class="btn">Регистрация</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -27,7 +15,6 @@
       Уже есть зарегистрированы?
       <RouterLink to="login">Войти</RouterLink>
     </p>
-    
   </form>
 </template>
 <script setup lang="ts">
@@ -63,7 +50,7 @@ async function submit() {
 
 <style scoped>
 form {
-  background-color: #4B2A81;
+  background-color: #4b2a81;
   padding: 24px;
   border-radius: 24px;
   display: flex;
@@ -89,5 +76,4 @@ a {
 .login-question {
   font-size: 12px;
 }
-
 </style>

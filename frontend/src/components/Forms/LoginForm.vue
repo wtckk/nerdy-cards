@@ -8,12 +8,10 @@
 
     <button type="submit" class="btn">Войти</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-    <p class="registration-question"> 
+    <p class="registration-question">
       Ещё не зарегистрированы?
       <RouterLink to="registration">Регистрация</RouterLink>
     </p>
-    
-    
   </form>
 </template>
 
@@ -49,7 +47,7 @@ async function submit() {
 
 <style scoped>
 form {
-  background-color: #4B2A81;
+  background-color: #4b2a81;
   padding: 24px;
   border-radius: 24px;
   display: flex;
@@ -76,9 +74,7 @@ a {
   font-size: 12px;
 }
 
-
 .error-message {
   color: red;
 }
-
 </style>
