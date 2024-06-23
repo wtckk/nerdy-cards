@@ -1,15 +1,15 @@
 <template>
   <div>
-    <img v-if="currentAvatarUrl" :src="currentAvatarUrl" alt="avatar" @click="openFileDialog" />
-    <img v-else src="/ava.png" alt="avatar" @click="openFileDialog" />
+    <img v-if="computedAvatarURL" :src="computedAvatarURL" alt="avatar" @click="openFileDialog" />
 
     <input type="file" ref="fileInput" @change="onFileSelected" style="display: none" />
     <button v-if="selectedFile" @click="uploadAvatar" :disabled="!selectedFile">Загрузить</button>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import ProfileService from '@/services/ProfileService'
 
@@ -19,7 +19,19 @@ const props = defineProps<{
 }>()
 
 const selectedFile = ref<File | null>(null)
+const avatarUrl = ref<string | null>(null)
+const errorMessage = ref('')
 const fileInput = ref<HTMLInputElement | null>(null)
+
+const computedAvatarURL = computed(() => {
+  if (avatarUrl.value) {
+    return avatarUrl.value
+  } else if (props.currentAvatarUrl) {
+    return props.currentAvatarUrl
+  } else {
+    return '/ava.png'
+  }
+})
 
 const onFileSelected = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -36,8 +48,10 @@ const uploadAvatar = async () => {
 
   try {
     await ProfileService.updateAvatar(props.profileId, formData)
+    avatarUrl.value = URL.createObjectURL(selectedFile.value)
   } catch (error: any) {
     console.error(error)
+    errorMessage.value = 'Не вышло загрузить аватар, попробуйте другой файл'
   }
 }
 
