@@ -8,9 +8,19 @@
       <button class="btn module-start-btn">Пройти</button>
 
       <div class="module-profile">
-        <span>{{ module?.profile.username }}</span>
+        <RouterLink :to="`/profile/${module?.profile.id}`" class="profile-link">
+          <img
+            :src="module?.profile.avatarUrl"
+            height="30px"
+            width="30px"
+            style="border-radius: 50%"
+            alt=""
+          />
 
-        <div>
+          <span>{{ module?.profile.username }}</span>
+        </RouterLink>
+
+        <div v-if="userStore.user?.username === module?.profile.username">
           <button v-if="!module?.isPublic" @click="publishModule">Опубликовать</button>
           <button v-else @click="publishModule">Скрыть</button>
           <button v-if="!isEditing" @click="editCards">edit</button>
@@ -44,8 +54,10 @@ import ModuleCardsEdit from '@/views/ModulePage/ModuleCardsEdit.vue'
 import { Card, Module } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
+import { useUserStore } from '@/stores/UserStore'
 
 const moduleStore = useModuleStore()
+const userStore = useUserStore()
 
 const module = ref<Module>()
 
@@ -183,6 +195,12 @@ onMounted(async () => {
   border-radius: 18px;
 }
 
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .module-start-btn {
   align-self: flex-end;
 }
@@ -190,6 +208,7 @@ onMounted(async () => {
 .module-profile {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
 
   width: 100%;

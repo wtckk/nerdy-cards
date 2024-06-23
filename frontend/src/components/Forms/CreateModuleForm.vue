@@ -5,6 +5,8 @@
       type="text"
       name="title"
       placeholder="Название модуля..."
+      minlength="4"
+      maxlength="32"
       v-model="title"
     />
     <input
@@ -12,6 +14,7 @@
       type="text"
       name="description"
       placeholder="Описание модуля..."
+      maxlength="200"
       v-model="description"
     />
 

@@ -8,8 +8,8 @@
       </div>
 
       <div class="card-inputs">
-        <input type="text" placeholder="термин" v-model="card.term" />
-        <input type="text" placeholder="определение" v-model="card.definition" />
+        <input type="text" placeholder="термин" maxlength="255" v-model="card.term" />
+        <input type="text" placeholder="определение" maxlength="255" v-model="card.definition" />
       </div>
     </div>
 

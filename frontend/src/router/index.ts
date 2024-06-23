@@ -5,6 +5,7 @@ import LoginView from '@/views/LoginView.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
 import ModuleView from '@/views/ModulePage/ModuleView.vue'
 import ProfileView from '@/views/ProfilePage/ProfileView.vue'
+import ErrorView from '@/views/ErrorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
     {
       path: '/profile/:id',
       component: ProfileView
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: ErrorView
     }
   ]
 })

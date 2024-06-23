@@ -1,11 +1,14 @@
 <template>
-  <RouterLink :to="`/modules/${card.id}`">
+  <RouterLink
+    :to="`/modules/${card.id}`"
+    v-if="userStore.user?.username === profile.username || card.isPublic"
+  >
     <div class="card">
       <div class="card-top">
-        <div>
-          {{ card.title }}
+        <div class="top-title">
+          <span :title="card.title">{{ card.title }}</span>
 
-          <span v-if="card.cardCount" class="top-counter">{{ card.cardCount }}</span>
+          <span v-if="card.cardCount" class="top-counter">card: {{ card.cardCount }}</span>
         </div>
 
         <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
@@ -30,6 +33,10 @@ import { Module } from '@/domain/Module'
 import { Profile } from '@/domain/User'
 import { RouterLink } from 'vue-router'
 
+import { useUserStore } from '@/stores/UserStore'
+
+const userStore = useUserStore()
+
 defineProps<{
   card: Module
   profile: Profile
@@ -43,6 +50,7 @@ defineProps<{
   justify-content: space-between;
 
   min-width: 250px;
+  width: 250px;
   height: 150px;
   padding: 20px;
   background-color: var(--basic-purple);
@@ -62,6 +70,20 @@ defineProps<{
   justify-content: space-between;
 
   opacity: 0.6;
+}
+
+.top-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 80%;
+}
+
+.top-title span:first-of-type {
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .top-counter {

@@ -20,8 +20,14 @@
           profile?.group ? `${profile?.group}` : 'не указан'
         }}</span>
         <input v-else type="text" placeholder="Ваша группа" v-model="editedProfile.group" />
-        <button v-if="!isEditing" @click="editProfile">
+        <button
+          v-if="!isEditing && userStore.user?.username === profile?.username"
+          @click="editProfile"
+        >
           <img src="/icons/edit.svg" alt="edit" />
+        </button>
+        <button v-else>
+          <img src="/icons/cat.svg" alt="edit" />
         </button>
       </p>
       <p>
@@ -36,8 +42,14 @@
           placeholder="Ваш университет"
           v-model="editedProfile.university"
         />
-        <button v-if="!isEditing" @click="editProfile">
+        <button
+          v-if="!isEditing && userStore.user?.username === profile?.username"
+          @click="editProfile"
+        >
           <img src="/icons/edit.svg" alt="edit" />
+        </button>
+        <button v-else>
+          <img src="/icons/cat.svg" alt="edit" />
         </button>
       </p>
 
