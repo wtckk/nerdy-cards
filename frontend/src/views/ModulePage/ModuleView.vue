@@ -3,9 +3,12 @@
     <div v-if="!isLoading" class="module">
       <h1>{{ module?.title }}</h1>
 
-      <div class="module-screen"></div>
-
-      <button class="btn module-start-btn">Пройти</button>
+      <ModuleScreen
+        :cards="module?.cards"
+        :profile-id="String(module?.profile?.id)"
+        v-model="progressCards"
+        @start-learning="startLearning"
+      />
 
       <div class="module-profile">
         <RouterLink :to="`/profile/${module?.profile.id}`" class="profile-link">
@@ -47,9 +50,10 @@ import PageLayout from '@/components/Layouts/PageLayout.vue'
 
 import ModuleCardsBlock from '@/views/ModulePage/ModuleCardsBlock.vue'
 import ModuleCardsEdit from '@/views/ModulePage/ModuleCardsEdit.vue'
+import ModuleScreen from '@/views/ModulePage/ModuleScreen.vue'
 import MiniAvatar from '@/components/Basic/MiniAvatar.vue'
 
-import { Card, Module } from '@/domain/Module'
+import { Card, Module, progressCard } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
@@ -63,9 +67,19 @@ const moduleId = String(route.params.id)
 const module = ref<Module>()
 const isEditing = ref(false)
 const editedCards = ref<Card[]>([])
+const progressCards = ref<progressCard[]>([])
 const errorMessage = ref('')
 
 const isLoading = computed(() => !module.value)
+
+function startLearning() {
+  if (module.value?.cards) {
+    progressCards.value = module.value.cards.map((card) => ({
+      cardId: card.id,
+      isLearned: false
+    }))
+  }
+}
 
 function toggleEditCards() {
   isEditing.value = !isEditing.value
@@ -155,21 +169,10 @@ onMounted(async () => {
   margin: 0;
 }
 
-.module-screen {
-  width: 100%;
-  height: 300px;
-  background-color: var(--basic-purple);
-  border-radius: 18px;
-}
-
 .profile-link {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.module-start-btn {
-  align-self: flex-end;
 }
 
 .module-profile {

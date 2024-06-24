@@ -8,7 +8,7 @@
       </div>
 
       <div v-if="profile" class="item-cards custom-scrollbar">
-        <AddCard />
+        <AddCard v-if="userStore.user?.username === profile.username" />
 
         <ModuleCard
           v-for="folder in profile.folders"

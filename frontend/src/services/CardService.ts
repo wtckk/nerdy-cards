@@ -1,7 +1,7 @@
 import { $api, handleError } from '@/http'
 import { AxiosError } from 'axios'
 
-import { Card } from '@/domain/Module'
+import { Card, progressCard } from '@/domain/Module'
 import { Success } from '@/domain/Responses'
 
 const createCards = async (moduleId: string, newCards: Card[]): Promise<Card[] | Error> => {
@@ -31,8 +31,21 @@ const removeCard = async (cardId: string): Promise<Success | Error> => {
   }
 }
 
+const createProgressCards = async (
+  profileId: string,
+  cards: progressCard[]
+): Promise<Card[] | Error> => {
+  try {
+    const response = await $api.post<Card[]>(`/card/progress/create/${profileId}`, cards)
+    return response.data
+  } catch (error) {
+    return handleError(error as AxiosError, 'Ошибка сохранения данных')
+  }
+}
+
 const CardService = {
   createCards,
+  createProgressCards,
 
   updateCards,
 

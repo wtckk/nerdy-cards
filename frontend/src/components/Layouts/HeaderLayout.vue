@@ -19,11 +19,13 @@
         <img src="/icons/notification.svg" alt="notification" />
       </button>
 
-      <button v-if="isAuth" @click="pushToProfile">
-        <button class="btn-circle">
-          <img src="/icons/profile.svg" alt="profile" />
+      <RouterLink v-if="isAuth" :to="`/profile/${String(userStore.myProfile?.id)}`">
+        <button>
+          <button class="btn-circle">
+            <img src="/icons/profile.svg" alt="profile" />
+          </button>
         </button>
-      </button>
+      </RouterLink>
 
       <RouterLink v-if="!isAuth" to="/login">
         <button class="btn-circle">
@@ -39,8 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router'
-
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
@@ -50,19 +50,6 @@ const { search } = storeToRefs(moduleStore)
 
 const userStore = useUserStore()
 const { isAuth } = storeToRefs(userStore)
-
-async function pushToProfile() {
-  const id = String(userStore.user?.id)
-
-  const response = await userStore.getUserProfile(id)
-
-  if (response instanceof Error) {
-    console.log('Произошла ошибка при получении профиля. Пожалуйста, попробуйте снова.')
-  } else {
-    const profileId = response.id
-    router.push(`/profile/${profileId}`)
-  }
-}
 </script>
 
 <style scoped>
