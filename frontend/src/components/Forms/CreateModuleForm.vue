@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="submit">
+    <h1>Создание модуля</h1>
     <input
       class="input"
       type="text"
@@ -100,8 +101,27 @@ async function submit() {
 
 <style scoped>
 form {
+  background-color: #4B2A81;
+  padding: 24px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
 }
+
+button {
+  margin-top: 16px;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  margin: 0px 0px 12px;
+}
+
+a {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
 </style>
