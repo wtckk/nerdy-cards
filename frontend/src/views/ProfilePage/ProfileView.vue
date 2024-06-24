@@ -1,6 +1,6 @@
 <template>
   <PageLayout>
-    <div class="profile">
+    <div v-if="!isLoading" class="profile">
       <div class="profile-top">
         <ProfileInfo />
 
@@ -8,6 +8,8 @@
       </div>
 
       <div v-if="profile" class="item-cards custom-scrollbar">
+        <AddCard />
+
         <ModuleCard
           v-for="folder in profile.folders"
           :key="folder.id"
@@ -16,18 +18,20 @@
         />
       </div>
     </div>
+
+    <div v-else>загрузка</div>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 
-import router from '@/router'
+import { useRoute } from 'vue-router'
 
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-
 import ModuleCard from '@/components/Cards/ModuleCard.vue'
 import ProfileInfo from '@/views/ProfilePage/ProfileInfo.vue'
+import AddCard from '@/components/Cards/AddCard.vue'
 
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
@@ -35,10 +39,18 @@ import { storeToRefs } from 'pinia'
 const userStore = useUserStore()
 const { profile } = storeToRefs(userStore)
 
-const profileId = String(router.currentRoute.value.params.id)
+const route = useRoute()
+
+const isLoading = computed(() => !profile.value)
+
+const profileId = String(route.params.id)
 
 onMounted(() => {
-  userStore.getProfile(profileId)
+  try {
+    userStore.getProfile(profileId)
+  } catch (err) {
+    console.log(err)
+  }
 })
 </script>
 

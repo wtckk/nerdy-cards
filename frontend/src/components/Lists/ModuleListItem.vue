@@ -1,14 +1,8 @@
 <template>
-  <div class="item" v-if="filteredModules.length">
+  <div class="item" v-if="(filteredModules.length || type == 'My') && userStore.user">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
-      <RouterLink v-if="isAdd" to="/create">
-        <div class="add-card">
-          <button class="add-btn">
-            <img src="/icons/plus.svg" alt="add-module" />
-          </button>
-        </div>
-      </RouterLink>
+      <AddCard v-if="isAdd && type === 'My'" />
 
       <ModuleCard
         v-for="module in filteredModules"
@@ -26,6 +20,7 @@ import { computed, ref, onMounted } from 'vue'
 import { Module, ModulesType } from '@/domain/Module'
 
 import ModuleCard from '@/components/Cards/ModuleCard.vue'
+import AddCard from '@/components/Cards/AddCard.vue'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
@@ -100,30 +95,6 @@ onMounted(async () => {
   display: flex;
   gap: 24px;
   padding: 10px;
-}
-
-.add-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 250px;
-  width: 250px;
-  height: 150px;
-  padding: 20px;
-  background-color: var(--basic-purple);
-  border-radius: 16px;
-  opacity: 0.5;
-  cursor: pointer;
-}
-
-.add-card:hover {
-  opacity: 0.9;
-  scale: 1.05;
-}
-
-.add-btn {
-  background-color: var(--basic-purple);
 }
 
 .custom-scrollbar {

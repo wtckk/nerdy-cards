@@ -49,6 +49,7 @@ export const useUserStore = defineStore('userStore', {
           this.profile = response
           return this.profile
         }
+        return response
       }
     }
   },

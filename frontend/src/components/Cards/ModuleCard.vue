@@ -15,13 +15,8 @@
       </div>
 
       <div class="card-user">
-        <img
-          :src="profile.avatarUrl"
-          height="30px"
-          width="30px"
-          style="border-radius: 50%"
-          alt=""
-        />
+        <MiniAvatar :avatar-url="profile.avatarUrl" />
+
         <p>{{ profile.username }}</p>
       </div>
     </div>
@@ -31,7 +26,10 @@
 <script setup lang="ts">
 import { Module } from '@/domain/Module'
 import { Profile } from '@/domain/User'
+
 import { RouterLink } from 'vue-router'
+
+import MiniAvatar from '@/components/Basic/MiniAvatar.vue'
 
 import { useUserStore } from '@/stores/UserStore'
 
