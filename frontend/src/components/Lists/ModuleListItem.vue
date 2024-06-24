@@ -1,7 +1,9 @@
 <template>
-  <div class="item" v-if="filteredModules.length">
+  <div class="item" v-if="(filteredModules.length || type == 'My') && userStore.user">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
+      <AddCard v-if="isAdd && type === 'My'" />
+
       <ModuleCard
         v-for="module in filteredModules"
         :key="module.id"
@@ -18,6 +20,7 @@ import { computed, ref, onMounted } from 'vue'
 import { Module, ModulesType } from '@/domain/Module'
 
 import ModuleCard from '@/components/Cards/ModuleCard.vue'
+import AddCard from '@/components/Cards/AddCard.vue'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
@@ -34,6 +37,7 @@ const props = defineProps<{
 }>()
 
 const localModules = ref<Module[]>([])
+const isAdd = ref(false)
 
 const filteredModules = computed(() => {
   let modules = localModules.value
@@ -55,11 +59,13 @@ onMounted(async () => {
     let modules: Module[] | Error = []
 
     if (props.type === 'My') {
+      isAdd.value = true
       const response = await moduleStore.getUserModules(user.value.id)
       if (response) {
         modules = response
       }
     } else if (props.type === 'New') {
+      isAdd.value = false
       const response = await moduleStore.getModules()
       if (response) {
         modules = response

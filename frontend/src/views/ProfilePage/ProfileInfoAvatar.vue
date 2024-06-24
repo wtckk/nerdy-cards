@@ -25,13 +25,7 @@ const errorMessage = ref('')
 const fileInput = ref<HTMLInputElement | null>(null)
 
 const computedAvatarURL = computed(() => {
-  if (avatarUrl.value) {
-    return avatarUrl.value
-  } else if (props.currentAvatarUrl) {
-    return props.currentAvatarUrl
-  } else {
-    return '/ava.png'
-  }
+  return avatarUrl.value || props.currentAvatarUrl || '/ava.png'
 })
 
 const onFileSelected = (event: Event) => {
@@ -40,9 +34,7 @@ const onFileSelected = (event: Event) => {
 }
 
 const uploadAvatar = async () => {
-  if (!selectedFile.value) {
-    return
-  }
+  if (!selectedFile.value) return
 
   const formData = new FormData()
   formData.append('avatar', selectedFile.value)
@@ -70,5 +62,6 @@ img {
   height: 300px;
   border-radius: 50%;
   cursor: pointer;
+  background-color: var(--text-purple);
 }
 </style>

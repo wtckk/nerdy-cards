@@ -88,9 +88,9 @@ a {
 
 .header-search div {
   background-color: var(--background);
-  padding: 6px 24px;
+  padding: 14px 24px;
   border-radius: 50px;
-  width: 300px;
+  width: 400px;
 }
 
 .header-search input {

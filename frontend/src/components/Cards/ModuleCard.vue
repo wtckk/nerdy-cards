@@ -8,20 +8,15 @@
         <div class="top-title">
           <span :title="card.title">{{ card.title }}</span>
 
-          <span v-if="card.cardCount" class="top-counter">card: {{ card.cardCount }}</span>
+          <span v-if="card.cardCount" class="top-counter">{{ card.cardCount }} термин</span>
         </div>
 
         <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
       </div>
 
       <div class="card-user">
-        <img
-          :src="profile.avatarUrl"
-          height="30px"
-          width="30px"
-          style="border-radius: 50%"
-          alt=""
-        />
+        <MiniAvatar :avatar-url="profile.avatarUrl" />
+
         <p>{{ profile.username }}</p>
       </div>
     </div>
@@ -31,7 +26,10 @@
 <script setup lang="ts">
 import { Module } from '@/domain/Module'
 import { Profile } from '@/domain/User'
+
 import { RouterLink } from 'vue-router'
+
+import MiniAvatar from '@/components/Basic/MiniAvatar.vue'
 
 import { useUserStore } from '@/stores/UserStore'
 
@@ -66,30 +64,34 @@ defineProps<{
 
 .card-top {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
 
   opacity: 0.6;
 }
 
 .top-title {
+  width: 85%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
   gap: 12px;
-  max-width: 80%;
 }
 
 .top-title span:first-of-type {
-  max-width: 60%;
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .top-counter {
-  background-color: var(--dark-purple);
+  background-color: var(--background);
   padding: 2px 8px;
   border-radius: 50px;
+  font-size: 14px;
 }
 
 .card-user {

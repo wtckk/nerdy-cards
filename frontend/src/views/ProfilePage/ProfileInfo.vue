@@ -12,7 +12,7 @@
       <p>
         имя пользователя
         <span class="dots"></span>
-        <span class="row">{{ profile?.username ? `${profile?.username}` : 'не указан' }}</span>
+        <span class="row">{{ profile?.username || 'не указан' }}</span>
         <button>
           <img src="/icons/cat.svg" alt="edit" />
         </button>
@@ -20,9 +20,7 @@
       <p>
         группа
         <span class="dots"></span>
-        <span v-if="!isEditing" class="row">{{
-          profile?.group ? `${profile?.group}` : 'не указан'
-        }}</span>
+        <span v-if="!isEditing" class="row">{{ profile?.group || 'не указан' }}</span>
         <input v-else type="text" placeholder="Ваша группа" v-model="editedProfile.group" />
         <button
           v-if="!isEditing && userStore.user?.username === profile?.username"
@@ -37,9 +35,7 @@
       <p>
         университет
         <span class="dots"></span>
-        <span v-if="!isEditing" class="row">{{
-          profile?.university ? `${profile?.university}` : 'не указан'
-        }}</span>
+        <span v-if="!isEditing" class="row">{{ profile?.university || 'не указан' }}</span>
         <input
           v-else
           type="text"
@@ -67,7 +63,7 @@ import { reactive, ref } from 'vue'
 
 import ProfileInfoAvatar from '@/views/ProfilePage/ProfileInfoAvatar.vue'
 
-import router from '@/router'
+import { useRoute } from 'vue-router'
 
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
@@ -75,13 +71,15 @@ import { storeToRefs } from 'pinia'
 const userStore = useUserStore()
 const { profile } = storeToRefs(userStore)
 
-const profileId = String(router.currentRoute.value.params.id)
+const route = useRoute()
+
+const profileId = String(route.params.id)
 
 const isEditing = ref(false)
 
 const editedProfile = reactive({
-  group: '',
-  university: ''
+  group: profile.value?.group || '',
+  university: profile.value?.university || ''
 })
 
 function editProfile() {

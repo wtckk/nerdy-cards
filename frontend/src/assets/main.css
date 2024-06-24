@@ -49,9 +49,7 @@ button {
   height: 50px;
   border-radius: 50%;
   background-color: var(--background);
-  -webkit-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
-  -moz-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
-  box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
+
   transition: transform 0.15s;
   transform-style: preserve-3d;
 }
@@ -80,10 +78,28 @@ input {
   border-radius: 8px;
 }
 
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition: background-color 0s 600000s, color 0s 600000s !important;
+  }
+
 ::placeholder {
   color: #6035a5;
 }
 
 .error-message {
   color: red;
+}
+
+textarea {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  resize: none;
+  height: fit-content;
+  overflow: hidden;
+  font-size: 24px;
+  color: #6035a5;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
 }
