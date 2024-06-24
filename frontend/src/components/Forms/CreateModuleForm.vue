@@ -10,8 +10,8 @@
       maxlength="32"
       v-model="title"
     />
-    <input
-      class="input"
+    <textarea
+      class="input description"
       type="text"
       name="description"
       placeholder="Описание модуля..."
@@ -107,10 +107,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-button {
-  margin-top: 16px;
+  margin: 24px;
 }
 
 h1 {
@@ -122,6 +119,14 @@ h1 {
 a {
   color: #a78bfa;
   font-weight: 500;
+}
+
+.description {
+  padding-bottom: 80px;
+}
+
+textarea {
+  color: white;
 }
 
 </style>
