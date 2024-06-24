@@ -6,12 +6,18 @@ import { CreateCardDto } from './dtos/create-card.dto';
 import { UpdateCardDto } from './dtos/update-card.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { SuccessResponseDto } from '../utils/response.dto';
+import { CardProgress } from './entites/card-progress.entity';
+import { CardProgressDto } from './dtos/card-progress.dto';
+import { CardWithProgressDto } from './dtos/card-with-progress.dto';
+import { mapCardWithProgress } from './mappers/card-progress.mapper';
 
 @Injectable()
 export class CardService {
   constructor(
     @InjectRepository(Card)
     private readonly cardRepository: Repository<Card>,
+    @InjectRepository(CardProgress)
+    private readonly cardProgressRepository: Repository<CardProgress>,
   ) {}
 
   /**
@@ -92,5 +98,61 @@ export class CardService {
       });
     }
     return card;
+  }
+
+  /**
+   * Создание прогресса прохождение модуля по карточкам
+   */
+  async progressCards(
+    cardsProgressDtos: CardProgressDto[],
+    profileId: string,
+  ): Promise<CardWithProgressDto[]> {
+    const cardProgress = cardsProgressDtos.map((dto) => {
+      const { cardId, isLearned } = dto;
+      return this.cardProgressRepository.create({
+        card: { id: cardId },
+        profile: { id: profileId },
+        isLearned,
+      });
+    });
+
+    const savedCardProgress =
+      await this.cardProgressRepository.save(cardProgress);
+
+    // Получаем ID сохраненных карточек с прогрессом
+    const savedCardIds = savedCardProgress.map((progress) => progress.card.id);
+
+    // Загружаем карточки с прогрессом из базы данных, подгружая отношения
+    const cardsWithProgress = await this.cardProgressRepository.find({
+      where: { card: { id: In(savedCardIds) }, profile: { id: profileId } },
+      relations: ['card', 'profile'],
+    });
+
+    // Используем маппер для преобразования
+    return cardsWithProgress.map((cardProgress) =>
+      mapCardWithProgress(cardProgress.card, cardProgress),
+    );
+  }
+
+  async getCardsInFolderWithProgress(folderId: string, profileId: string) {
+    // const cards = await this.cardRepository.find({
+    //   where: { folder: { id: folderId } },
+    // });
+    const cardsProgress = await this.cardProgressRepository.find({
+      where: {
+        profile: {
+          id: profileId,
+        },
+        card: {
+          folder: {
+            id: folderId,
+          },
+        },
+      },
+      relations: ['card'],
+    });
+    return cardsProgress.map((cardsProgress) =>
+      mapCardWithProgress(cardsProgress.card, cardsProgress),
+    );
   }
 }

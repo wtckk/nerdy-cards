@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Put,
@@ -14,6 +15,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { CreateCardDto } from './dtos/create-card.dto';
 import { Card } from './entites/card.entity';
 import { SuccessResponseDto } from '../utils/response.dto';
+import { CardProgressDto } from './dtos/card-progress.dto';
 
 @ApiTags('Работа с карточками')
 @ApiBearerAuth()
@@ -49,5 +51,21 @@ export class CardController {
   @Delete('delete/:cardId')
   removeCard(@Param('cardId') cardId: string): Promise<SuccessResponseDto> {
     return this.cardService.removeCard(cardId);
+  }
+
+  @Post('progress/create/:profileId')
+  progressCardSave(
+    @Param('profileId') profileId: string,
+    @Body() cardsDto: CardProgressDto[],
+  ) {
+    return this.cardService.progressCards(cardsDto, profileId);
+  }
+
+  @Get('progress/by-profile-id/:profileId/:folderId')
+  getCardsInFolderWithProgressByProfile(
+    @Param('profileId') profileId: string,
+    @Param('folderId') folderId: string,
+  ) {
+    return this.cardService.getCardsInFolderWithProgress(folderId, profileId);
   }
 }

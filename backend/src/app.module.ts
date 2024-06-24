@@ -14,6 +14,7 @@ import { Profile } from './profile/entities/profile.entity';
 import { CardModule } from './card/card.module';
 import { Card } from './card/entites/card.entity';
 import { S3Module } from './s3/s3.module';
+import { CardProgress } from './card/entites/card-progress.entity';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { S3Module } from './s3/s3.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [User, RefreshToken, Folder, Profile, Card],
+      entities: [User, RefreshToken, Folder, Profile, Card, CardProgress],
       synchronize: true,
       logging: ['query', 'error'],
     }),

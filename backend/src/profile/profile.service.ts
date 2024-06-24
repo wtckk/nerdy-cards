@@ -13,7 +13,6 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { S3Service } from '../s3/s3.service';
 import { AVATAR_FOLDER } from '../common/constants/s3.constants';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProfileService {

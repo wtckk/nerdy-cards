@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Folder } from '../../folder/entites/folder.entity';
+import { CardProgress } from '../../card/entites/card-progress.entity';
 
 /**
  * Модель Profile в базе данных
@@ -39,4 +40,7 @@ export class Profile {
 
   @OneToMany(() => Folder, (folder) => folder.profile)
   folders: Folder[];
+
+  @OneToMany(() => CardProgress, (cardProgress) => cardProgress.profile)
+  cardProgress: CardProgress[];
 }

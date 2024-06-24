@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Folder } from '../../folder/entites/folder.entity';
+import { CardProgress } from './card-progress.entity';
 
 /**
  * Модель Card в базе данных
@@ -29,4 +31,7 @@ export class Card {
   })
   @JoinColumn({ name: 'folderId' })
   folder: Folder;
+
+  @OneToMany(() => CardProgress, (cardProgress) => cardProgress.card)
+  progress: CardProgress[];
 }
