@@ -14,7 +14,7 @@ import { useUserStore } from '@/stores/UserStore'
 
 const userStore = useUserStore()
 
-const types: ModulesType[] = ['New', 'My']
+const types: ModulesType[] = ['My', 'New']
 </script>
 
 <style scoped>

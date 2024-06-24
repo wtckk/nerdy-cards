@@ -2,6 +2,14 @@
   <div class="item" v-if="filteredModules.length">
     <p>{{ type }}</p>
     <div class="item-cards custom-scrollbar">
+      <RouterLink v-if="isAdd" to="/create">
+        <div class="add-card">
+          <button class="add-btn">
+            <img src="/icons/plus.svg" alt="add-module" />
+          </button>
+        </div>
+      </RouterLink>
+
       <ModuleCard
         v-for="module in filteredModules"
         :key="module.id"
@@ -34,6 +42,7 @@ const props = defineProps<{
 }>()
 
 const localModules = ref<Module[]>([])
+const isAdd = ref(false)
 
 const filteredModules = computed(() => {
   let modules = localModules.value
@@ -55,11 +64,13 @@ onMounted(async () => {
     let modules: Module[] | Error = []
 
     if (props.type === 'My') {
+      isAdd.value = true
       const response = await moduleStore.getUserModules(user.value.id)
       if (response) {
         modules = response
       }
     } else if (props.type === 'New') {
+      isAdd.value = false
       const response = await moduleStore.getModules()
       if (response) {
         modules = response
@@ -89,6 +100,30 @@ onMounted(async () => {
   display: flex;
   gap: 24px;
   padding: 10px;
+}
+
+.add-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 250px;
+  width: 250px;
+  height: 150px;
+  padding: 20px;
+  background-color: var(--basic-purple);
+  border-radius: 16px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.add-card:hover {
+  opacity: 0.9;
+  scale: 1.05;
+}
+
+.add-btn {
+  background-color: var(--basic-purple);
 }
 
 .custom-scrollbar {

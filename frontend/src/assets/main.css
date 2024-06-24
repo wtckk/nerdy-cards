@@ -49,9 +49,7 @@ button {
   height: 50px;
   border-radius: 50%;
   background-color: var(--background);
-  -webkit-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
-  -moz-box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
-  box-shadow: -2px 2px 6px 1px rgba(0, 0, 0, 0.34);
+
   transition: transform 0.15s;
   transform-style: preserve-3d;
 }
