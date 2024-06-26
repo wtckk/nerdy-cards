@@ -3,7 +3,7 @@
     <h1>404 - Страница не найдена</h1>
     <p>Извините, но запрашиваемая вами страница не существует.</p>
     <router-link to="/">
-      <button class="btn">Вернуться на главную</button>
+      <UButton>Вернуться на главную</UButton>
     </router-link>
   </div>
 </template>

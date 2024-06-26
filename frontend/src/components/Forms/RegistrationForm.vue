@@ -1,18 +1,22 @@
 <template>
   <form @submit.prevent="submit">
     <h1>Регистрация</h1>
-    <p>Логин</p>
-    <input class="input" type="text" name="username" minlength="4" v-model="username" />
-    <p>Почта</p>
-    <input class="input" type="email" name="email" v-model="email" />
-    <p>Пароль</p>
-    <input class="input" type="password" name="password" minlength="8" v-model="password" />
 
-    <button type="submit" class="btn">Регистрация</button>
+    <UInput label="Логин" name="username" :min-max="[4, null]" v-model="username" />
+    <UInput label="Почта" type="email" name="email" v-model="email" />
+    <UInput
+      label="Пароль"
+      type="password"
+      name="password"
+      :min-max="[8, null]"
+      v-model="password"
+    />
+
+    <UButton type="submit">Регистрация</UButton>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <p class="login-question">
-      Уже есть зарегистрированы?
+      Уже зарегистрированы?
       <RouterLink to="login">Войти</RouterLink>
     </p>
   </form>

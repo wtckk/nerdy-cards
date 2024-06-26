@@ -38,31 +38,6 @@ button {
   cursor: pointer;
 }
 
-.btn {
-  background-color: var(--basic-purple);
-  border-radius: 12px;
-  padding: 10px 16px;
-}
-
-.btn-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--background);
-
-  transition: transform 0.15s;
-  transform-style: preserve-3d;
-}
-
-.btn:active,
-.btn-circle:active {
-  transform: translate(0em, 0.25em);
-}
-
-.btn-circle:hover {
-  scale: 1.05;
-}
-
 input {
   outline: none;
   border: none;
@@ -72,16 +47,12 @@ input {
   background: transparent;
 }
 
-.input {
-  background-color: #a78bfa;
-  padding: 8px 16px;
-  border-radius: 8px;
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s !important;
 }
-
-  input:-webkit-autofill,
-  input:-webkit-autofill:focus {
-    transition: background-color 0s 600000s, color 0s 600000s !important;
-  }
 
 ::placeholder {
   color: #6035a5;

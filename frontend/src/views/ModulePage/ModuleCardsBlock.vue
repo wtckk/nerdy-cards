@@ -3,7 +3,7 @@
     <div class="cards-top">
       <span> количество терминов: {{ cards.length }} </span>
 
-      <button>sort</button>
+      <UButton>sort</UButton>
     </div>
 
     <div v-for="category in ['Изучено', 'Не изучено']" :key="category" class="cards-block">

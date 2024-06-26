@@ -8,34 +8,22 @@
       </div>
 
       <RouterLink to="/create">
-        <button class="btn-circle">
-          <img src="/icons/plus.svg" alt="add-module" />
-        </button>
+        <UIconButton iconUrl="/icons/plus.svg" />
       </RouterLink>
     </div>
 
     <div class="header-btns">
-      <button class="btn-circle">
-        <img src="/icons/notification.svg" alt="notification" />
-      </button>
+      <UIconButton iconUrl="/icons/notification.svg" />
 
       <RouterLink v-if="isAuth" :to="`/profile/${String(userStore.myProfile?.id)}`">
-        <button>
-          <button class="btn-circle">
-            <img src="/icons/profile.svg" alt="profile" />
-          </button>
-        </button>
+        <UIconButton iconUrl="/icons/profile.svg" />
       </RouterLink>
 
       <RouterLink v-if="!isAuth" to="/login">
-        <button class="btn-circle">
-          <img src="/icons/auth.svg" alt="auth" />
-        </button>
+        <UIconButton iconUrl="/icons/auth.svg" />
       </RouterLink>
 
-      <button v-else @click="userStore.logout" class="btn-circle">
-        <img src="/icons/logout.svg" alt="logout" />
-      </button>
+      <UIconButton v-else @click="userStore.logout" iconUrl="/icons/logout.svg" />
     </div>
   </header>
 </template>

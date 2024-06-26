@@ -8,23 +8,31 @@
     </div>
 
     <div v-if="progressCards?.length" class="learn-btns">
-      <button @click="learn">помню</button>
-      <button @click="forgot">не помню</button>
+      <UButton @click="learn" size="large">помню</UButton>
+      <UButton @click="forgot" size="large">не помню</UButton>
     </div>
 
     <div v-if="progressCards?.length" class="nav-btns">
-      <button :disabled="currentCardIndex == 0" @click="currentCardIndex--">prev</button>
+      <UButton :disabled="currentCardIndex == 0" @click="currentCardIndex--" size="small">
+        prev
+      </UButton>
+
       <span>{{ currentCardIndex + 1 }}/{{ cards.length }}</span>
-      <button :disabled="currentCardIndex + 1 == cards.length" @click="currentCardIndex++">
+
+      <UButton
+        :disabled="currentCardIndex + 1 == cards.length"
+        @click="currentCardIndex++"
+        size="small"
+      >
         next
-      </button>
+      </UButton>
     </div>
 
-    <button v-if="progressCards?.length && currentCardIndex + 1 == cards.length" @click="save">
+    <UButton v-if="progressCards?.length && currentCardIndex + 1 == cards.length" @click="save">
       на бекенд
-    </button>
+    </UButton>
 
-    <button @click="$emit('startLearning')" class="btn module-start-btn">Пройти</button>
+    <UButton @click="$emit('startLearning')" className="module-start-btn">Пройти</UButton>
   </div>
 </template>
 
@@ -91,17 +99,9 @@ async function save() {
 
 .nav-btns {
   display: flex;
+  align-items: center;
   gap: 12px;
   place-self: center;
-}
-
-.nav-btns button {
-  background-color: green;
-}
-
-.nav-btns button:disabled {
-  background-color: grey;
-  cursor: default;
 }
 
 .module-start-btn {

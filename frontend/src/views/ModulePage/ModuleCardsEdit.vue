@@ -2,11 +2,11 @@
   <div>
     <div v-for="card in cards" :key="card.id" class="card">
       <span>#{{ card.position }}</span>
-      <input class="input" type="text" placeholder="термин" v-model="card.term" />
-      <input class="input" type="text" placeholder="определение" v-model="card.definition" />
-      <button @click="$emit('deliteCard', card)">delete</button>
+      <UInput placeholder="термин" v-model="card.term" />
+      <UInput placeholder="определение" v-model="card.definition" />
+      <UButton @click="$emit('deliteCard', card)">delete</UButton>
     </div>
-    <button @click="$emit('addCard')">add</button>
+    <UButton @click="$emit('addCard')">add</UButton>
   </div>
 </template>
 

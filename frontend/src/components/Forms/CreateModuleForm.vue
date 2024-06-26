@@ -1,27 +1,19 @@
 <template>
   <form @submit.prevent="submit">
     <h1>Создание модуля</h1>
-    <input
-      class="input"
-      type="text"
-      name="title"
-      placeholder="Название модуля..."
-      minlength="4"
-      maxlength="32"
-      v-model="title"
-    />
-    <textarea
-      class="input description"
-      type="text"
+    <UInput name="title" placeholder="Название модуля..." :min-max="[4, 32]" v-model="title" />
+    <UInput
+      type="textarea"
       name="description"
       placeholder="Описание модуля..."
-      maxlength="200"
+      class="description"
+      :min-max="[null, 200]"
       v-model="description"
     />
 
     <CreateModuleCards :cards="cards" @add-card="addCard" @delite-card="deliteCard" />
 
-    <button type="submit" class="btn">Создать</button>
+    <UButton type="submit">Создать</UButton>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </form>
 </template>
@@ -35,6 +27,7 @@ import { useModuleStore } from '@/stores/ModulesStore'
 
 import router from '@/router'
 import { Card } from '@/domain/Module'
+import UButton from '../Global/UButton.vue'
 
 const moduleStore = useModuleStore()
 
@@ -101,7 +94,7 @@ async function submit() {
 
 <style scoped>
 form {
-  background-color: #4B2A81;
+  background-color: #4b2a81;
   padding: 24px;
   border-radius: 24px;
   display: flex;
@@ -122,11 +115,13 @@ a {
 }
 
 .description {
-  padding-bottom: 80px;
+  height: 140px;
+}
+form button {
+  place-self: center;
 }
 
 textarea {
   color: white;
 }
-
 </style>

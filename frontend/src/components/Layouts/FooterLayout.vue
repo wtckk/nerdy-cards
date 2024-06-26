@@ -2,9 +2,9 @@
   <footer>
     <div class="footer-block">
       <div class="block-btns">
-        <button class="btn">О компании</button>
-        <button class="btn">Реклама</button>
-        <button class="btn">Поддержка</button>
+        <UButton>О компании</UButton>
+        <UButton>Реклама</UButton>
+        <UButton>Поддержка</UButton>
       </div>
       <div class="block-social">
         <img src="/social/telegram.svg" alt="telegram" />

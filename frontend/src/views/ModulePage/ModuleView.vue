@@ -12,17 +12,17 @@
 
       <div class="module-profile">
         <RouterLink :to="`/profile/${module?.profile.id}`" class="profile-link">
-          <MiniAvatar :avatar-url="module?.profile.avatarUrl" />
+          <UMiniAvatar :avatar-url="module?.profile.avatarUrl" />
 
           <span>{{ module?.profile.username }}</span>
         </RouterLink>
 
-        <div v-if="userStore.user?.username === module?.profile.username">
-          <button @click="togglePublishModule">
+        <div v-if="userStore.user?.username === module?.profile.username" class="profile-btns">
+          <UButton @click="togglePublishModule">
             {{ module?.isPublic ? 'Скрыть' : 'Опубликовать' }}
-          </button>
-          <button v-if="!isEditing" @click="toggleEditCards">edit</button>
-          <button v-else @click="updateCards">save</button>
+          </UButton>
+          <UButton v-if="!isEditing" @click="toggleEditCards">edit</UButton>
+          <UButton v-else @click="updateCards">save</UButton>
         </div>
       </div>
 
@@ -51,7 +51,6 @@ import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ModuleCardsBlock from '@/views/ModulePage/ModuleCardsBlock.vue'
 import ModuleCardsEdit from '@/views/ModulePage/ModuleCardsEdit.vue'
 import ModuleScreen from '@/views/ModulePage/ModuleScreen.vue'
-import MiniAvatar from '@/components/Basic/MiniAvatar.vue'
 
 import { Card, Module, progressCard } from '@/domain/Module'
 
@@ -170,6 +169,12 @@ onMounted(async () => {
 }
 
 .profile-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-btns {
   display: flex;
   align-items: center;
   gap: 12px;

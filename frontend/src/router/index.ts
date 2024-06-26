@@ -44,6 +44,11 @@ const router = createRouter({
       component: ProfileView
     },
     {
+      path: '/dev',
+      name: 'dev',
+      component: () => import('@/views/DevView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: ErrorView
