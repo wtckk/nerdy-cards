@@ -4,8 +4,8 @@
       <h1>{{ module?.title }}</h1>
 
       <ModuleScreen
-        :cards="module?.cards"
-        :profile-id="String(module?.profile?.id)"
+        :cards="module?.cards ? module.cards : []"
+        :profile-id="String(userStore.myProfile?.id)"
         v-model="progressCards"
         @start-learning="startLearning"
       />
@@ -76,7 +76,10 @@ const isLoading = computed(() => !module.value)
 
 async function startLearning() {
   if (module.value?.cards) {
-    const response = await CardService.getProgressCards(module.value.profile.id, module.value.id)
+    const response = await CardService.getProgressCards(
+      userStore.myProfile?.id ? userStore.myProfile.id : '',
+      module.value.id
+    )
 
     if (response instanceof Error) {
       errorMessage.value = 'Произошла ошибка при получении карточек. Пожалуйста, попробуйте снова.'

@@ -1,5 +1,5 @@
 <template>
-  <FormLayout>
+  <FormLayout :back-btn="true">
     <CreateModuleForm />
   </FormLayout>
 </template>

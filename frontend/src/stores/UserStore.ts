@@ -49,6 +49,7 @@ export const useUserStore = defineStore('userStore', {
           console.error('Ошибка при получении профиля пользователя:', response.message)
         } else {
           this.myProfile = response
+          console.log(this.myProfile)
           return this.myProfile
         }
         return response
@@ -107,6 +108,7 @@ export const useUserStore = defineStore('userStore', {
         this.token = ''
         this.isAuth = false
         this.user = null
+        this.myProfile = null
       }
     },
 
