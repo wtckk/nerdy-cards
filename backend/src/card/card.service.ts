@@ -110,7 +110,7 @@ export class CardService {
     // Получаем карточки с существующим прогрессом пользователя
     const existingProgress = await this.cardProgressRepository.find({
       where: {
-        card: { id: In(cardsProgressDtos.map((dto) => dto.cardId)) },
+        card: { id: In(cardsProgressDtos.map((dto) => dto.id)) },
         profile: { id: profileId },
       },
       relations: ['card', 'profile'],
@@ -120,8 +120,7 @@ export class CardService {
       cardsProgressDtos.map(async (dto) => {
         const existingCardProgress = existingProgress.find(
           (progress) =>
-            progress.card.id === dto.cardId &&
-            progress.profile.id === profileId,
+            progress.card.id === dto.id && progress.profile.id === profileId,
         );
         // Если есть карточки с прогрессом, то мы их обновляем
         if (existingCardProgress) {
@@ -132,7 +131,7 @@ export class CardService {
         } else {
           // Если прогресс не существовал, то создаем
           const savedProgress = this.cardProgressRepository.create({
-            card: { id: dto.cardId },
+            card: { id: dto.id },
             profile: { id: profileId },
             isLearned: dto.isLearned,
           });
@@ -147,7 +146,10 @@ export class CardService {
     );
   }
 
-  async getCardsInFolderWithProgress(folderId: string, profileId: string) {
+  async getCardsInFolderWithProgress(
+    folderId: string,
+    profileId: string,
+  ): Promise<CardWithProgressDto[]> {
     const cardsProgress = await this.cardProgressRepository.find({
       where: {
         profile: {

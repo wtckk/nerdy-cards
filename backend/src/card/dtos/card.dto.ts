@@ -1,31 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-/**
- * DTO для вывода карточки с ее прогрессом
- */
-export class CardWithProgressDto {
+export class CardDto {
   @ApiProperty({
     description: 'Уникальный идентификатор карточки UUID',
   })
   id: string;
 
   @ApiProperty({
+    example: 'Английский',
     description: 'Термин',
   })
-  term: string;
+  term?: string;
 
   @ApiProperty({
-    description: 'Определение',
+    example: 'English',
+    description: 'Определение термина',
   })
-  definition: string;
+  definition?: string;
 
   @ApiProperty({
+    example: '1',
     description: 'Позиция карточки в папке',
   })
   position: number;
-
-  @ApiProperty({
-    description: 'Статус изучения карточек',
-  })
-  isLearned: boolean;
 }

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
@@ -71,9 +72,9 @@ export class AuthService {
         user: tokens.user,
       };
     } catch (error) {
-      throw new BadRequestException({
-        message: 'Ошибка регистрации',
-        status: HttpStatus.BAD_REQUEST,
+      throw new InternalServerErrorException({
+        message: 'Ошибка регистрации пользователя',
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     }
   }

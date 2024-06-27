@@ -1,4 +1,9 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Folder } from './entites/folder.entity';
 import { Repository } from 'typeorm';
@@ -59,9 +64,9 @@ export class FolderService {
   /**
    * Получение папки по ID
    */
-  async getFolderById(id: string): Promise<Folder> {
+  async getFolderById(folderId: string): Promise<FolderDto> {
     const folder = await this.folderRepository.findOne({
-      where: { id: id },
+      where: { id: folderId },
       relations: ['profile', 'cards'],
       order: {
         cards: {
@@ -70,12 +75,12 @@ export class FolderService {
       },
     });
     if (!folder) {
-      throw new BadRequestException({
-        message: 'ID не найден',
-        status: HttpStatus.BAD_REQUEST,
+      throw new NotFoundException({
+        message: 'Папка не найдена',
+        status: HttpStatus.NOT_FOUND,
       });
     }
-    return folder;
+    return plainToClass(FolderDto, folder);
   }
 
   /**
@@ -93,9 +98,9 @@ export class FolderService {
 
       // Проверяем на наличие карточек в модуле
       if (dto.cards.length === 0) {
-        throw new BadRequestException({
-          message: 'Отсутствуют карточки',
-          status: HttpStatus.BAD_REQUEST,
+        throw new NotFoundException({
+          message: 'Папка не найдена',
+          status: HttpStatus.NOT_FOUND,
         });
       }
       // Создаем карточки с использованием folderId
@@ -107,15 +112,15 @@ export class FolderService {
 
       return savedFolder;
     } catch (error) {
-      throw new BadRequestException({
-        message: 'Ошибка создания модуля',
-        status: HttpStatus.BAD_REQUEST,
+      throw new InternalServerErrorException({
+        message: 'Ошибка создания пользователя',
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     }
   }
 
   /**
-   * Обновление данных папок
+   * Обновление данных папки
    */
   async updateFolder(
     id: string,
@@ -123,9 +128,9 @@ export class FolderService {
   ): Promise<SuccessResponseDto> {
     const folder = await this.getFolderById(id);
     if (!folder) {
-      throw new BadRequestException({
-        message: 'ID не существует',
-        status: HttpStatus.BAD_REQUEST,
+      throw new NotFoundException({
+        message: 'Папка не найдена',
+        status: HttpStatus.NOT_FOUND,
       });
     }
     await this.folderRepository.save({ ...folder, ...dto });
