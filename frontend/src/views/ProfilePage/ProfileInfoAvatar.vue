@@ -3,9 +3,8 @@
     <img v-if="computedAvatarURL" :src="computedAvatarURL" alt="avatar" @click="openFileDialog" />
 
     <input type="file" ref="fileInput" @change="onFileSelected" style="display: none" />
-    <UButton v-if="selectedFile" @click="uploadAvatar" color="background" :disabled="!selectedFile"
-      >Загрузить</UButton
-    >
+    <UButton class="uploadAvatar" v-if="selectedFile" @click="uploadAvatar" color="background"
+      :disabled="!selectedFile">Загрузить</UButton>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>
@@ -66,4 +65,10 @@ img {
   cursor: pointer;
   background-color: var(--text-purple);
 }
+
+.uploadAvatar{
+  margin: 0 auto;
+  margin-top: 8px;
+}
+
 </style>

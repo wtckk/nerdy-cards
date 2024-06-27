@@ -1,55 +1,34 @@
 <template>
   <div class="profile-info">
-    <ProfileInfoAvatar
-      :profile-id="profileId"
-      :current-avatar-url="profile?.avatarUrl"
-      :can-be-changed="userStore.user?.username === profile?.username"
-    />
+    <ProfileInfoAvatar :profile-id="profileId" :current-avatar-url="profile?.avatarUrl"
+      :can-be-changed="userStore.user?.username === profile?.username" />
 
-    <strong>Данные пользователя</strong>
+    <div>
+      <span class="username">{{ profile?.username || 'не указан' }}</span>
+      <button>
+        <img src="/icons/cat.svg" alt="edit" />
+      </button>
+    </div>
 
     <div class="info-block">
-      <p>
-        имя пользователя
-        <span class="dots"></span>
-        <span class="row">{{ profile?.username || 'не указан' }}</span>
-        <button>
-          <img src="/icons/cat.svg" alt="edit" />
-        </button>
-      </p>
-      <p>
-        группа
-        <span class="dots"></span>
-        <span v-if="!isEditing" class="row">{{ profile?.group || 'не указан' }}</span>
-        <UInput v-else placeholder="Ваша группа" v-model="editedProfile.group" />
-        <button
-          v-if="!isEditing && userStore.user?.username === profile?.username"
-          @click="editProfile"
-        >
-          <img src="/icons/edit.svg" alt="edit" />
-        </button>
-        <button v-else>
-          <img src="/icons/cat.svg" alt="edit" />
-        </button>
-      </p>
-      <p>
-        университет
-        <span class="dots"></span>
-        <span v-if="!isEditing" class="row">{{ profile?.university || 'не указан' }}</span>
-        <UInput v-else placeholder="Ваш университет" v-model="editedProfile.university" />
-        <button
-          v-if="!isEditing && userStore.user?.username === profile?.username"
-          @click="editProfile"
-        >
-          <img src="/icons/edit.svg" alt="edit" />
-        </button>
-        <button v-else>
-          <img src="/icons/cat.svg" alt="edit" />
-        </button>
-      </p>
+      <div class="sub-block">
+        <span>Учебное заведение</span>
+        <span class="subtitle" v-if="!isEditing">{{ profile?.university || 'не указан' }}</span>
+        <UInput class="info-input" v-else placeholder="Ваш университет" v-model="editedProfile.university" />
+      </div>
 
-      <UButton v-if="isEditing" @click="saveProfile" color="background">save</UButton>
+      <div class="sub-block">
+        <span>группа</span>
+        <span class="subtitle" v-if="!isEditing">{{ profile?.group || 'не указан' }}</span>
+        <UInput class="info-input" v-else placeholder="Ваша группа" v-model="editedProfile.group" />
+      </div>
     </div>
+
+    <UButton class="save-profile" v-if="isEditing" @click="saveProfile" color="background">Сохранить</UButton>
+
+    <button v-if="!isEditing && userStore.user?.username === profile?.username" @click="editProfile">
+      <img class="pencil" src="/icons/edit.svg" alt="edit" />
+    </button>
   </div>
 </template>
 
@@ -99,8 +78,8 @@ async function saveProfile() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-
+  gap: 16px;
+  position: relative;
   padding: 24px 48px;
   border-radius: 18px;
   width: 50%;
@@ -114,23 +93,48 @@ async function saveProfile() {
 
 .info-block {
   width: 100%;
-}
-.info-block p {
   display: flex;
-  position: relative;
-  width: 100%;
+  justify-content: space-between;
 }
 
-.info-block .dots {
-  flex: 1;
-  border-bottom: 1px dotted;
+.sub-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.info-block .row {
+.sub-block img {
+  width: 20px;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.sub-block span:first-of-type {
+  color: var(--background);
+  font-weight: 500;
+}
+
+.subtitle {
+  font-size: 25px;
+}
+
+.info-input {
+  border: 2px solid var(--background);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.pencil {
   position: absolute;
-  right: 40px;
-  top: 0;
-  width: 100%;
-  text-align: right;
+  width: 25px !important;
+  top: 24px;
+  right: 24px;
+  background-color: var(--background);
+  padding: 8px;
+  border-radius: 12px;
 }
+
 </style>

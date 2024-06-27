@@ -1,21 +1,17 @@
 <template>
   <PageLayout>
+    <h1>Мой профиль</h1>
     <div v-if="!isLoading" class="profile">
       <div class="profile-top">
         <ProfileInfo />
 
         <div class="profile-stats">stats</div>
       </div>
-
+      <h2>Мои карточки</h2>
       <div v-if="profile" class="item-cards custom-scrollbar">
         <AddCard v-if="userStore.user?.username === profile.username" />
 
-        <ModuleCard
-          v-for="folder in profile.folders"
-          :key="folder.id"
-          :card="folder"
-          :profile="profile"
-        />
+        <ModuleCard v-for="folder in profile.folders" :key="folder.id" :card="folder" :profile="profile" />
       </div>
     </div>
 
@@ -58,7 +54,6 @@ onMounted(() => {
 .profile {
   display: flex;
   flex-direction: column;
-  gap: 24px;
   width: 100%;
 }
 
@@ -104,5 +99,9 @@ onMounted(() => {
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: transparent;
+}
+
+h2 {
+  margin: 18px 0px 8px 0px;
 }
 </style>
