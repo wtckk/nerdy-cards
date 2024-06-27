@@ -4,8 +4,8 @@
       <h1>{{ module?.title }}</h1>
 
       <ModuleScreen
-        :cards="module?.cards"
-        :profile-id="String(module?.profile?.id)"
+        :cards="module?.cards ? module.cards : []"
+        :profile-id="String(userStore.myProfile?.id)"
         v-model="progressCards"
         @start-learning="startLearning"
       />
@@ -21,7 +21,9 @@
           <UButton @click="togglePublishModule">
             {{ module?.isPublic ? 'Скрыть' : 'Опубликовать' }}
           </UButton>
-          <UButton v-if="!isEditing" @click="toggleEditCards">edit</UButton>
+          <UButton v-if="!isEditing" :disabled="progressCards.length" @click="toggleEditCards"
+            >edit</UButton
+          >
           <UButton v-else @click="updateCards">save</UButton>
         </div>
       </div>
@@ -56,6 +58,7 @@ import { Card, Module, progressCard } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
+import CardService from '@/services/CardService'
 
 const moduleStore = useModuleStore()
 const userStore = useUserStore()
@@ -71,12 +74,27 @@ const errorMessage = ref('')
 
 const isLoading = computed(() => !module.value)
 
-function startLearning() {
+async function startLearning() {
   if (module.value?.cards) {
-    progressCards.value = module.value.cards.map((card) => ({
-      cardId: card.id,
-      isLearned: false
-    }))
+    const response = await CardService.getProgressCards(
+      userStore.myProfile?.id ? userStore.myProfile.id : '',
+      module.value.id
+    )
+
+    if (response instanceof Error) {
+      errorMessage.value = 'Произошла ошибка при получении карточек. Пожалуйста, попробуйте снова.'
+    } else {
+      progressCards.value = response.map((card) => ({
+        cardId: card.id,
+        isLearned: card.isLearned ? card.isLearned : false
+      }))
+      if (!progressCards.value.length) {
+        progressCards.value = module.value.cards.map((card) => ({
+          cardId: card.id,
+          isLearned: false
+        }))
+      }
+    }
   }
 }
 

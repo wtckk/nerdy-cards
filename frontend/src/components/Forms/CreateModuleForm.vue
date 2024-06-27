@@ -100,7 +100,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin: 24px;
 }
 
 h1 {

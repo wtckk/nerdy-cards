@@ -85,5 +85,8 @@ defineProps({
 
 .btn.has-icon .icon {
   margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

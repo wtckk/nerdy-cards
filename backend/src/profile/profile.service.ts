@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from './entities/profile.entity';
 import { Repository } from 'typeorm';
@@ -38,26 +33,26 @@ export class ProfileService {
    * Доступно администраторам
    */
   async getAllProfiles(): Promise<Profile[]> {
-    const profiles = await this.profileRepository.find({
-      relations: ['user'],
-    });
+    const profiles = await this.profileRepository.find();
     return profiles;
   }
 
   /**
    * Получение профиля пользователя по ID профиля
+   * Доступно всем пользователям
+   * Используем QueryBuilder для подсчета количества карточек папки
    */
-  async getProfile(id: string): Promise<Profile> {
+  async getProfile(profileId: string): Promise<Profile> {
     const profile = await this.profileRepository
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.folders', 'folders')
       .loadRelationCountAndMap('folders.cardCount', 'folders.cards')
-      .where('profile.id = :id', { id })
+      .where('profile.id = :id', { profileId })
       .getOne();
 
     if (!profile) {
       throw new NotFoundException({
-        message: 'ID не существует',
+        message: 'Пользователь не найден',
         status: HttpStatus.NOT_FOUND,
       });
     }
@@ -78,7 +73,7 @@ export class ProfileService {
     });
     if (!profile) {
       throw new NotFoundException({
-        message: 'ID не существует',
+        message: 'Пользователь не найден',
         status: HttpStatus.NOT_FOUND,
       });
     }
@@ -95,9 +90,9 @@ export class ProfileService {
     const profile = await this.getProfile(id);
 
     if (!profile) {
-      throw new BadRequestException({
-        message: 'ID не существует',
-        status: HttpStatus.BAD_REQUEST,
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        status: HttpStatus.NOT_FOUND,
       });
     }
     await this.profileRepository.save({ ...profile, ...dto });
@@ -105,6 +100,10 @@ export class ProfileService {
     return createSuccessResponse('Профиль успешно обновлен');
   }
 
+  /**
+   * Обновление аватарки профиля пользователя
+   * Используем S3 Yandex Cloud
+   */
   async updateAvatar(
     profileId: string,
     file: Express.Multer.File,

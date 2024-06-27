@@ -4,6 +4,15 @@ import { AxiosError } from 'axios'
 import { Card, progressCard } from '@/domain/Module'
 import { Success } from '@/domain/Responses'
 
+const getProgressCards = async (profileId: string, moduleId: string): Promise<Card[] | Error> => {
+  try {
+    const response = await $api.get<Card[]>(`/card/progress/by-profile-id/${profileId}/${moduleId}`)
+    return response.data
+  } catch (error) {
+    return handleError(error as AxiosError, 'Ошибка получения карточек')
+  }
+}
+
 const createCards = async (moduleId: string, newCards: Card[]): Promise<Card[] | Error> => {
   try {
     const response = await $api.post<Card[]>(`/card/create/${moduleId}`, newCards)
@@ -44,6 +53,8 @@ const createProgressCards = async (
 }
 
 const CardService = {
+  getProgressCards,
+
   createCards,
   createProgressCards,
 

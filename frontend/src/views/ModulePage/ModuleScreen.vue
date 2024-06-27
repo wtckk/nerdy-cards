@@ -1,19 +1,28 @@
 <template>
   <div class="module-screen">
     <div class="screen" @click="isFlipped = !isFlipped">
-      <div v-if="progressCards?.length">
-        <div v-if="!isFlipped">{{ cards[currentCardIndex].term }}</div>
-        <div v-else>{{ cards[currentCardIndex].definition }}</div>
+      <div>
+        <div class="sreen-text" v-if="!isFlipped">
+          {{ cards[currentCardIndex].term }}
+        </div>
+        <div class="sreen-text" v-else>{{ cards[currentCardIndex].definition }}</div>
+        <span class="screen-type">{{ !isFlipped ? 'термин' : 'определение' }}</span>
       </div>
     </div>
 
     <div v-if="progressCards?.length" class="learn-btns">
-      <UButton @click="learn" size="large">помню</UButton>
+      <UButton @click="learn" :disabled="progressCards[currentCardIndex].isLearned" size="large"
+        >помню</UButton
+      >
       <UButton @click="forgot" size="large">не помню</UButton>
     </div>
 
-    <div v-if="progressCards?.length" class="nav-btns">
-      <UButton :disabled="currentCardIndex == 0" @click="currentCardIndex--" size="small">
+    <div class="nav-btns">
+      <UButton
+        :disabled="currentCardIndex == 0"
+        @click="currentCardIndex--, (isFlipped = false)"
+        size="small"
+      >
         prev
       </UButton>
 
@@ -21,18 +30,22 @@
 
       <UButton
         :disabled="currentCardIndex + 1 == cards.length"
-        @click="currentCardIndex++"
+        @click="currentCardIndex++, (isFlipped = false)"
         size="small"
       >
         next
       </UButton>
     </div>
 
-    <UButton v-if="progressCards?.length && currentCardIndex + 1 == cards.length" @click="save">
-      на бекенд
+    <UButton
+      v-if="progressCards?.length && currentCardIndex + 1 == cards.length"
+      @click="save"
+      className="screen-btn"
+    >
+      завершить
     </UButton>
 
-    <UButton @click="$emit('startLearning')" className="module-start-btn">Пройти</UButton>
+    <UButton v-if="!progressCards?.length" @click="start" className="screen-btn"> Изучить </UButton>
   </div>
 </template>
 
@@ -51,7 +64,7 @@ const props = defineProps<{
   profileId: string
 }>()
 
-defineEmits(['startLearning'])
+const emits = defineEmits(['startLearning'])
 
 function learn() {
   if (progressCards.value) {
@@ -68,7 +81,17 @@ function forgot() {
 async function save() {
   if (progressCards.value) {
     await CardService.createProgressCards(props.profileId, progressCards.value)
+
+    progressCards.value = []
+
+    currentCardIndex.value = 0
   }
+}
+
+function start() {
+  currentCardIndex.value = 0
+  isFlipped.value = false
+  emits('startLearning')
 }
 </script>
 
@@ -76,6 +99,7 @@ async function save() {
 .module-screen {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   gap: 12px;
 }
@@ -84,11 +108,27 @@ async function save() {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  position: relative;
 
   width: 100%;
   height: 400px;
   background-color: var(--basic-purple);
   border-radius: 18px;
+  user-select: none;
+
+  transition: transform 0.3s;
+}
+
+.sreen-text {
+  font-size: 32px;
+  font-weight: 500;
+  padding: 12px 24px;
+}
+.screen-type {
+  position: absolute;
+  top: 12px;
+  left: 12px;
 }
 
 .learn-btns {
@@ -104,7 +144,7 @@ async function save() {
   place-self: center;
 }
 
-.module-start-btn {
+.screen-btn {
   align-self: flex-end;
 }
 </style>
