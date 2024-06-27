@@ -14,6 +14,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
@@ -51,6 +52,7 @@ export class ProfileController {
   }
 
   @ApiOperation({ summary: 'Обновление данных профиля' })
+  @ApiResponse({ status: 200, description: 'Профиль успешно обновлен' })
   @Put('update/:profileId')
   updateProfile(
     @Param('profileId') profileId: string,

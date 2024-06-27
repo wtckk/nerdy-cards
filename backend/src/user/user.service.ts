@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -34,7 +34,7 @@ export class UserService {
 
     if (!user) {
       throw new NotFoundException({
-        message: 'ID не существует',
+        message: 'Пользовтель не найдена',
         status: HttpStatus.NOT_FOUND,
       });
     }
@@ -60,7 +60,10 @@ export class UserService {
       const user = this.usersRepository.create(userDto);
       return this.usersRepository.save(user);
     } catch (error) {
-      throw new BadRequestException();
+      throw new InternalServerErrorException({
+        message: 'Ошибка создания пользователя',
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
     }
   }
 }

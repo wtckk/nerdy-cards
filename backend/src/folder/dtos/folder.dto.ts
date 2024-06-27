@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateCardDto } from '../../card/dtos/create-card.dto';
+import { CardDto } from '../../card/dtos/card.dto';
 
 /**
  * DTO для показа данных Папки
@@ -24,12 +24,17 @@ export class FolderDto {
 
   @ApiProperty({
     description: 'Карточки папки',
-    type: [CreateCardDto],
+    type: [CardDto],
   })
-  cards: CreateCardDto[];
+  cards: CardDto[];
 
   @ApiProperty({
     description: 'Количество карточек папки',
   })
   cardCount: number;
+
+  @ApiProperty({
+    description: 'Статус папки для публикации',
+  })
+  isPublic: boolean;
 }

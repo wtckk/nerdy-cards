@@ -8,7 +8,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
@@ -30,6 +35,7 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение всех опубликованных папок пользователей',
   })
+  @ApiResponse({ type: [FolderDto] })
   @Get('all')
   getAllPublicFolders(): Promise<FolderDto[]> {
     return this.folderService.getAllPublicFolder();
@@ -38,6 +44,7 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение всех папок конкретного пользователя по userId',
   })
+  @ApiResponse({ type: [FolderDto] })
   @Get('user/:userId')
   getAllFolderUser(@Param('userId') userId: string): Promise<FolderDto[]> {
     return this.folderService.getFolderByUser(userId);
@@ -57,14 +64,16 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение папки по ее id',
   })
+  @ApiResponse({ type: FolderDto })
   @Get('get-by-id/:folderId')
-  getFolderById(@Param('folderId') id: string): Promise<Folder> {
+  getFolderById(@Param('folderId') id: string): Promise<FolderDto> {
     return this.folderService.getFolderById(id);
   }
 
   @ApiOperation({
     summary: 'Обновление данных папки',
   })
+  @ApiResponse({ status: 200, description: 'Папка успешно обновлена' })
   @Put('update/:folderId')
   updateFolder(
     @Param('folderId') id: string,
@@ -75,6 +84,10 @@ export class FolderController {
 
   @ApiOperation({
     summary: 'Публикация папки',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Конфиденциальность папки успешно обновлена',
   })
   @Patch('publish/:folderId')
   publishFolder(
