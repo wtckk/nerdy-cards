@@ -107,26 +107,39 @@ export class CardService {
     cardsProgressDtos: CardProgressDto[],
     profileId: string,
   ): Promise<CardWithProgressDto[]> {
-    const cardProgress = cardsProgressDtos.map((dto) => {
-      const { cardId, isLearned } = dto;
-      return this.cardProgressRepository.create({
-        card: { id: cardId },
+    // Получаем карточки с существующим прогрессом пользователя
+    const existingProgress = await this.cardProgressRepository.find({
+      where: {
+        card: { id: In(cardsProgressDtos.map((dto) => dto.cardId)) },
         profile: { id: profileId },
-        isLearned,
-      });
-    });
-
-    const savedCardProgress =
-      await this.cardProgressRepository.save(cardProgress);
-
-    // Получаем ID сохраненных карточек с прогрессом
-    const savedCardIds = savedCardProgress.map((progress) => progress.card.id);
-
-    // Загружаем карточки с прогрессом из базы данных, подгружая отношения
-    const cardsWithProgress = await this.cardProgressRepository.find({
-      where: { card: { id: In(savedCardIds) }, profile: { id: profileId } },
+      },
       relations: ['card', 'profile'],
     });
+
+    const cardsWithProgress = await Promise.all(
+      cardsProgressDtos.map(async (dto) => {
+        const existingCardProgress = existingProgress.find(
+          (progress) =>
+            progress.card.id === dto.cardId &&
+            progress.profile.id === profileId,
+        );
+        // Если есть карточки с прогрессом, то мы их обновляем
+        if (existingCardProgress) {
+          return this.cardProgressRepository.save({
+            ...existingCardProgress,
+            isLearned: dto.isLearned,
+          });
+        } else {
+          // Если прогресс не существовал, то создаем
+          const savedProgress = this.cardProgressRepository.create({
+            card: { id: dto.cardId },
+            profile: { id: profileId },
+            isLearned: dto.isLearned,
+          });
+          return await this.cardProgressRepository.save(savedProgress);
+        }
+      }),
+    );
 
     // Используем маппер для преобразования
     return cardsWithProgress.map((cardProgress) =>
@@ -135,9 +148,6 @@ export class CardService {
   }
 
   async getCardsInFolderWithProgress(folderId: string, profileId: string) {
-    // const cards = await this.cardRepository.find({
-    //   where: { folder: { id: folderId } },
-    // });
     const cardsProgress = await this.cardProgressRepository.find({
       where: {
         profile: {
@@ -151,8 +161,8 @@ export class CardService {
       },
       relations: ['card'],
     });
-    return cardsProgress.map((cardsProgress) =>
-      mapCardWithProgress(cardsProgress.card, cardsProgress),
+    return cardsProgress.map((cardProgress) =>
+      mapCardWithProgress(cardProgress.card, cardProgress),
     );
   }
 }

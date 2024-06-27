@@ -1,3 +1,6 @@
+/**
+ * DTO для вывода карточки с ее прогрессом
+ */
 export class CardWithProgressDto {
   id: string;
 
