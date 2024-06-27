@@ -20,6 +20,7 @@ interface Card {
   term: string
   definition: string
   position: number
+  isLearned?: boolean
 }
 
 interface progressCard {

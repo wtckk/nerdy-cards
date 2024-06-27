@@ -3,14 +3,14 @@
     <div class="cards-top">
       <span> количество терминов: {{ cards.length }} </span>
 
-      <UButton>sort</UButton>
+      <UButton @click="sort">sort</UButton>
     </div>
 
     <div v-for="category in ['Изучено', 'Не изучено']" :key="category" class="cards-block">
       <p>{{ category }}</p>
 
       <div
-        v-for="card in cards"
+        v-for="card in sorted"
         :key="card.id"
         class="card"
         :style="category === 'Изучено' ? 'background-color: #C9ECA6' : 'background-color: #FFBEBE'"
@@ -24,10 +24,25 @@
 
 <script setup lang="ts">
 import { Card } from '@/domain/Module'
+import { computed, ref } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   cards: Card[]
 }>()
+
+const isSorted = ref(false)
+const sortedCards = ref<Card[]>([])
+
+function sort() {
+  isSorted.value = !isSorted.value
+  if (isSorted.value) {
+    sortedCards.value = props.cards.slice().sort((a, b) => ('' + a.term).localeCompare(b.term))
+  }
+}
+
+const sorted = computed(() => {
+  return isSorted.value ? sortedCards.value : props.cards
+})
 </script>
 
 <style scoped>
