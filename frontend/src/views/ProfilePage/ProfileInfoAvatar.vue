@@ -3,7 +3,9 @@
     <img v-if="computedAvatarURL" :src="computedAvatarURL" alt="avatar" @click="openFileDialog" />
 
     <input type="file" ref="fileInput" @change="onFileSelected" style="display: none" />
-    <button v-if="selectedFile" @click="uploadAvatar" :disabled="!selectedFile">Загрузить</button>
+    <UButton v-if="selectedFile" @click="uploadAvatar" color="background" :disabled="!selectedFile"
+      >Загрузить</UButton
+    >
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>

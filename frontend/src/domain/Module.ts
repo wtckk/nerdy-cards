@@ -22,4 +22,9 @@ interface Card {
   position: number
 }
 
-export { Module, Card, ModulesType }
+interface progressCard {
+  cardId: string
+  isLearned: boolean
+}
+
+export { Module, Card, progressCard, ModulesType }

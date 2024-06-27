@@ -12,6 +12,7 @@ import ProfileService from '@/services/ProfileService'
 interface State {
   user: User | null
   profile: Profile | null
+  myProfile: Profile | null
   token: string
   isAuth: Boolean
   isLoading: Boolean
@@ -21,6 +22,7 @@ export const useUserStore = defineStore('userStore', {
   state: (): State => ({
     user: null,
     profile: null,
+    myProfile: null,
     token: localStorage.getItem('token') || '',
     isAuth: false,
     isLoading: false
@@ -46,8 +48,8 @@ export const useUserStore = defineStore('userStore', {
         if (response instanceof Error) {
           console.error('Ошибка при получении профиля пользователя:', response.message)
         } else {
-          this.profile = response
-          return this.profile
+          this.myProfile = response
+          return this.myProfile
         }
         return response
       }
@@ -68,6 +70,8 @@ export const useUserStore = defineStore('userStore', {
         this.token = response.accessToken
         this.isAuth = true
         this.user = response.user
+
+        await this.getUserProfile(String(this.user.id))
       }
       return response
     },
@@ -85,6 +89,8 @@ export const useUserStore = defineStore('userStore', {
         this.token = response.accessToken
         this.isAuth = true
         this.user = response.user
+
+        await this.getUserProfile(String(this.user.id))
       }
 
       return response

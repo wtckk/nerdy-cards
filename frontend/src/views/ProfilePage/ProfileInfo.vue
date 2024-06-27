@@ -21,7 +21,7 @@
         группа
         <span class="dots"></span>
         <span v-if="!isEditing" class="row">{{ profile?.group || 'не указан' }}</span>
-        <input v-else type="text" placeholder="Ваша группа" v-model="editedProfile.group" />
+        <UInput v-else placeholder="Ваша группа" v-model="editedProfile.group" />
         <button
           v-if="!isEditing && userStore.user?.username === profile?.username"
           @click="editProfile"
@@ -36,12 +36,7 @@
         университет
         <span class="dots"></span>
         <span v-if="!isEditing" class="row">{{ profile?.university || 'не указан' }}</span>
-        <input
-          v-else
-          type="text"
-          placeholder="Ваш университет"
-          v-model="editedProfile.university"
-        />
+        <UInput v-else placeholder="Ваш университет" v-model="editedProfile.university" />
         <button
           v-if="!isEditing && userStore.user?.username === profile?.username"
           @click="editProfile"
@@ -53,7 +48,7 @@
         </button>
       </p>
 
-      <button v-if="isEditing" @click="saveProfile" class="btn">save</button>
+      <UButton v-if="isEditing" @click="saveProfile" color="background">save</UButton>
     </div>
   </div>
 </template>
@@ -67,6 +62,7 @@ import { useRoute } from 'vue-router'
 
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
+import UButton from '@/components/Global/UButton.vue'
 
 const userStore = useUserStore()
 const { profile } = storeToRefs(userStore)

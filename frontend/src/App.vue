@@ -10,9 +10,13 @@ import { onMounted } from 'vue'
 
 const userStore = useUserStore()
 
-onMounted(() => {
+onMounted(async () => {
   if (localStorage.getItem('token')) {
-    userStore.checkAuth()
+    await userStore.checkAuth()
+  }
+
+  if (!userStore.myProfile) {
+    await userStore.getUserProfile(String(userStore.user?.id))
   }
 })
 </script>

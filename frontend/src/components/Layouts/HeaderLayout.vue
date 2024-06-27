@@ -8,39 +8,27 @@
       </div>
 
       <RouterLink to="/create">
-        <button class="btn-circle">
-          <img src="/icons/plus.svg" alt="add-module" />
-        </button>
+        <UIconButton iconUrl="/icons/plus.svg" />
       </RouterLink>
     </div>
 
     <div class="header-btns">
-      <button class="btn-circle">
-        <img src="/icons/notification.svg" alt="notification" />
-      </button>
+      <UIconButton iconUrl="/icons/notification.svg" />
 
-      <button v-if="isAuth" @click="pushToProfile">
-        <button class="btn-circle">
-          <img src="/icons/profile.svg" alt="profile" />
-        </button>
-      </button>
-
-      <RouterLink v-if="!isAuth" to="/login">
-        <button class="btn-circle">
-          <img src="/icons/auth.svg" alt="auth" />
-        </button>
+      <RouterLink v-if="isAuth" :to="`/profile/${String(userStore.myProfile?.id)}`">
+        <UIconButton iconUrl="/icons/profile.svg" />
       </RouterLink>
 
-      <button v-else @click="userStore.logout" class="btn-circle">
-        <img src="/icons/logout.svg" alt="logout" />
-      </button>
+      <RouterLink v-if="!isAuth" to="/login">
+        <UIconButton iconUrl="/icons/auth.svg" />
+      </RouterLink>
+
+      <UIconButton v-else @click="userStore.logout" iconUrl="/icons/logout.svg" />
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import router from '@/router'
-
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
@@ -50,19 +38,6 @@ const { search } = storeToRefs(moduleStore)
 
 const userStore = useUserStore()
 const { isAuth } = storeToRefs(userStore)
-
-async function pushToProfile() {
-  const id = String(userStore.user?.id)
-
-  const response = await userStore.getUserProfile(id)
-
-  if (response instanceof Error) {
-    console.log('Произошла ошибка при получении профиля. Пожалуйста, попробуйте снова.')
-  } else {
-    const profileId = response.id
-    router.push(`/profile/${profileId}`)
-  }
-}
 </script>
 
 <style scoped>

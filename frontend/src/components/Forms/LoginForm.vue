@@ -1,12 +1,11 @@
 <template>
   <form @submit.prevent="submit">
     <h1>Вход</h1>
-    <p>Почта</p>
-    <input class="input" type="email" name="email" v-model="email" />
-    <p>Пароль</p>
-    <input class="input" type="password" name="password" v-model="password" />
 
-    <button type="submit" class="btn">Войти</button>
+    <UInput type="email" label="Почта" name="email" v-model="email" />
+    <UInput type="password" label="Пароль" name="password" v-model="password" />
+
+    <UButton type="submit">Войти</UButton>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     <p class="registration-question">
       Ещё не зарегистрированы?
