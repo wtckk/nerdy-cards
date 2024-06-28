@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Post,
   Put,
@@ -21,7 +20,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { CreateCardDto } from './dtos/create-card.dto';
 import { Card } from './entites/card.entity';
 import { SuccessResponseDto } from '../utils/response.dto';
-import { CardProgressDto } from './dtos/card-progress.dto';
+import { CardCreateProgressDto } from './dtos/card-create-progress.dto';
 import { CardWithProgressDto } from './dtos/card-with-progress.dto';
 
 @ApiTags('Работа с карточками')
@@ -65,25 +64,13 @@ export class CardController {
   @ApiOperation({
     summary: 'Создание прогресса изучения карточки для пользователя',
   })
-  @ApiBody({ type: CardProgressDto })
+  @ApiBody({ type: CardCreateProgressDto })
   @ApiResponse({ type: [CardWithProgressDto] })
   @Post('progress/create/:profileId')
   progressCardSave(
     @Param('profileId') profileId: string,
-    @Body() cardsDto: CardProgressDto[],
+    @Body() cardsDto: CardCreateProgressDto[],
   ): Promise<CardWithProgressDto[]> {
     return this.cardService.progressCards(cardsDto, profileId);
-  }
-
-  @ApiOperation({
-    summary: 'Получения прогресса изучения карточек пользователя',
-  })
-  @Get('progress/by-profile-id/:profileId/:folderId')
-  @ApiResponse({ type: [CardWithProgressDto] })
-  getCardsInFolderWithProgressByProfile(
-    @Param('profileId') profileId: string,
-    @Param('folderId') folderId: string,
-  ): Promise<CardWithProgressDto[]> {
-    return this.cardService.getCardsInFolderWithProgress(folderId, profileId);
   }
 }

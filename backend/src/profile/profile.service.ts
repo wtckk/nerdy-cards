@@ -47,7 +47,7 @@ export class ProfileService {
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.folders', 'folders')
       .loadRelationCountAndMap('folders.cardCount', 'folders.cards')
-      .where('profile.id = :id', { profileId })
+      .where('profile.id = :profileId', { profileId })
       .getOne();
 
     if (!profile) {

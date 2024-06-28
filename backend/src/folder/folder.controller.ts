@@ -24,6 +24,7 @@ import { UpdateFolderDto } from './dtos/update-folder.dto';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { Folder } from './entites/folder.entity';
 import { FolderDto } from './dtos/folder.dto';
+import { FolderWithCardProgressDto } from './dtos/folder-with-card-progress.dto';
 
 @ApiTags('Работа с папками')
 @ApiBearerAuth()
@@ -64,10 +65,16 @@ export class FolderController {
   @ApiOperation({
     summary: 'Получение папки по ее id',
   })
-  @ApiResponse({ type: FolderDto })
-  @Get('get-by-id/:folderId')
-  getFolderById(@Param('folderId') id: string): Promise<FolderDto> {
-    return this.folderService.getFolderById(id);
+  @ApiResponse({ type: FolderWithCardProgressDto })
+  @Get('get-with-progress/:folderId/:profileId')
+  getFolderById(
+    @Param('folderId') folderId: string,
+    @Param('profileId') profileId: string,
+  ): Promise<FolderWithCardProgressDto> {
+    return this.folderService.getFolderWithProgressCardById(
+      folderId,
+      profileId,
+    );
   }
 
   @ApiOperation({

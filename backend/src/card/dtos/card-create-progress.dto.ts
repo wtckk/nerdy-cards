@@ -4,7 +4,7 @@ import { IsBoolean, IsUUID } from 'class-validator';
 /**
  * DTO для создания прогресса у карточек
  */
-export class CardProgressDto {
+export class CardCreateProgressDto {
   @ApiProperty({
     description: 'Уникальный идентификатор карточки UUID',
   })

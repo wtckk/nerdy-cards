@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entites/card.entity';
 import { In, Repository } from 'typeorm';
@@ -7,9 +7,9 @@ import { UpdateCardDto } from './dtos/update-card.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { CardProgress } from './entites/card-progress.entity';
-import { CardProgressDto } from './dtos/card-progress.dto';
+import { CardCreateProgressDto } from './dtos/card-create-progress.dto';
 import { CardWithProgressDto } from './dtos/card-with-progress.dto';
-import { mapCardWithProgress } from './mappers/card-progress.mapper';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class CardService {
@@ -87,24 +87,10 @@ export class CardService {
   }
 
   /**
-   * Получение карточки по ID
-   */
-  async getCardById(cardId: string): Promise<Card> {
-    const card = await this.cardRepository.findOneBy({ id: cardId });
-    if (!card) {
-      throw new BadRequestException({
-        message: 'ID не существует',
-        status: HttpStatus.OK,
-      });
-    }
-    return card;
-  }
-
-  /**
    * Создание прогресса прохождение модуля по карточкам
    */
   async progressCards(
-    cardsProgressDtos: CardProgressDto[],
+    cardsProgressDtos: CardCreateProgressDto[],
     profileId: string,
   ): Promise<CardWithProgressDto[]> {
     // Получаем карточки с существующим прогрессом пользователя
@@ -140,31 +126,14 @@ export class CardService {
       }),
     );
 
-    // Используем маппер для преобразования
-    return cardsWithProgress.map((cardProgress) =>
-      mapCardWithProgress(cardProgress.card, cardProgress),
-    );
-  }
-
-  async getCardsInFolderWithProgress(
-    folderId: string,
-    profileId: string,
-  ): Promise<CardWithProgressDto[]> {
-    const cardsProgress = await this.cardProgressRepository.find({
-      where: {
-        profile: {
-          id: profileId,
-        },
-        card: {
-          folder: {
-            id: folderId,
-          },
-        },
-      },
-      relations: ['card'],
-    });
-    return cardsProgress.map((cardProgress) =>
-      mapCardWithProgress(cardProgress.card, cardProgress),
+    return cardsWithProgress.map((progress) =>
+      plainToClass(CardWithProgressDto, {
+        id: progress.card.id,
+        term: progress.card.term,
+        definition: progress.card.term,
+        position: progress.card.position,
+        isLearned: progress.isLearned,
+      }),
     );
   }
 }

@@ -16,6 +16,8 @@ import { createSuccessResponse } from '../utils/utils';
 import { SuccessResponseDto } from '../utils/response.dto';
 import { FolderDto } from './dtos/folder.dto';
 import { plainToClass } from 'class-transformer';
+import { FolderWithCardProgressDto } from './dtos/folder-with-card-progress.dto';
+import { CardWithProgressDto } from '../card/dtos/card-with-progress.dto';
 
 @Injectable()
 export class FolderService {
@@ -61,26 +63,62 @@ export class FolderService {
     return plainToClass(FolderDto, folders);
   }
 
-  /**
-   * Получение папки по ID
-   */
-  async getFolderById(folderId: string): Promise<FolderDto> {
-    const folder = await this.folderRepository.findOne({
-      where: { id: folderId },
-      relations: ['profile', 'cards'],
-      order: {
-        cards: {
-          position: 'asc',
-        },
-      },
-    });
+  getFolderById(folderId: string): Promise<Folder> {
+    const folder = this.folderRepository.findOne({ where: { id: folderId } });
+
     if (!folder) {
       throw new NotFoundException({
         message: 'Папка не найдена',
         status: HttpStatus.NOT_FOUND,
       });
     }
-    return plainToClass(FolderDto, folder);
+    return folder;
+  }
+
+  /**
+   * Получение папки по ID
+   */
+  async getFolderWithProgressCardById(
+    folderId: string,
+    profileId: string,
+  ): Promise<FolderWithCardProgressDto> {
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+      relations: [
+        'profile',
+        'cards',
+        'cards.progress',
+        'cards.progress.profile',
+      ],
+      order: {
+        cards: {
+          position: 'asc',
+        },
+      },
+    });
+
+    if (!folder) {
+      throw new NotFoundException({
+        message: 'Папка не найдена',
+        status: HttpStatus.NOT_FOUND,
+      });
+    }
+
+    // Фильтруем прогресс только для текущего пользователя
+    folder.cards.forEach((card) => {
+      card.progress = card.progress.filter(
+        (progress) => progress.profile.id === profileId,
+      );
+    });
+
+    return plainToClass(FolderWithCardProgressDto, {
+      ...folder,
+      cards: folder.cards.map((card) => ({
+        ...card,
+        isLearned:
+          card.progress.length > 0 ? card.progress[0].isLearned : false,
+      })),
+    });
   }
 
   /**
