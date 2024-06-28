@@ -24,7 +24,7 @@ interface Card {
 }
 
 interface progressCard {
-  cardId: string
+  id: string
   isLearned: boolean
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <RouterView />
+  <RouterView v-if="!userStore.isLoading" />
 </template>
 
 <script setup lang="ts">
@@ -13,10 +13,6 @@ const userStore = useUserStore()
 onMounted(async () => {
   if (localStorage.getItem('token')) {
     await userStore.checkAuth()
-  }
-
-  if (!userStore.myProfile) {
-    await userStore.getUserProfile(String(userStore.user?.id))
   }
 })
 </script>

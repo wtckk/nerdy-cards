@@ -49,7 +49,6 @@ export const useUserStore = defineStore('userStore', {
           console.error('Ошибка при получении профиля пользователя:', response.message)
         } else {
           this.myProfile = response
-          console.log(this.myProfile)
           return this.myProfile
         }
         return response
@@ -123,6 +122,7 @@ export const useUserStore = defineStore('userStore', {
 
         this.isAuth = true
         this.user = response.data.user
+        await this.getUserProfile(String(this.user.id))
       } catch (error) {
         console.log(error, 'Ошибка проверки авторизации')
       } finally {

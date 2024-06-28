@@ -10,15 +10,11 @@
       </div>
     </div>
 
-    <div v-if="progressCards?.length" class="learn-btns">
-      <UButton @click="learn" :disabled="progressCards[currentCardIndex].isLearned" size="large"
-        >помню</UButton
-      >
-      <UButton @click="forgot" size="large">не помню</UButton>
-    </div>
-
     <div class="nav-btns">
+      <UButton v-if="isLearning" @click="forgot"> не помню </UButton>
+
       <UButton
+        v-else
         :disabled="currentCardIndex == 0"
         @click="currentCardIndex--, (isFlipped = false)"
         size="small"
@@ -28,7 +24,10 @@
 
       <span>{{ currentCardIndex + 1 }}/{{ cards.length }}</span>
 
+      <UButton v-if="isLearning && progressCards?.length" @click="learn"> помню </UButton>
+
       <UButton
+        v-else
         :disabled="currentCardIndex + 1 == cards.length"
         @click="currentCardIndex++, (isFlipped = false)"
         size="small"
@@ -37,22 +36,16 @@
       </UButton>
     </div>
 
-    <UButton
-      v-if="progressCards?.length && currentCardIndex + 1 == cards.length"
-      @click="save"
-      className="screen-btn"
-    >
-      завершить
-    </UButton>
-
-    <UButton v-if="!progressCards?.length" @click="start" className="screen-btn"> Изучить </UButton>
+    <UButton v-if="!isLearning" @click="start" className="screen-btn"> Изучить </UButton>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Card, progressCard } from '@/domain/Module'
-import CardService from '@/services/CardService'
 import { ref } from 'vue'
+
+import { Card, progressCard } from '@/domain/Module'
+
+import CardService from '@/services/CardService'
 
 const progressCards = defineModel<progressCard[]>()
 
@@ -62,19 +55,32 @@ const currentCardIndex = ref(0)
 const props = defineProps<{
   cards: Card[]
   profileId: string
+  isLearning: boolean
 }>()
 
-const emits = defineEmits(['startLearning'])
+const emits = defineEmits(['startLearning', 'saveProgress'])
 
 function learn() {
   if (progressCards.value) {
     progressCards.value[currentCardIndex.value].isLearned = true
+    if (currentCardIndex.value + 1 != props.cards.length) {
+      currentCardIndex.value++
+    } else {
+      console.log('dfsef')
+      save()
+    }
   }
 }
 
 function forgot() {
   if (progressCards.value) {
     progressCards.value[currentCardIndex.value].isLearned = false
+    if (currentCardIndex.value + 1 != props.cards.length) {
+      currentCardIndex.value++
+    } else {
+      console.log('dfsef')
+      save()
+    }
   }
 }
 
@@ -82,8 +88,9 @@ async function save() {
   if (progressCards.value) {
     await CardService.createProgressCards(props.profileId, progressCards.value)
 
-    progressCards.value = []
+    emits('saveProgress', progressCards.value)
 
+    progressCards.value = []
     currentCardIndex.value = 0
   }
 }

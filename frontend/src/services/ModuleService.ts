@@ -22,9 +22,9 @@ const getUserModules = async (id: string): Promise<Module[] | Error> => {
   }
 }
 
-const getModuleById = async (id: string): Promise<Module | Error> => {
+const getModuleById = async (moduleId: string, profileId: string): Promise<Module | Error> => {
   try {
-    const response = await $api.get<Module>(`/folder/get-by-id/${id}`)
+    const response = await $api.get<Module>(`/folder/get-with-progress/${moduleId}/${profileId}`)
     return response.data
   } catch (error) {
     return handleError(error as AxiosError, 'Ошибка получения модуля пользователя')

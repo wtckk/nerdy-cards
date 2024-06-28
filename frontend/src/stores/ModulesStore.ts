@@ -45,8 +45,8 @@ export const useModuleStore = defineStore('moduleStore', {
       }
     },
     getModuleById() {
-      return async (moduleId: string) => {
-        const response = await ModuleService.getModuleById(moduleId)
+      return async (moduleId: string, profileId: string) => {
+        const response = await ModuleService.getModuleById(moduleId, profileId)
 
         if (response instanceof Error) {
           console.error('Ошибка при получении модуля по ID:', response.message)

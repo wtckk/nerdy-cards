@@ -5,9 +5,11 @@
 
       <ModuleScreen
         :cards="module?.cards ? module.cards : []"
+        :is-learning="inLearning"
         :profile-id="String(userStore.myProfile?.id)"
         v-model="progressCards"
         @start-learning="startLearning"
+        @save-progress="saveProgress"
       />
 
       <div class="module-profile">
@@ -16,6 +18,10 @@
 
           <span>{{ module?.profile.username }}</span>
         </RouterLink>
+
+        <div v-if="isLearnedCount">
+          прогресс модуля: {{ (isLearnedCount / (module?.cards?.length || 0)) * 100 }}%
+        </div>
 
         <div v-if="userStore.user?.username === module?.profile.username" class="profile-btns">
           <UButton @click="togglePublishModule">
@@ -58,7 +64,6 @@ import { Card, Module, progressCard } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
-import CardService from '@/services/CardService'
 
 const moduleStore = useModuleStore()
 const userStore = useUserStore()
@@ -66,35 +71,34 @@ const userStore = useUserStore()
 const route = useRoute()
 const moduleId = String(route.params.id)
 
-const module = ref<Module>()
 const isEditing = ref(false)
+const inLearning = ref(false)
+
+const module = ref<Module>()
 const editedCards = ref<Card[]>([])
 const progressCards = ref<progressCard[]>([])
+
 const errorMessage = ref('')
 
 const isLoading = computed(() => !module.value)
 
+const isLearnedCount = computed(() => {
+  if (module.value?.cards) {
+    const count = module.value.cards.filter((card) => card.isLearned).length
+    console.log(count)
+    return count
+  }
+  return 0
+})
+
 async function startLearning() {
   if (module.value?.cards) {
-    const response = await CardService.getProgressCards(
-      userStore.myProfile?.id ? userStore.myProfile.id : '',
-      module.value.id
-    )
+    progressCards.value = await module.value.cards.map((card) => ({
+      id: card.id,
+      isLearned: card.isLearned ? true : false
+    }))
 
-    if (response instanceof Error) {
-      errorMessage.value = 'Произошла ошибка при получении карточек. Пожалуйста, попробуйте снова.'
-    } else {
-      progressCards.value = response.map((card) => ({
-        cardId: card.id,
-        isLearned: card.isLearned ? card.isLearned : false
-      }))
-      if (!progressCards.value.length) {
-        progressCards.value = module.value.cards.map((card) => ({
-          cardId: card.id,
-          isLearned: false
-        }))
-      }
-    }
+    inLearning.value = true
   }
 }
 
@@ -117,7 +121,13 @@ async function deleteCard(deletedCard: Card) {
 }
 
 async function createCard() {
-  const newCard = { id: '', term: '', definition: '', position: editedCards.value.length + 1 }
+  const newCard = {
+    id: '',
+    term: '',
+    definition: '',
+    position: editedCards.value.length + 1,
+    isLearned: false
+  }
 
   const response = await moduleStore.createCards(moduleId, [newCard])
 
@@ -134,6 +144,7 @@ async function updateCards() {
     errorMessage.value = 'Заполните все поля карточек, пожалуйста.'
     return
   }
+  console.log(editedCards.value)
   const response = await moduleStore.updateCards(editedCards.value)
   if (response instanceof Error) {
     errorMessage.value = 'Произошла ошибка при сохранении карточек. Пожалуйста, попробуйте снова.'
@@ -163,8 +174,22 @@ function updateCardPositions() {
   })
 }
 
+function saveProgress(progressCards: progressCard[]) {
+  if (module.value?.cards) {
+    module.value.cards = module.value.cards.map((card) => {
+      const progressCard = progressCards.find((pc) => pc.id === card.id)
+      if (progressCard) {
+        card.isLearned = progressCard.isLearned
+      }
+      return card
+    })
+
+    inLearning.value = false
+  }
+}
+
 onMounted(async () => {
-  const moduleOrError = await moduleStore.getModuleById(moduleId)
+  const moduleOrError = await moduleStore.getModuleById(moduleId, String(userStore.myProfile?.id))
 
   if (moduleOrError instanceof Error) {
     console.error('Ошибка при получении модуля:', moduleOrError)

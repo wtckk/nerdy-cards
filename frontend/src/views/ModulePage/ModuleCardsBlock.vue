@@ -6,11 +6,11 @@
       <UButton @click="sort">sort</UButton>
     </div>
 
-    <div v-for="category in ['Изучено', 'Не изучено']" :key="category" class="cards-block">
+    <div v-for="category in ['Не изучено', 'Изучено']" :key="category" class="cards-block">
       <p>{{ category }}</p>
 
       <div
-        v-for="card in sorted"
+        v-for="card in category === 'Изучено' ? isLearnedCards : notLearnedCards"
         :key="card.id"
         class="card"
         :style="category === 'Изучено' ? 'background-color: #C9ECA6' : 'background-color: #FFBEBE'"
@@ -42,6 +42,14 @@ function sort() {
 
 const sorted = computed(() => {
   return isSorted.value ? sortedCards.value : props.cards
+})
+
+const isLearnedCards = computed(() => {
+  return sorted.value.filter((card) => card.isLearned)
+})
+
+const notLearnedCards = computed(() => {
+  return sorted.value.filter((card) => !card.isLearned)
 })
 </script>
 
