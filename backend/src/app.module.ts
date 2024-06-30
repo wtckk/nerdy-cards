@@ -15,6 +15,9 @@ import { CardModule } from './card/card.module';
 import { Card } from './card/entites/card.entity';
 import { S3Module } from './s3/s3.module';
 import { CardProgress } from './card/entites/card-progress.entity';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
 
 @Module({
   imports: [
@@ -33,6 +36,12 @@ import { CardProgress } from './card/entites/card-progress.entity';
       synchronize: true,
       logging: ['query', 'error'],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
     UserModule,
     AuthModule,
     FolderModule,
@@ -41,6 +50,11 @@ import { CardProgress } from './card/entites/card-progress.entity';
     S3Module,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

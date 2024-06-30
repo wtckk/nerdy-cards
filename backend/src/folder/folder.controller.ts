@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -25,6 +26,7 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { Folder } from './entites/folder.entity';
 import { FolderDto } from './dtos/folder.dto';
 import { FolderWithCardProgressDto } from './dtos/folder-with-card-progress.dto';
+import { OwnerInterceptor } from '../common/interceptors/owner.interceptor';
 
 @ApiTags('Работа с папками')
 @ApiBearerAuth()
@@ -81,6 +83,7 @@ export class FolderController {
     summary: 'Обновление данных папки',
   })
   @ApiResponse({ status: 200, description: 'Папка успешно обновлена' })
+  @UseInterceptors(OwnerInterceptor)
   @Put('update/:folderId')
   updateFolder(
     @Param('folderId') id: string,
@@ -96,6 +99,7 @@ export class FolderController {
     status: 200,
     description: 'Конфиденциальность папки успешно обновлена',
   })
+  @UseInterceptors(OwnerInterceptor)
   @Patch('publish/:folderId')
   publishFolder(
     @Param('folderId') folderId: string,

@@ -17,7 +17,6 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { FolderDto } from './dtos/folder.dto';
 import { plainToClass } from 'class-transformer';
 import { FolderWithCardProgressDto } from './dtos/folder-with-card-progress.dto';
-import { CardWithProgressDto } from '../card/dtos/card-with-progress.dto';
 
 @Injectable()
 export class FolderService {
@@ -63,8 +62,14 @@ export class FolderService {
     return plainToClass(FolderDto, folders);
   }
 
-  getFolderById(folderId: string): Promise<Folder> {
-    const folder = this.folderRepository.findOne({ where: { id: folderId } });
+  /**
+   * Получение папки по folderId
+   */
+  async getFolderById(folderId: string) {
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+      relations: ['profile', 'profile.user'],
+    });
 
     if (!folder) {
       throw new NotFoundException({
@@ -76,7 +81,7 @@ export class FolderService {
   }
 
   /**
-   * Получение папки по ID
+   * Получение папки по ID c прогрессом для конкретного пользователя
    */
   async getFolderWithProgressCardById(
     folderId: string,

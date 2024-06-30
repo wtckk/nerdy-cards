@@ -37,12 +37,26 @@ export class ProfileService {
     return profiles;
   }
 
+  async getProfileById(profileId: string): Promise<Profile> {
+    const profile = await this.profileRepository.findOne({
+      where: { id: profileId },
+      relations: ['user'],
+    });
+    if (!profile) {
+      throw new NotFoundException({
+        message: 'Пользователь не найден',
+        status: HttpStatus.NOT_FOUND,
+      });
+    }
+    return profile;
+  }
+
   /**
    * Получение профиля пользователя по ID профиля
    * Доступно всем пользователям
    * Используем QueryBuilder для подсчета количества карточек папки
    */
-  async getProfile(profileId: string): Promise<Profile> {
+  async getProfileByIdWithFolder(profileId: string): Promise<Profile> {
     const profile = await this.profileRepository
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.folders', 'folders')
@@ -87,7 +101,7 @@ export class ProfileService {
     id: string,
     dto: UpdateProfileDto,
   ): Promise<SuccessResponseDto> {
-    const profile = await this.getProfile(id);
+    const profile = await this.getProfileByIdWithFolder(id);
 
     if (!profile) {
       throw new NotFoundException({
@@ -113,7 +127,7 @@ export class ProfileService {
 
     const s3Response = await this.s3Service.uploadAvatar(file.buffer, filePath);
 
-    const profile = await this.getProfile(profileId);
+    const profile = await this.getProfileByIdWithFolder(profileId);
 
     await this.profileRepository.save({
       ...profile,

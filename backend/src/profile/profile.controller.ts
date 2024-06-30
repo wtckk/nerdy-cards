@@ -25,6 +25,7 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { Profile } from './entities/profile.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileValidationPipe } from '../common/pipes/file-validation.pipe';
+import { OwnerInterceptor } from '../common/interceptors/owner.interceptor';
 
 @ApiTags('Профиль пользователя')
 @ApiBearerAuth()
@@ -41,8 +42,10 @@ export class ProfileController {
 
   @ApiOperation({ summary: 'Получения профиля по ID профиля' })
   @Get('id/:profileId')
-  getProfile(@Param('profileId') profileId: string): Promise<Profile> {
-    return this.profileService.getProfile(profileId);
+  getProfileWithFolder(
+    @Param('profileId') profileId: string,
+  ): Promise<Profile> {
+    return this.profileService.getProfileByIdWithFolder(profileId);
   }
 
   @ApiOperation({ summary: 'Получение профиля по ID ползователя' })
@@ -53,6 +56,7 @@ export class ProfileController {
 
   @ApiOperation({ summary: 'Обновление данных профиля' })
   @ApiResponse({ status: 200, description: 'Профиль успешно обновлен' })
+  @UseInterceptors(OwnerInterceptor)
   @Put('update/:profileId')
   updateProfile(
     @Param('profileId') profileId: string,
@@ -74,7 +78,7 @@ export class ProfileController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('avatar'))
+  @UseInterceptors(FileInterceptor('avatar'), OwnerInterceptor)
   @Post('avatar/:profileId')
   updateAvatar(
     @Param('profileId') profileId: string,

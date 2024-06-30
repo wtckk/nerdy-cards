@@ -32,6 +32,8 @@ export class Card {
   @JoinColumn({ name: 'folderId' })
   folder: Folder;
 
-  @OneToMany(() => CardProgress, (cardProgress) => cardProgress.card)
+  @OneToMany(() => CardProgress, (cardProgress) => cardProgress.card, {
+    onDelete: 'CASCADE',
+  })
   progress: CardProgress[];
 }

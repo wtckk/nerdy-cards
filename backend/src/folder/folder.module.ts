@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { FolderService } from './folder.service';
 import { FolderController } from './folder.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,11 @@ import { CardModule } from '../card/card.module';
 @Module({
   providers: [FolderService],
   controllers: [FolderController],
-  imports: [TypeOrmModule.forFeature([Folder]), ProfileModule, CardModule],
+  imports: [
+    TypeOrmModule.forFeature([Folder]),
+    forwardRef(() => ProfileModule),
+    CardModule,
+  ],
+  exports: [FolderService],
 })
 export class FolderModule {}
