@@ -1,12 +1,23 @@
 <template>
   <div>
     <div v-for="card in cards" :key="card.id" class="card">
-      <span>#{{ card.position }}</span>
       <UInput placeholder="термин" v-model="card.term" />
       <UInput placeholder="определение" v-model="card.definition" />
-      <UButton @click="$emit('deliteCard', card)">delete</UButton>
+      <UIconButton
+        @click="$emit('deliteCard', card)"
+        background="var(--basic-purple)"
+        iconUrl="/icons/cross.svg"
+        size="small"
+        >delete</UIconButton
+      >
     </div>
-    <UButton @click="$emit('addCard')">add</UButton>
+    <UIconButton
+      @click="$emit('addCard')"
+      background="var(--basic-purple)"
+      iconUrl="/icons/plus.svg"
+      class="card-add"
+      >add</UIconButton
+    >
   </div>
 </template>
 
@@ -28,5 +39,9 @@ defineEmits(['addCard', 'deliteCard'])
   border-radius: 12px;
   color: black;
   font-weight: 400;
+}
+
+.card-add {
+  margin: 12px auto;
 }
 </style>

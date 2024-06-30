@@ -1,39 +1,49 @@
 <template>
   <div class="module-screen">
-    <div class="screen" @click="isFlipped = !isFlipped">
-      <div>
-        <div class="sreen-text" v-if="!isFlipped">
+    <div class="screen" :class="{ flipped: isFlipped }" @click="isFlipped = !isFlipped">
+      <div class="screen-inner">
+        <div class="sreen-text screen-front" v-if="!isFlipped">
           {{ cards[currentCardIndex].term }}
+          <span class="screen-type">термин</span>
         </div>
-        <div class="sreen-text" v-else>{{ cards[currentCardIndex].definition }}</div>
-        <span class="screen-type">{{ !isFlipped ? 'термин' : 'определение' }}</span>
+        <div class="sreen-text screen-back" v-else>
+          {{ cards[currentCardIndex].definition }}<span class="screen-type">определение</span>
+        </div>
       </div>
     </div>
 
     <div class="nav-btns">
-      <UButton v-if="isLearning" @click="forgot"> не помню </UButton>
+      <UIconButton
+        v-if="isLearning"
+        border="var(--basic-purple)"
+        @click="forgot"
+        iconUrl="/icons/cross-bold.svg"
+      />
 
-      <UButton
+      <UIconButton
         v-else
         :disabled="currentCardIndex == 0"
-        @click="currentCardIndex--, (isFlipped = false)"
-        size="small"
-      >
-        prev
-      </UButton>
+        @click="prev"
+        class="prev"
+        iconUrl="/icons/arrow-left.svg"
+      />
 
-      <span>{{ currentCardIndex + 1 }}/{{ cards.length }}</span>
+      <span class="counter">{{ currentCardIndex + 1 }}/{{ cards.length }}</span>
 
-      <UButton v-if="isLearning && progressCards?.length" @click="learn"> помню </UButton>
+      <UIconButton
+        v-if="isLearning && progressCards?.length"
+        border="var(--basic-purple)"
+        @click="learn"
+        iconUrl="/icons/check.svg"
+      />
 
-      <UButton
+      <UIconButton
         v-else
+        style="transform: rotate(180deg)"
         :disabled="currentCardIndex + 1 == cards.length"
-        @click="currentCardIndex++, (isFlipped = false)"
-        size="small"
-      >
-        next
-      </UButton>
+        @click="next"
+        iconUrl="/icons/arrow-left.svg"
+      />
     </div>
 
     <UButton v-if="!isLearning" @click="start" className="screen-btn"> Изучить </UButton>
@@ -65,10 +75,22 @@ function learn() {
     progressCards.value[currentCardIndex.value].isLearned = true
     if (currentCardIndex.value + 1 != props.cards.length) {
       currentCardIndex.value++
+      isFlipped.value = false
+
+      document.querySelector('.screen-inner')?.classList.add('swipe-up-right')
+      setTimeout(() => {
+        document.querySelector('.screen-inner')?.classList.remove('swipe-up-right')
+      }, 500)
     } else {
-      console.log('dfsef')
       save()
     }
+  }
+}
+
+function prev() {
+  if (currentCardIndex.value > 0) {
+    currentCardIndex.value--
+    isFlipped.value = false
   }
 }
 
@@ -77,10 +99,27 @@ function forgot() {
     progressCards.value[currentCardIndex.value].isLearned = false
     if (currentCardIndex.value + 1 != props.cards.length) {
       currentCardIndex.value++
+      isFlipped.value = false
+
+      document.querySelector('.screen-inner')?.classList.add('swipe-up-left')
+      setTimeout(() => {
+        document.querySelector('.screen-inner')?.classList.remove('swipe-up-left')
+      }, 500)
     } else {
-      console.log('dfsef')
       save()
     }
+  }
+}
+
+function next() {
+  if (currentCardIndex.value + 1 != props.cards.length) {
+    currentCardIndex.value++
+    isFlipped.value = false
+
+    document.querySelector('.screen-inner')?.classList.add('swipe-up-right')
+    setTimeout(() => {
+      document.querySelector('.screen-inner')?.classList.remove('swipe-up-right')
+    }, 500)
   }
 }
 
@@ -112,30 +151,85 @@ function start() {
 }
 
 .screen {
+  width: 100%;
+  height: 500px;
+  perspective: 1000px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.screen-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  transform-style: preserve-3d;
+  border-radius: 18px;
+  background-color: var(--basic-purple);
+}
+
+.screen.flipped .screen-inner {
+  transform: rotateY(180deg);
+}
+
+.screen-front,
+.screen-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  position: relative;
+}
 
-  width: 100%;
-  height: 400px;
-  background-color: var(--basic-purple);
-  border-radius: 18px;
-  user-select: none;
-
-  transition: transform 0.3s;
+.screen-back {
+  color: white;
+  transform: rotateY(180deg);
 }
 
 .sreen-text {
   font-size: 32px;
   font-weight: 500;
-  padding: 12px 24px;
 }
+
+.swipe-up-left {
+  animation: swipeUpLeft 0.5s ease-out;
+}
+
+.swipe-up-right {
+  animation: swipeUpRight 0.5s ease-out;
+}
+
+@keyframes swipeUpLeft {
+  from {
+    transform: translateX(0) translateY(0) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-150%) translateY(-30%) rotate(15deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes swipeUpRight {
+  from {
+    transform: translateX(0) translateY(0) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(150%) translateY(-30%) rotate(-15deg);
+    opacity: 0.2;
+  }
+}
+
 .screen-type {
   position: absolute;
   top: 12px;
   left: 12px;
+  font-size: 16px;
+  font-weight: 200;
 }
 
 .learn-btns {
@@ -149,6 +243,21 @@ function start() {
   align-items: center;
   gap: 12px;
   place-self: center;
+}
+
+.nav-btns button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prev:active {
+  transform: translate(0em, 0em) !important;
+}
+
+.counter {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .screen-btn {

@@ -20,7 +20,7 @@
         </RouterLink>
 
         <div v-if="isLearnedCount">
-          прогресс модуля: {{ (isLearnedCount / (module?.cards?.length || 0)) * 100 }}%
+          прогресс модуля: {{ Math.floor((isLearnedCount / (module?.cards?.length || 0)) * 100) }}%
         </div>
 
         <div v-if="userStore.user?.username === module?.profile.username" class="profile-btns">

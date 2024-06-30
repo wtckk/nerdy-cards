@@ -7,10 +7,14 @@ export class CardProgress {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Card, (card) => card.progress)
+  @ManyToOne(() => Card, (card) => card.progress, {
+    onDelete: 'CASCADE',
+  })
   card: Card;
 
-  @ManyToOne(() => Profile, (profile) => profile.cardProgress)
+  @ManyToOne(() => Profile, (profile) => profile.cardProgress, {
+    onDelete: 'CASCADE',
+  })
   profile: Profile;
 
   @Column({ type: 'boolean', default: false })

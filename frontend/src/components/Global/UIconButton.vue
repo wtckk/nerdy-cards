@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[className, 'circle', size]"
-    :style="`background: ${background}`"
+    :style="`background: ${background}; border: 1px solid ${border}`"
     :disabled="disabled"
     :type="type"
   >
@@ -22,6 +22,10 @@ defineProps({
     type: String
   },
   background: {
+    type: String,
+    default: 'var(--background);'
+  },
+  border: {
     type: String,
     default: 'var(--background);'
   },
