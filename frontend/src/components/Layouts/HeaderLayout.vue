@@ -15,6 +15,10 @@
     <div class="header-btns">
       <UIconButton iconUrl="/icons/notification.svg" />
 
+      <RouterLink v-if="userStore.user?.role === 'ADMIN'" :to="`/admin/users`">
+        <UIconButton iconUrl="/icons/profile.svg" />
+      </RouterLink>
+
       <RouterLink v-if="isAuth" :to="`/profile/${String(userStore.myProfile?.id)}`">
         <UIconButton iconUrl="/icons/profile.svg" />
       </RouterLink>

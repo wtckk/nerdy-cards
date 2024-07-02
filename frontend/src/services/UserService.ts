@@ -2,7 +2,16 @@ import { $api, handleError } from '@/http'
 import { AxiosError } from 'axios'
 
 import { AuthResponse, Success } from '@/domain/Responses'
-import { LoginUser, RegistrationUser } from '@/domain/User'
+import { LoginUser, RegistrationUser, User } from '@/domain/User'
+
+const getUsers = async (): Promise<User[] | Error> => {
+  try {
+    const response = await $api.get<User[]>('/user/all')
+    return response.data
+  } catch (error) {
+    return handleError(error as AxiosError, 'Ошибка загрузки пользователей')
+  }
+}
 
 const loginUser = async (user: LoginUser): Promise<AuthResponse | Error> => {
   try {
@@ -32,6 +41,8 @@ const logout = async (): Promise<Success | Error> => {
 }
 
 const UserService = {
+  getUsers,
+
   registerUser,
   loginUser,
   logout

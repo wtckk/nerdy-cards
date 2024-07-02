@@ -23,7 +23,13 @@
           прогресс модуля: {{ Math.floor((isLearnedCount / (module?.cards?.length || 0)) * 100) }}%
         </div>
 
-        <div v-if="userStore.user?.username === module?.profile.username" class="profile-btns">
+        <div
+          v-if="
+            userStore.user?.username === module?.profile.username ||
+            userStore.user?.role === 'ADMIN'
+          "
+          class="profile-btns"
+        >
           <UButton @click="togglePublishModule">
             {{ module?.isPublic ? 'Скрыть' : 'Опубликовать' }}
           </UButton>

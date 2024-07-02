@@ -2,9 +2,8 @@
   <footer>
     <div class="footer-block">
       <div class="block-btns">
-        <UButton>О компании</UButton>
-        <UButton>Реклама</UButton>
-        <UButton>Поддержка</UButton>
+        <RouterLink to="/about"><UButton>О компании</UButton></RouterLink>
+        <RouterLink to="/advertising"><UButton>Реклама</UButton></RouterLink>
       </div>
       <div class="block-social">
         <img src="/social/telegram.svg" alt="telegram" />

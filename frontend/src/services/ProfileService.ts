@@ -4,6 +4,15 @@ import { AxiosError } from 'axios'
 import { Success } from '@/domain/Responses'
 import { Profile } from '@/domain/User'
 
+const getProfiles = async (): Promise<Profile[] | Error> => {
+  try {
+    const response = await $api.get<Profile[]>('/profile')
+    return response.data
+  } catch (error) {
+    return handleError(error as AxiosError, 'Ошибка получения профилей')
+  }
+}
+
 const getProfile = async (profileId: string): Promise<Profile | Error> => {
   try {
     const response = await $api.get<Profile>(`/profile/id/${profileId}`)
@@ -45,6 +54,7 @@ const updateProfile = async (profileId: string, newProfile: object): Promise<Suc
 }
 
 const ProfileService = {
+  getProfiles,
   getProfile,
   getProfileByUserId,
 

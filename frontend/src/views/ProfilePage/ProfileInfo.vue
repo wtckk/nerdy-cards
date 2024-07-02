@@ -1,7 +1,10 @@
 <template>
   <div class="profile-info">
-    <ProfileInfoAvatar :profile-id="profileId" :current-avatar-url="profile?.avatarUrl"
-      :can-be-changed="userStore.user?.username === profile?.username" />
+    <ProfileInfoAvatar
+      :profile-id="profileId"
+      :current-avatar-url="profile?.avatarUrl"
+      :can-be-changed="userStore.user?.username === profile?.username"
+    />
 
     <div>
       <span class="username">{{ profile?.username || 'не указан' }}</span>
@@ -14,7 +17,12 @@
       <div class="sub-block">
         <span>Учебное заведение</span>
         <span class="subtitle" v-if="!isEditing">{{ profile?.university || 'не указан' }}</span>
-        <UInput class="info-input" v-else placeholder="Ваш университет" v-model="editedProfile.university" />
+        <UInput
+          class="info-input"
+          v-else
+          placeholder="Ваш университет"
+          v-model="editedProfile.university"
+        />
       </div>
 
       <div class="sub-block">
@@ -24,9 +32,17 @@
       </div>
     </div>
 
-    <UButton class="save-profile" v-if="isEditing" @click="saveProfile" color="background">Сохранить</UButton>
+    <UButton class="save-profile" v-if="isEditing" @click="saveProfile" color="background"
+      >Сохранить</UButton
+    >
 
-    <button v-if="!isEditing && userStore.user?.username === profile?.username" @click="editProfile">
+    <button
+      v-if="
+        (!isEditing && userStore.user?.username === profile?.username) ||
+        userStore.user?.role === 'ADMIN'
+      "
+      @click="editProfile"
+    >
       <img class="pencil" src="/icons/edit.svg" alt="edit" />
     </button>
   </div>
@@ -136,5 +152,4 @@ async function saveProfile() {
   padding: 8px;
   border-radius: 12px;
 }
-
 </style>

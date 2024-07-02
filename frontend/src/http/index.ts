@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { AuthResponse } from '@/domain/Responses'
+import router from '@/router'
 
 const API_URL = 'http://localhost:3000/api'
 
@@ -42,6 +43,10 @@ $api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _isRetry?: boolean }
+
+    if (error.response?.status === 404) {
+      router.push('/NotFound')
+    }
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._isRetry) {
       originalRequest._isRetry = true

@@ -1,17 +1,22 @@
 <template>
   <PageLayout>
-    <h1>Мой профиль</h1>
+    <h1>Профиль {{ profile?.username }}</h1>
     <div v-if="!isLoading" class="profile">
       <div class="profile-top">
         <ProfileInfo />
 
         <div class="profile-stats">stats</div>
       </div>
-      <h2>Мои карточки</h2>
+      <h2 v-if="profile?.folders?.length">Модули</h2>
       <div v-if="profile" class="item-cards custom-scrollbar">
         <AddCard v-if="userStore.user?.username === profile.username" />
 
-        <ModuleCard v-for="folder in profile.folders" :key="folder.id" :card="folder" :profile="profile" />
+        <ModuleCard
+          v-for="folder in profile.folders"
+          :key="folder.id"
+          :card="folder"
+          :profile="profile"
+        />
       </div>
     </div>
 
@@ -20,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 
 import { useRoute } from 'vue-router'
 
@@ -39,11 +44,17 @@ const route = useRoute()
 
 const isLoading = computed(() => !profile.value)
 
-const profileId = String(route.params.id)
+const profileId = computed(() => {
+  return String(route.params.id)
+})
+
+watch(profileId, () => {
+  userStore.getProfile(profileId.value)
+})
 
 onMounted(() => {
   try {
-    userStore.getProfile(profileId)
+    userStore.getProfile(profileId.value)
   } catch (err) {
     console.log(err)
   }
