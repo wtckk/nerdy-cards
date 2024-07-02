@@ -26,7 +26,6 @@ import { Profile } from './entities/profile.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileValidationPipe } from '../common/pipes/file-validation.pipe';
 import { OwnerInterceptor } from '../common/interceptors/owner.interceptor';
-
 @ApiTags('Профиль пользователя')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -35,7 +34,7 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @ApiOperation({ summary: 'Получения списка всех профилей' })
-  @Get()
+  @Get('all')
   getAllProfiles(): Promise<Profile[]> {
     return this.profileService.getAllProfiles();
   }

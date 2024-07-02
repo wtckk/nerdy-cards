@@ -1,3 +1,8 @@
+import { FolderDto } from '../../folder/dtos/folder.dto';
+
+/**
+ * DTO для отоброжения данных пользователя
+ */
 export class ProfileDto {
   id: string;
 
@@ -8,6 +13,8 @@ export class ProfileDto {
   group?: string;
 
   university?: string;
+
+  folders: FolderDto[];
 
   createdAt: Date;
 }

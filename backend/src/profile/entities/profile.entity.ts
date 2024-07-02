@@ -10,6 +10,7 @@ import {
 import { User } from '../../user/entities/user.entity';
 import { Folder } from '../../folder/entites/folder.entity';
 import { CardProgress } from '../../card/entites/card-progress.entity';
+import { FolderLike } from '../../folder-like/entities/folder-like.entity';
 
 /**
  * Модель Profile в базе данных
@@ -43,4 +44,7 @@ export class Profile {
 
   @OneToMany(() => CardProgress, (cardProgress) => cardProgress.profile)
   cardProgress: CardProgress[];
+
+  @OneToMany(() => FolderLike, (folderLike) => folderLike.profile)
+  folderLikes: FolderLike[];
 }

@@ -60,8 +60,10 @@ export class ProfileService {
     const profile = await this.profileRepository
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.folders', 'folders')
+      .leftJoinAndSelect('folders.likes', 'likes')
       .loadRelationCountAndMap('folders.cardCount', 'folders.cards')
-      .where('profile.id = :profileId', { profileId })
+      .loadRelationCountAndMap('folders.likeCount', 'likes')
+      .where('profile.id = :profileId', { profileId: profileId })
       .getOne();
 
     if (!profile) {

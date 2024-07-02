@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Profile } from '../../profile/entities/profile.entity';
 import { Card } from '../../card/entites/card.entity';
+import { FolderLike } from '../../folder-like/entities/folder-like.entity';
 
 /**
  * Модель папок карточек в базе данных
@@ -42,4 +43,7 @@ export class Folder {
 
   @OneToMany(() => Card, (card) => card.folder)
   cards: Card[];
+
+  @OneToMany(() => FolderLike, (folderLike) => folderLike.folder)
+  likes: FolderLike[];
 }

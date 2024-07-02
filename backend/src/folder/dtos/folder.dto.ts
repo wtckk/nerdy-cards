@@ -37,4 +37,9 @@ export class FolderDto {
     description: 'Статус папки для публикации',
   })
   isPublic: boolean;
+
+  @ApiProperty({
+    description: 'Количество лайков',
+  })
+  likeCount: number;
 }
