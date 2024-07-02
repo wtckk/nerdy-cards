@@ -17,6 +17,7 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { FolderDto } from './dtos/folder.dto';
 import { plainToClass } from 'class-transformer';
 import { FolderWithCardProgressDto } from './dtos/folder-with-card-progress.dto';
+import { UserDto } from '../user/dtos/user.dto';
 
 @Injectable()
 export class FolderService {
@@ -28,7 +29,7 @@ export class FolderService {
   ) {}
 
   /**
-   * Получение списка всех созданных папок (отсортированные)
+   * Получение списка всех опубликованных папок (отсортированные)
    * Доступно всем пользователям
    * Используем QueryBuilder для подсчета количества карточек папки
    */
@@ -37,11 +38,12 @@ export class FolderService {
       .createQueryBuilder('folder')
       .leftJoinAndSelect('folder.profile', 'profile')
       .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .loadRelationCountAndMap('folder.likeCount', 'folder.likes')
       .where('folder.isPublic = :isPublic', { isPublic: true })
       .groupBy('folder.id')
       .orderBy('folder.createdAt', 'DESC')
       .getMany();
-    return plainToClass(FolderDto, folders);
+    return folders.map((folder) => plainToClass(FolderDto, folder));
   }
 
   /**
@@ -55,11 +57,12 @@ export class FolderService {
       .createQueryBuilder('folder')
       .leftJoinAndSelect('folder.profile', 'profile')
       .loadRelationCountAndMap('folder.cardCount', 'folder.cards')
+      .loadRelationCountAndMap('folder.likeCount', 'folder.likes')
       .where('folder.profileId = :profileId', { profileId: profile.id })
       .groupBy('folder.id')
       .orderBy('folder.createdAt', 'DESC')
       .getMany();
-    return plainToClass(FolderDto, folders);
+    return folders.map((folder) => plainToClass(FolderDto, folder));
   }
 
   /**
@@ -94,6 +97,7 @@ export class FolderService {
         'cards',
         'cards.progress',
         'cards.progress.profile',
+        'likes',
       ],
       order: {
         cards: {
@@ -123,6 +127,7 @@ export class FolderService {
         isLearned:
           card.progress.length > 0 ? card.progress[0].isLearned : false,
       })),
+      likeCount: folder.likes.length,
     });
   }
 
