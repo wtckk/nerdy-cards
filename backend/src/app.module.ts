@@ -23,6 +23,8 @@ import { Card } from './card/entites/card.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
+import { ProfileStatsModule } from './profile-stats/profile-stats.module';
+import { ProfileStats } from './profile-stats/entities/profile-stats.entity';
 
 @Module({
   imports: [
@@ -45,6 +47,7 @@ import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
         Card,
         CardProgress,
         FolderLike,
+        ProfileStats,
       ],
       synchronize: true,
       logging: ['query', 'error'],
@@ -62,6 +65,7 @@ import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
     CardModule,
     S3Module,
     FolderLikeModule,
+    ProfileStatsModule,
   ],
   controllers: [],
   providers: [

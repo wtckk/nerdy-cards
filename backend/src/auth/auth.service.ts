@@ -72,6 +72,7 @@ export class AuthService {
         user: tokens.user,
       };
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException({
         message: 'Ошибка регистрации пользователя',
         status: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -11,6 +11,7 @@ import { User } from '../../user/entities/user.entity';
 import { Folder } from '../../folder/entites/folder.entity';
 import { CardProgress } from '../../card/entites/card-progress.entity';
 import { FolderLike } from '../../folder-like/entities/folder-like.entity';
+import { ProfileStats } from '../../profile-stats/entities/profile-stats.entity';
 
 /**
  * Модель Profile в базе данных
@@ -35,9 +36,14 @@ export class Profile {
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @OneToOne(() => User, (user) => user.profile)
   user: User;
+
+  @OneToOne(() => ProfileStats, (profileStats) => profileStats.profile, {
+    cascade: true,
+  })
+  @JoinColumn()
+  stats: ProfileStats;
 
   @OneToMany(() => Folder, (folder) => folder.profile)
   folders: Folder[];

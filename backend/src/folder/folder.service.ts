@@ -161,7 +161,7 @@ export class FolderService {
       return savedFolder;
     } catch (error) {
       throw new InternalServerErrorException({
-        message: 'Ошибка создания пользователя',
+        message: 'Ошибка создания модуля',
         status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     }

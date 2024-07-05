@@ -8,12 +8,15 @@ import { SuccessResponseDto } from '../utils/response.dto';
 import { createSuccessResponse } from '../utils/utils';
 import { S3Service } from '../s3/s3.service';
 import { AVATAR_FOLDER } from '../common/constants/s3.constants';
+import { ProfileStats } from '../profile-stats/entities/profile-stats.entity';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+    @InjectRepository(ProfileStats)
+    private readonly profileStatsRepository: Repository<ProfileStats>,
     private readonly s3Service: S3Service,
   ) {}
 
@@ -21,11 +24,14 @@ export class ProfileService {
    * Создание профиля
    */
   async createProfile(user: User): Promise<Profile> {
-    const profile = this.profileRepository.create({
+    const profileCreated = this.profileRepository.create({
       username: user.username,
-      user,
+      user: user,
+      stats: this.profileStatsRepository.create(),
     });
-    return await this.profileRepository.save(profile);
+
+    const profile = await this.profileRepository.save(profileCreated);
+    return profile;
   }
 
   /**
@@ -42,6 +48,7 @@ export class ProfileService {
       where: { id: profileId },
       relations: ['user'],
     });
+    console.log(profile);
     if (!profile) {
       throw new NotFoundException({
         message: 'Пользователь не найден',
@@ -60,9 +67,8 @@ export class ProfileService {
     const profile = await this.profileRepository
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.folders', 'folders')
-      .leftJoinAndSelect('folders.likes', 'likes')
       .loadRelationCountAndMap('folders.cardCount', 'folders.cards')
-      .loadRelationCountAndMap('folders.likeCount', 'likes')
+      .loadRelationCountAndMap('folders.likeCount', 'folders.likes')
       .where('profile.id = :profileId', { profileId: profileId })
       .getOne();
 

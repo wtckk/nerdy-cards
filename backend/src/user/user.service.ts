@@ -14,6 +14,7 @@ import { plainToClass } from 'class-transformer';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from './enums/user-role.enum';
+import { ProfileService } from '../profile/profile.service';
 
 @Injectable()
 export class UserService implements OnApplicationBootstrap {
@@ -21,6 +22,7 @@ export class UserService implements OnApplicationBootstrap {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly configService: ConfigService,
+    private readonly profileService: ProfileService,
   ) {}
 
   /**
@@ -104,6 +106,7 @@ export class UserService implements OnApplicationBootstrap {
         role: UserRole.ADMIN,
       });
       await this.usersRepository.save(adminCreated);
+      await this.profileService.createProfile(adminCreated);
     }
   }
 }
