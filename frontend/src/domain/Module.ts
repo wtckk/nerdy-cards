@@ -11,6 +11,8 @@ interface Module {
   updatedAt: Date
   isPublic: Boolean
   cardCount: number
+  likeCount: number
+  isLiked?: boolean
 
   cards?: Card[]
 }

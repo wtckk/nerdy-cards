@@ -3,16 +3,18 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { API_URL } from '@/http'
 
-import { LoginUser, Profile, RegistrationUser, User } from '@/domain/User'
+import { LoginUser, Profile, ProfileStats, RegistrationUser, User } from '@/domain/User'
 import { AuthResponse } from '@/domain/Responses'
 
 import UserService from '@/services/UserService'
 import ProfileService from '@/services/ProfileService'
+import ProfileStatsService from '@/services/ProfileStats'
 
 interface State {
   user: User | null
   profile: Profile | null
   myProfile: Profile | null
+  stats: ProfileStats | null
   token: string
   isAuth: Boolean
   isLoading: Boolean
@@ -23,6 +25,7 @@ export const useUserStore = defineStore('userStore', {
     user: null,
     profile: null,
     myProfile: null,
+    stats: null,
     token: localStorage.getItem('token') || '',
     isAuth: false,
     isLoading: false
@@ -50,6 +53,19 @@ export const useUserStore = defineStore('userStore', {
         } else {
           this.myProfile = response
           return this.myProfile
+        }
+        return response
+      }
+    },
+
+    getProfileStats() {
+      return async (profileId: string) => {
+        const response = await ProfileStatsService.getProfileStats(profileId)
+
+        if (response instanceof Error) {
+          console.error('Ошибка при получении статистики профиля:', response.message)
+        } else {
+          this.stats = response
         }
         return response
       }
@@ -137,6 +153,19 @@ export const useUserStore = defineStore('userStore', {
         console.error('Ошибка при обновлении данных профиля', response.message)
       } else {
         return
+      }
+
+      return response
+    },
+
+    async updateProfileStats(profileId: string) {
+      const response = await ProfileStatsService.updateProfileStats(profileId)
+
+      if (response instanceof Error) {
+        console.error('Ошибка при обновлении статистики профиля', response.message)
+      } else {
+        this.stats = response
+        return this.stats
       }
 
       return response

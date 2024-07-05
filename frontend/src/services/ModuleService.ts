@@ -40,6 +40,18 @@ const createModule = async (newModule: object): Promise<Module | Error> => {
   }
 }
 
+const toggleLike = async (folderId: string, profileId: string): Promise<Success | Error> => {
+  try {
+    const response = await $api.post<Success>(`/folder-like/toggle`, {
+      folderId,
+      profileId
+    })
+    return response.data
+  } catch (error) {
+    return handleError(error as AxiosError, 'Ошибка изменения статуса лайка')
+  }
+}
+
 const publishModule = async (moduleId: string): Promise<Success | Error> => {
   try {
     const response = await $api.patch<Success>(`/folder/publish/${moduleId}`)
@@ -55,6 +67,7 @@ const ModuleService = {
   getModuleById,
 
   createModule,
+  toggleLike,
 
   publishModule
 }

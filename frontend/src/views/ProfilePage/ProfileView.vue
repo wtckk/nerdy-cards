@@ -5,7 +5,10 @@
       <div class="profile-top">
         <ProfileInfo />
 
-        <div class="profile-stats">stats</div>
+        <div class="profile-stats">
+          {{ stats }}
+          <UButton @click="userStore.updateProfileStats(profileId)">update</UButton>
+        </div>
       </div>
       <h2 v-if="profile?.folders?.length">Модули</h2>
       <div v-if="profile" class="item-cards custom-scrollbar">
@@ -38,7 +41,7 @@ import { useUserStore } from '@/stores/UserStore'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { profile } = storeToRefs(userStore)
+const { profile, stats } = storeToRefs(userStore)
 
 const route = useRoute()
 
@@ -52,9 +55,10 @@ watch(profileId, () => {
   userStore.getProfile(profileId.value)
 })
 
-onMounted(() => {
+onMounted(async () => {
   try {
-    userStore.getProfile(profileId.value)
+    await userStore.getProfile(profileId.value)
+    await userStore.getProfileStats(profileId.value)
   } catch (err) {
     console.log(err)
   }

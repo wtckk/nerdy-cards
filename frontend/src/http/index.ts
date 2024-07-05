@@ -44,9 +44,9 @@ $api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _isRetry?: boolean }
 
-    if (error.response?.status === 404) {
-      router.push('/NotFound')
-    }
+    // if (error.response?.status === 404 && originalRequest && !originalRequest._isRetry) {
+    //   router.push('/NotFound')
+    // }
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._isRetry) {
       originalRequest._isRetry = true

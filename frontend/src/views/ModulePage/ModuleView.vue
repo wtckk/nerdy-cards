@@ -13,11 +13,20 @@
       />
 
       <div class="module-profile">
-        <RouterLink :to="`/profile/${module?.profile.id}`" class="profile-link">
-          <UMiniAvatar :avatar-url="module?.profile.avatarUrl" />
+        <div class="profile-left">
+          <RouterLink :to="`/profile/${module?.profile.id}`" class="profile-link">
+            <UMiniAvatar :avatar-url="module?.profile.avatarUrl" />
 
-          <span>{{ module?.profile.username }}</span>
-        </RouterLink>
+            <span>{{ module?.profile.username }}</span>
+          </RouterLink>
+
+          <button @click="toggleLike" class="profile-like">
+            <img v-if="!module?.isLiked" src="/icons/like.svg" alt="like" />
+            <img v-else src="/icons/like-fill.svg" alt="like" />
+
+            <span>{{ module?.likeCount }}</span>
+          </button>
+        </div>
 
         <div v-if="isLearnedCount">
           прогресс модуля: {{ Math.floor((isLearnedCount / (module?.cards?.length || 0)) * 100) }}%
@@ -70,6 +79,7 @@ import { Card, Module, progressCard } from '@/domain/Module'
 
 import { useModuleStore } from '@/stores/ModulesStore'
 import { useUserStore } from '@/stores/UserStore'
+import ModuleService from '@/services/ModuleService'
 
 const moduleStore = useModuleStore()
 const userStore = useUserStore()
@@ -112,6 +122,21 @@ function toggleEditCards() {
   isEditing.value = !isEditing.value
   if (isEditing.value && module.value?.cards) {
     editedCards.value = [...module.value.cards]
+  }
+}
+
+async function toggleLike() {
+  if (module.value) {
+    const response = await ModuleService.toggleLike(
+      module.value.id,
+      String(userStore.myProfile?.id)
+    )
+
+    if (response instanceof Error) {
+      console.log('ошибка')
+    } else {
+      module.value.isLiked = !module.value.isLiked
+    }
   }
 }
 
@@ -238,5 +263,23 @@ onMounted(async () => {
   padding: 20px;
   border: 1px solid var(--basic-purple);
   border-radius: 18px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-like {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.profile-like img {
+  width: 20px;
+  height: 20px;
 }
 </style>

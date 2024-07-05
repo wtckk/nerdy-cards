@@ -14,10 +14,18 @@
         <img v-if="!card.isPublic" src="/icons/isPublic.svg" alt="" />
       </div>
 
-      <div class="card-user">
-        <UMiniAvatar :avatar-url="profile.avatarUrl" />
+      <div class="card-bottom">
+        <div class="card-user">
+          <UMiniAvatar :avatar-url="profile.avatarUrl" />
 
-        <p>{{ profile.username }}</p>
+          <p>{{ profile.username }}</p>
+        </div>
+
+        <div class="card-like">
+          <img src="/icons/like-fill.svg" alt="like" />
+
+          <span>{{ card.likeCount }}</span>
+        </div>
       </div>
     </div>
   </RouterLink>
@@ -92,9 +100,27 @@ defineProps<{
   font-size: 14px;
 }
 
+.card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .card-user {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.card-like {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.card-like img {
+  width: 20px;
+  height: 20px;
 }
 </style>

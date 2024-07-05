@@ -6,7 +6,7 @@ import { Profile } from '@/domain/User'
 
 const getProfiles = async (): Promise<Profile[] | Error> => {
   try {
-    const response = await $api.get<Profile[]>('/profile')
+    const response = await $api.get<Profile[]>('/profile/all')
     return response.data
   } catch (error) {
     return handleError(error as AxiosError, 'Ошибка получения профилей')

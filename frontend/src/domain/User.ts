@@ -31,4 +31,14 @@ interface RegistrationUser {
   password: string
 }
 
-export { User, Profile, LoginUser, RegistrationUser }
+interface ProfileStats {
+  id: string
+  foldersCreated: number
+  likesCount: number
+  cardsCreated: number
+  cardsLearned: number
+  cardsNotLearned: number
+  profile: Profile
+}
+
+export { User, Profile, LoginUser, RegistrationUser, ProfileStats }

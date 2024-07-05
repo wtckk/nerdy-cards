@@ -6,10 +6,6 @@
       <div>
         <input type="text" placeholder="search" v-model="search" />
       </div>
-
-      <RouterLink to="/create">
-        <UIconButton iconUrl="/icons/plus.svg" />
-      </RouterLink>
     </div>
 
     <div class="header-btns">
