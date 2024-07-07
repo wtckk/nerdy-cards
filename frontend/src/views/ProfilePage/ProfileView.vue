@@ -5,10 +5,11 @@
       <div class="profile-top">
         <ProfileInfo />
 
-        <div class="profile-stats">
-          {{ stats }}
-          <UButton @click="userStore.updateProfileStats(profileId)">update</UButton>
-        </div>
+        <ProfileStats
+          v-if="stats"
+          :stats="stats"
+          @update="userStore.updateProfileStats(profileId)"
+        />
       </div>
       <h2 v-if="profile?.folders?.length">Модули</h2>
       <div v-if="profile" class="item-cards custom-scrollbar">
@@ -35,6 +36,7 @@ import { useRoute } from 'vue-router'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ModuleCard from '@/components/Cards/ModuleCard.vue'
 import ProfileInfo from '@/views/ProfilePage/ProfileInfo.vue'
+import ProfileStats from '@/views/ProfilePage/ProfileStats.vue'
 import AddCard from '@/components/Cards/AddCard.vue'
 
 import { useUserStore } from '@/stores/UserStore'
@@ -75,19 +77,6 @@ onMounted(async () => {
 .profile-top {
   display: flex;
   gap: 24px;
-}
-
-.profile-stats {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-
-  padding: 24px 48px;
-  border-radius: 18px;
-  width: 50%;
-
-  background-color: var(--basic-purple);
 }
 
 .item-cards {

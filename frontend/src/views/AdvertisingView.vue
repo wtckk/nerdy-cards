@@ -76,4 +76,8 @@ p,
 strong {
   font-size: 18px;
 }
+
+p {
+  margin: 14px 0;
+}
 </style>
